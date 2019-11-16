@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -k o
-#PBS -l nodes=1:ppn=8,vmem=500gb,walltime=240:00:00
+#PBS -l nodes=1:ppn=8,vmem=249gb,walltime=240:00:00
 #PBS -M wisnoski@indiana.edu
 #PBS -m abe
 #PBS -j oe
