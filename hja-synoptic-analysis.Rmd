@@ -1,0 +1,113 @@
+---
+title: "HJ Andrews Synoptic: Bacterial Analysis"
+author: "Nathan I. Wisnoski"
+date: "11/16/2019"
+output: html_document
+---
+
+# Initial setup 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, 
+  fig.align = "center", 
+  fig.width = 6,
+  message = FALSE,
+  warning = FALSE
+)
+
+library("vegan")
+library("tidyverse")
+library("cowplot")
+library("ggrepel")
+
+theme_set(theme_cowplot() +
+            theme(axis.title = element_text(size = 12),
+                  axis.text = element_text(size = 10),
+                  legend.position = "top", 
+                  strip.text = element_text(size = 12),
+                  strip.background = element_blank(),
+                  legend.text = element_text(size = 10),
+                  legend.title = element_text(size = 12)))
+
+
+# load external functions
+source("analysis/mothur_tools.R")
+
+```
+
+First, we load the data. This includes the site-by-species matrix (generated in Mothur, v. 1.41.1), the RDP taxonomy, the environmental data, and the phylogenetic tree (generated with FastTreeMP).
+```{r load, echo=FALSE, message=FALSE}
+## Import Shared, Design, and Environment Files
+
+# Define Inputs
+# Design = general design file for experiment
+# shared = OTU table from mothur with sequence similarity clustering
+# Taxonomy = Taxonomic information for each OTU
+
+# Import Design
+#design.total <- read.delim("data/design.txt", header=T, row.names=1)
+
+# Import Shared Files
+OTUs <- read.otu(shared = "data/hja-synoptic.0.03.shared", cutoff = "0.03") # 97% Similarity
+OTUs <- OTUs[rownames(OTUs) != "hja2016_046",] # remove these two sites
+OTUs <- OTUs[rownames(OTUs) != "hja2016_115",]
+
+# Import Taxonomy
+OTU.tax <- read.tax(taxonomy = "data/hja-synoptic.0.03.taxonomy", format = "rdp")
+
+# Import Env
+options(readr.default_locale=readr::locale(tz="America/Los_Angeles"))
+env.aquatic <- read_csv("data/hja-synoptic_env-data-aquatic.csv",
+                      col_types = cols(
+                        Date = col_date(format = "%d-%b-%y"),
+                        `Approx Arrival Time` = col_time(),
+                        `Approx Departure Time` = col_time()))
+
+env.soils <- read_csv("data/hja-synoptic_env-data-soils.csv",
+                      col_types = cols(
+                        date = col_date()))
+
+design <- read.csv("data/hja-synoptic_sequence-sample-list.csv")
+rownames(design) <- design$Sample.Name
+```
+
+```{r}
+dim(OTUs)
+sort(rowSums(OTUs))
+
+OTUs <- OTUs[which(rowSums(OTUs)>5000),]
+# check if order is the same
+design <- subset(design, Sample.Name %in% rownames(OTUs))
+sum(rownames(OTUs) != rownames(design))
+
+set.seed(47405)
+OTUs <- rrarefy(OTUs, min(rowSums(OTUs)))
+
+OTUs <- OTUs[,which(colSums(OTUs) != 0)]
+OTUs.hel <- decostand(OTUs, method = "hel")
+OTUs.hel.dist <- vegdist(OTUs.hel, method = "euclid")
+hel.pcoa <- cmdscale(OTUs.hel.dist, k = 3, eig = T)
+ordiplot(hel.pcoa, choices = c(1,2), main = "HJA Synoptic samples")
+ordiplot(hel.pcoa, choices = c(2,3))
+hja.evals <- eigenvals(OTUs.pcoa)
+var1 <- hja.evals[1]/sum(hja.evals)
+var2 <- hja.evals[2]/sum(hja.evals)
+var3 <- hja.evals[3]/sum(hja.evals)
+sum(var1, var2, var3)
+
+pcdims <- hel.pcoa$points[,1:3]
+colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
+cbind(pcdims, design) %>% 
+  ggplot(aes(x = PCoA1, y = PCoA2, color = Sample.Type)) + 
+  geom_point(alpha = 0.5) + 
+  stat_ellipse() +
+  coord_fixed() +
+  scale_color_brewer("", palette = "Dark2") +
+  ggsave("figures/hja-synoptic-ordination.png", dpi = 600, width = 6, height = 6, units = "in")
+
+cbind(pcdims, design) %>% 
+  ggplot(aes(x = PCoA2, y = PCoA3, color = Sample.Type)) + 
+  geom_point() + 
+  coord_fixed()
+```
+
