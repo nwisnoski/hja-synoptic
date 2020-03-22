@@ -128,6 +128,74 @@ cbind(pcdims, design) %>%
 
 env <- left_join(design, env.soils) %>% left_join(env.aquatic)
 
+soil.dat <- inner_join(design, env.soils)
+soil.coords <- SoDA::geoXY(soil.dat$latitude, soil.dat$longitude)
+soil.geo <- dist(soil.coords)
+soil.otus <- OTUs.hel[which(design$Sample.Type == "Terrestrial soil"),]
+soil.dists <- vegdist(soil.otus, method = "euclid")
+plot(soil.geo, soil.dists)
+cbind(geo = soil.geo, com = soil.dists) %>% as_tibble() %>% 
+  ggplot(aes(x = geo, y = com)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
 
+sed.dat <- inner_join(design[which(design$Sample.Type == "Sediment"),], (env.aquatic))
+sed.geo <- dist(SoDA::geoXY(aquatic.dat$latitude, aquatic.dat$longitude))
+sed.otus <- OTUs.hel[sed.dat$Sample.Name,]
+sed.dists <- vegdist(sed.otus, method = "euclid")
+cbind(geo = sed.geo, com = sed.dists) %>% as_tibble() %>% 
+  ggplot(aes(x = geo, y = com)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+aquatic.dat <- inner_join(design[which(design$Sample.Type == "Surface water"),], (env.aquatic))
+aquatic.geo <- dist(SoDA::geoXY(aquatic.dat$latitude, aquatic.dat$longitude))
+aquatic.otus <- OTUs.hel[aquatic.dat$Sample.Name,]
+aquatic.dists <- vegdist(aquatic.otus, method = "euclid")
+cbind(geo = aquatic.geo, com = aquatic.dists) %>% as_tibble() %>% 
+  ggplot(aes(x = geo, y = com)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+
+hypor.dat <- inner_join(design[which(design$Sample.Type == "Hyporheic water"),], (env.aquatic))
+hypor.geo <- dist(SoDA::geoXY(hypor.dat$latitude, hypor.dat$longitude))
+hypor.otus <- OTUs.hel[hypor.dat$Sample.Name,]
+hypor.dists <- vegdist(hypor.otus, method = "euclid")
+cbind(geo = hypor.geo, com = hypor.dists) %>% as_tibble() %>% 
+  ggplot(aes(x = geo, y = com)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+all.dat <- rbind.data.frame(
+  inner_join(design, select(env.aquatic, Site.Code, latitude, longitude)),
+  inner_join(design, select(env.soils, Site.Code, latitude, longitude)))
+all.geo <- dist(SoDA::geoXY(all.dat$latitude, all.dat$longitude))
+all.otus <- OTUs.hel[droplevels(all.dat$Sample.Name),]
+all.dists <- vegdist(all.otus, method = "euclid")
+all.dists.df <- simba::liste(all.dists, entry = "com")
+all.dists.df <- all.dists.df %>% 
+  mutate(site1 = as.character(NBX), site2 = as.character(NBY),
+         hab1 = design[site1,"Sample.Type"],
+         hab2 = design[site2,"Sample.Type"],
+         habs = paste(hab1, hab2, sep = "-")) %>% 
+  mutate(geo = all.geo)
+for(i in 1:nrow(all.dists.df)){
+  hab1 = as.character(all.dists.df$hab1[i])
+  hab2 = as.character(all.dists.df$hab2[i])
+  sorted.habs <- sort(c(hab1,hab2))
+  all.dists.df$hab1[i] = sorted.habs[1]
+  all.dists.df$hab2[i] = sorted.habs[2]
+  all.dists.df$habs[i] = paste(sorted.habs[1], sorted.habs[2], sep = "-")
+}
+
+all.dists.df %>% 
+  ggplot(aes(x = as.numeric(geo), y = as.numeric(com))) +
+  # geom_point(data = select(all.dists.df, -hab1, -hab2), 
+  #            aes(grouping = NULL), alpha = 0.1, color = "grey") +
+  geom_point(alpha = 0.25) +
+  geom_smooth(method = 'lm') + 
+  facet_grid(hab1~hab2) +
+  theme(legend.position = "none")
 ```
 
