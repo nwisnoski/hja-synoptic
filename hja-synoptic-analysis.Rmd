@@ -21,6 +21,7 @@ library("cowplot")
 library("ggrepel")
 library("readxl")
 library("ggridges")
+library("ftmsRanalysis")
 
 theme_set(theme_bw() +
             theme(axis.title = element_text(size = 12),
@@ -100,26 +101,43 @@ OTUs.hel <- decostand(OTUs, method = "hel")
 # Load FTICRMS data
 ```{r}
 fticrms <- read_xlsx("data/hja-FTICRMS.xlsx")
-fticrms_wide <- t(fticrms[,15:76])
-rownames(fticrms_wide)
-colnames(fticrms_wide) <- fticrms$`Measured Ionic Mass (m/z)`
-ms_pca <- rda(fticrms_wide)
-screeplot(ms_pca)
-biplot(ms_pca)
-eigenvals(ms_pca)[1]/sum(eigenvals(ms_pca))
-eigenvals(ms_pca)[2]/sum(eigenvals(ms_pca))
 
-ms_toplot <- fticrms[,c(1,15:76)] %>% 
-  pivot_longer(cols = !(`Measured Ionic Mass (m/z)`),
-               names_to = "Site Code", 
-               values_to = "Peaks")
+# peak_data_long <- fticrms[,c(1,15:76)] %>% 
+#   pivot_longer(cols = !(`Measured Ionic Mass (m/z)`),
+#                names_to = "Site.Code", 
+#                values_to = "Count") %>% 
+#   rename(mass_ratio = `Measured Ionic Mass (m/z)`)
 
-ms_toplot %>% 
-  ggplot(aes(x = `Measured Ionic Mass (m/z)`, y = `Site Code`, height = Peaks)) + 
-  geom_ridgeline() + 
-  scale_y_discrete(expand = c(0.01, 0)) + 
-  scale_x_continuous(expand = c(0.01, 0)) + 
-  theme_ridges() + theme(legend.position = "n")
+peak_data <- fticrms[,c(1,15:76)] %>% 
+  rename(mass_ratio = `Measured Ionic Mass (m/z)`) %>% 
+  as.data.frame(.)
+sites <- data.frame(Site.Code = unique(peak_data_long$Site.Code))
+
+sites <- env.aquatic %>% filter(`Sample Type` == "Sediment") %>% 
+  rename(Site.Code = `Site Code`) %>% 
+  right_join(sites, by = "Site.Code")
+
+meta_df <-fticrms[,1:13] %>% 
+  rename(mass_ratio = `Measured Ionic Mass (m/z)`) %>% 
+  as.data.frame(.)
+
+hja_peakdat <- as.peakData(e_data = peak_data, 
+            f_data = sites,
+            e_meta = meta_df, 
+            edata_cname = "mass_ratio",
+            fdata_cname = "Site.Code",
+            mass_cname = "mass_ratio",
+            instrument_type = "12T", 
+            isotopic_cname = "C13",
+            isotopic_notation = "1",
+            c_cname = "C",
+            h_cname = "H",
+            o_cname = "O",
+            n_cname = "N",
+            s_cname = "S",
+            p_cname = "P")
+
+
 ```
 
 # Analysis
