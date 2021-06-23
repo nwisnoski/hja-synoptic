@@ -111,7 +111,7 @@ fticrms <- read_xlsx("data/hja-FTICRMS.xlsx")
 peak_data <- fticrms[,c(1,15:76)] %>% 
   rename(mass_ratio = `Measured Ionic Mass (m/z)`) %>% 
   as.data.frame(.)
-sites <- data.frame(Site.Code = unique(peak_data_long$Site.Code))
+sites <- data.frame(Site.Code = as.character(unique(peak_data_long$Site.Code)))
 
 sites <- env.aquatic %>% filter(`Sample Type` == "Sediment") %>% 
   rename(Site.Code = `Site Code`) %>% 
@@ -137,6 +137,12 @@ hja_peakdat <- as.peakData(e_data = peak_data,
             s_cname = "S",
             p_cname = "P")
 
+filter_obj <- ftmsRanalysis::mass_filter(hja_peakdat)
+hja_peakdat_filtered <- applyFilt(filter_obj, hja_peakdat, min_mass = 200, max_mass = 900)
+isotope_filter <- ftmsRanalysis::emeta_filter(hja_peakdat_filtered, cname = "C13")
+hja_peakdat_filtered <- applyFilt(isotope_filter, hja_peakdat_filtered, max_val = 0 )
+
+hja_peakdat_filtered <- ftmsRanalysis::compound_calcs(hja_peakdat_filtered)
 
 ```
 
@@ -168,6 +174,22 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design
   scale_color_brewer("", palette = "Dark2") +
   ggsave("figures/hja-synoptic-ordination.png", dpi = 600, width = 6, height = 6, units = "in")
 ```
+
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
 
 ##
 ```{r}
