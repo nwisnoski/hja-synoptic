@@ -22,6 +22,7 @@ library("ggrepel")
 library("readxl")
 library("ggridges")
 library("ftmsRanalysis")
+library("viridis")
 
 theme_set(theme_bw() +
             theme(axis.title = element_text(size = 12),
@@ -111,11 +112,13 @@ fticrms <- read_xlsx("data/hja-FTICRMS.xlsx")
 peak_data <- fticrms[,c(1,15:76)] %>% 
   rename(mass_ratio = `Measured Ionic Mass (m/z)`) %>% 
   as.data.frame(.)
-sites <- data.frame(Site.Code = as.character(unique(peak_data_long$Site.Code)))
+sites <- data.frame(Site.Code = as.character(colnames(peak_data)[-1]))
+sites$sample_type <- c(rep("sediment", nrow(sites)-2), rep("labqc", 2))
 
-sites <- env.aquatic %>% filter(`Sample Type` == "Sediment") %>% 
-  rename(Site.Code = `Site Code`) %>% 
-  right_join(sites, by = "Site.Code")
+# sites <- env.aquatic %>% filter(`Sample Type` == "Sediment") %>% 
+#   rename(Site.Code = `Site Code`) %>% 
+#   right_join(sites, by = "Site.Code") %>% 
+#   .[,c(1:4)]
 
 meta_df <-fticrms[,1:13] %>% 
   rename(mass_ratio = `Measured Ionic Mass (m/z)`) %>% 
@@ -137,13 +140,31 @@ hja_peakdat <- as.peakData(e_data = peak_data,
             s_cname = "S",
             p_cname = "P")
 
+summary(hja_peakdat)
+
 filter_obj <- ftmsRanalysis::mass_filter(hja_peakdat)
 hja_peakdat_filtered <- applyFilt(filter_obj, hja_peakdat, min_mass = 200, max_mass = 900)
 isotope_filter <- ftmsRanalysis::emeta_filter(hja_peakdat_filtered, cname = "C13")
 hja_peakdat_filtered <- applyFilt(isotope_filter, hja_peakdat_filtered, max_val = 0 )
 
-hja_peakdat_filtered <- ftmsRanalysis::compound_calcs(hja_peakdat_filtered)
+hja_peakdat_pa <- edata_transform(hja_peakdat_filtered, data_scale = "pres")
+plot(hja_peakdat_pa)
+hja_peakdat_pa <- compound_calcs(hja_peakdat_pa)
+hja_peakdat_pa <- assign_elemental_composition(hja_peakdat_pa)
+table(hja_peakdat_pa$e_meta[,getElCompColName(hja_peakdat_pa)])
+hja_peakdat_pa <- assign_class(hja_peakdat_pa)
+table(hja_peakdat_pa$e_meta[,getBS1ColName(hja_peakdat_pa)])
 
+hja_peakdat_pa <- applyFilt(molecule_filter(hja_peakdat_pa), hja_peakdat_pa, min_number=2)
+hja_peakdat_pa <- applyFilt(formula_filter(hja_peakdat_pa), hja_peakdat_pa)
+
+hja_peakdat_pa <- subset(hja_peakdat_pa, samples = sites$Site.Code[which(sites$sample_type!="labqc")], check_rows = T)
+plot(hja_peakdat_pa)
+summary(hja_peakdat_pa)
+
+one_sample <- subset(hja_peakdat_pa, samples = "CC-1")
+vanKrevelenPlot(one_sample)
+densityPlot(hja_peakdat_pa, variable = "GFE", curve_colors = viridis(62))
 ```
 
 # Analysis
@@ -175,12 +196,107 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design
   ggsave("figures/hja-synoptic-ordination.png", dpi = 600, width = 6, height = 6, units = "in")
 ```
 
-
-
+## PCoA molecules
 ```{r}
+hja_peaks <- hja_peakdat_pa$e_data
+rownames(hja_peaks) <- hja_peaks$mass_ratio
+hja_peaks <- t(hja_peaks[,-1])
+head(hja_peaks[,1:10])
+hja_peaks_dist <- vegdist(hja_peaks, method = "bray")
+
+hja_peaks_pcoa <- cmdscale(hja_peaks_dist, k = 3, eig = T)
+hja_peaks_evals <- eigenvals(hja_peaks_pcoa)
+var1 <- hja_peaks_evals[1]/sum(hja_peaks_evals) * 100
+var2 <- hja_peaks_evals[2]/sum(hja_peaks_evals) * 100
+var3 <- hja_peaks_evals[3]/sum(hja_peaks_evals) * 100
+sum(var1, var2, var3)
+
+pcdims <- hja_peaks_pcoa$points[,1:3]
+colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
+
+# Plot 
+left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"), 
+          env.aquatic %>% filter(`Sample Type` == "Sediment") %>% rename(Site.Code = `Site Code`),
+          by = "Site.Code") %>% 
+  ggplot(aes(x = PCoA1, y = PCoA2, color = log10(`Drainage_area_ha`))) + 
+  geom_point(alpha = 0.5) + 
+  #stat_ellipse() +
+  coord_fixed() +
+  geom_text_repel(aes(label = Site.Code)) +
+  labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
+       y = paste0("PCoA2 (", round(var2,2),"%)")) 
 
 ```
 
+```{r}
+sed_sitecodes_in_seqs <- subset(design, Sample.Type == "Sediment")$Site.Code
+
+
+# do sed fticrms pcoa
+sed_peaks_pa <- subset(hja_peakdat_pa, samples = sed_sitecodes_in_seqs)
+sed_peaks <- sed_peaks_pa$e_data
+rownames(sed_peaks) <- sed_peaks$mass_ratio
+sed_peaks <- t(sed_peaks[,-1])
+head(sed_peaks[,1:10])
+sed_peaks_dist <- vegdist(sed_peaks, method = "bray")
+
+sed_peaks_pcoa <- cmdscale(sed_peaks_dist, k = 3, eig = T)
+sed_peaks_evals <- eigenvals(sed_peaks_pcoa)
+var1 <- sed_peaks_evals[1]/sum(sed_peaks_evals) * 100
+var2 <- sed_peaks_evals[2]/sum(sed_peaks_evals) * 100
+var3 <- sed_peaks_evals[3]/sum(sed_peaks_evals) * 100
+sum(var1, var2, var3)
+
+pcdims <- sed_peaks_pcoa$points[,1:3]
+colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
+
+# Plot 
+left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"), 
+          env.aquatic %>% filter(`Sample Type` == "Sediment") %>% rename(Site.Code = `Site Code`),
+          by = "Site.Code") %>% 
+  ggplot(aes(x = PCoA1, y = PCoA2, color = log10(`Drainage_area_ha`))) + 
+  geom_point(alpha = 0.5) + 
+  #stat_ellipse() +
+  coord_fixed() +
+  geom_text_repel(aes(label = Site.Code)) +
+  labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
+       y = paste0("PCoA2 (", round(var2,2),"%)")) +
+  ggsave("figures/sed_molecular_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
+
+
+
+
+# do sed microbe pcoa
+sed_samples_in_ICRMS <- subset(design, Sample.Type == "Sediment" & Site.Code %in% sed_peaks_pa$f_data$Site.Code)$Sample.Name
+
+sed_otus_dist <- vegdist(OTUs[sed_samples_in_ICRMS,], method = "bray")
+sed_pcoa <- cmdscale(sed_otus_dist, k = 3, eig = T)
+sed_evals <- eigenvals(sed_pcoa)
+var1 <- sed_evals[1]/sum(sed_evals) * 100
+var2 <- sed_evals[2]/sum(sed_evals) * 100
+var3 <- sed_evals[3]/sum(sed_evals) * 100
+sum(var1, var2, var3)
+
+pcdims <- sed_pcoa$points[,1:3]
+colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
+
+left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design) %>% 
+  ggplot(aes(x = PCoA1, y = PCoA3)) + 
+  geom_point(alpha = 0.5) + 
+  coord_fixed() +
+  geom_text_repel(aes(label = Site.Code), max.overlaps = 20) +
+  labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
+       y = paste0("PCoA3 (", round(var3,2),"%)")) +
+  scale_color_brewer("", palette = "Dark2") +
+  ggsave("figures/sed_microbial_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
+
+
+scores(sed_pcoa)
+scores(sed_peaks_pcoa)
+
+sed_procrust <- protest(sed_pcoa, sed_peaks_pcoa)
+plot(sed_procrust)
+```
 
 
 
