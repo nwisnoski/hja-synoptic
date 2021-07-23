@@ -219,12 +219,14 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"),
           env.aquatic %>% filter(`Sample Type` == "Sediment") %>% rename(Site.Code = `Site Code`),
           by = "Site.Code") %>% 
   ggplot(aes(x = PCoA1, y = PCoA2, color = log10(`Drainage_area_ha`))) + 
-  geom_point(alpha = 0.5) + 
+  geom_point(aes( size = log10(Drainage_area_ha)), alpha = 0.5) + 
   #stat_ellipse() +
   coord_fixed() +
   geom_text_repel(aes(label = Site.Code)) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
-       y = paste0("PCoA2 (", round(var2,2),"%)")) 
+       y = paste0("PCoA2 (", round(var2,2),"%)")) +
+  scale_color_viridis_c(begin = 0.1, end = 0.9) +
+  ggsave("figures/hja-synoptic-ordination-dom.png", dpi = 600, width = 6, height = 6, units = "in")
 
 ```
 
@@ -294,8 +296,12 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design
 scores(sed_pcoa)
 scores(sed_peaks_pcoa)
 
-sed_procrust <- protest(sed_pcoa, sed_peaks_pcoa)
-plot(sed_procrust)
+
+DOM_diversity <- (colSums(data.frame(sed_peaks_pa$e_data[,-1])))
+sed_otus <- OTUs[sed_samples_in_ICRMS,]
+mic_diversity <- exp(diversity(sed_otus))
+
+plot(DOM_diversity, mic_diversity)
 ```
 
 
