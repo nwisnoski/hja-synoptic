@@ -15,14 +15,15 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-library("vegan")
-library("tidyverse")
-library("cowplot")
-library("ggrepel")
-library("readxl")
-library("ggridges")
-library("ftmsRanalysis")
-library("viridis")
+library(here)
+library(vegan)
+library(tidyverse)
+library(ggrepel)
+library(readxl)
+library(ggridges)
+library(ftmsRanalysis)
+library(patchwork)
+library(viridis)
 
 theme_set(theme_bw() +
             theme(axis.title = element_text(size = 12),
@@ -184,7 +185,7 @@ pcdims <- hel.pcoa$points[,1:3]
 colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
 
 # Plot 
-left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design) %>% 
+hja_synoptic_microbes_ordination <- left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design) %>% 
   ggplot(aes(x = PCoA1, y = PCoA3, color = Sample.Type)) + 
   geom_point(alpha = 0.5) + 
   stat_ellipse() +
@@ -192,8 +193,10 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design
   #geom_text_repel(aes(label = Site.Code)) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
        y = paste0("PCoA3 (", round(var3,2),"%)")) +
-  scale_color_brewer("", palette = "Dark2") +
-  ggsave("figures/hja-synoptic-ordination.png", dpi = 600, width = 6, height = 6, units = "in")
+  scale_color_brewer("", palette = "Dark2")
+
+ggsave(filename = here("figures/hja_synoptic_microbes_ordination.pdf"), 
+       plot = hja_synoptic_microbes_ordination, dpi = 600, width = 6, height = 6, units = "in")
 ```
 
 ## PCoA molecules
@@ -214,10 +217,12 @@ sum(var1, var2, var3)
 pcdims <- hja_peaks_pcoa$points[,1:3]
 colnames(pcdims) <- c("PCoA1", "PCoA2", "PCoA3")
 
-# Plot 
-left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"), 
+DOM_env_df <- left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"), 
           env.aquatic %>% filter(`Sample Type` == "Sediment") %>% rename(Site.Code = `Site Code`),
-          by = "Site.Code") %>% 
+          by = "Site.Code")
+
+# Plot 
+hja_synoptic_DOM_ordination <- DOM_env_df %>% 
   ggplot(aes(x = PCoA1, y = PCoA2, color = log10(`Drainage_area_ha`))) + 
   geom_point(aes( size = log10(Drainage_area_ha)), alpha = 0.5) + 
   #stat_ellipse() +
@@ -225,10 +230,34 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"),
   geom_text_repel(aes(label = Site.Code)) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
        y = paste0("PCoA2 (", round(var2,2),"%)")) +
-  scale_color_viridis_c(begin = 0.1, end = 0.9) +
-  ggsave("figures/hja-synoptic-ordination-dom.png", dpi = 600, width = 6, height = 6, units = "in")
+  scale_color_viridis_c(begin = 0.1, end = 0.9)
+
+ggsave(filename = here("figures/hja-synoptic-ordination-dom.pdf"), 
+       plot = hja_synoptic_DOM_ordination, dpi = 600, width = 6, height = 6, units = "in")
 
 ```
+
+RDA microbes and molecules
+```{r}
+env_physical_features <- DOM_env_df %>% 
+  select(Site.Code, Drainage_area_ha, Stream_Order, 
+         Valley_Distance_to_outlet_m, `Segment_Valley_Avg_Slope_m/m`,
+         `Segment_Stream_Avg_Slope_m/m`, Segment_Valley_Avg_Width_m,
+         `Segment_Sinuosity_m/m`)
+
+env_physical_features_mod <- scale(env_physical_features[-1])
+dom_rda <- rda(hja_peaks ~ ., data = as.data.frame(env_physical_features_mod))
+plot(dom_rda)
+
+sediment_samples <- design %>% 
+  filter(Site.Code %in% env_physical_features$Site.Code,
+         Sample.Type == "Sediment") %>% 
+  select(Sample.Name) %>% as_vector()
+OTUs.hel.sed <- OTUs.hel[which(rownames(OTUs.hel) %in% sediment_samples),]
+
+rda(OTUs.hel.sed ~ ., data = env_physical_features)
+```
+
 
 ```{r}
 sed_sitecodes_in_seqs <- subset(design, Sample.Type == "Sediment")$Site.Code
