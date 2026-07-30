@@ -1,0 +1,442 @@
+#!/usr/bin/env Rscript
+
+# Multi-run paired-end DADA2 workflow for exact 16S V4 ASVs.
+# Each sequencing run is filtered, learns its own error model, and is denoised
+# separately. Exact sequence tables are then merged across runs before
+# consensus chimera removal and optional taxonomy assignment.
+
+parse_args <- function(args) {
+  values <- list(
+    manifest = "data/derived/hja_2016_sample_manifest.csv",
+    run_config = "config/dada2_run_config.csv",
+    project_root = ".",
+    output = "results/dada2_2016",
+    taxonomy = NA_character_,
+    species = NA_character_,
+    seed = 2016L
+  )
+  flags <- c(
+    "--manifest" = "manifest",
+    "--run-config" = "run_config",
+    "--project-root" = "project_root",
+    "--output" = "output",
+    "--taxonomy" = "taxonomy",
+    "--species" = "species",
+    "--seed" = "seed"
+  )
+  i <- 1L
+  while (i <= length(args)) {
+    flag <- args[[i]]
+    if (!flag %in% names(flags) || i == length(args)) {
+      stop("Unknown or incomplete argument: ", flag, call. = FALSE)
+    }
+    values[[flags[[flag]]]] <- args[[i + 1L]]
+    i <- i + 2L
+  }
+  values$seed <- as.integer(values$seed)
+  if (is.na(values$seed)) {
+    stop("--seed must be an integer.", call. = FALSE)
+  }
+  values
+}
+
+is_absolute <- function(path) {
+  grepl("^(/|[A-Za-z]:[/\\\\])", path)
+}
+
+under_root <- function(path, root) {
+  if (is_absolute(path)) path else file.path(root, path)
+}
+
+as_flag <- function(x) {
+  toupper(trimws(as.character(x))) %in% c("TRUE", "T", "YES", "Y", "1")
+}
+
+as_pool <- function(x) {
+  value <- tolower(trimws(as.character(x)))
+  if (value == "pseudo") return("pseudo")
+  if (value %in% c("true", "t", "yes", "1")) return(TRUE)
+  if (value %in% c("false", "f", "no", "0")) return(FALSE)
+  stop("pool must be pseudo, TRUE, or FALSE; got: ", x, call. = FALSE)
+}
+
+get_n <- function(x) {
+  sum(dada2::getUniques(x))
+}
+
+write_csv <- function(x, path) {
+  write.csv(x, path, row.names = FALSE, na = "")
+}
+
+args <- parse_args(commandArgs(trailingOnly = TRUE))
+set.seed(args$seed)
+if (!requireNamespace("dada2", quietly = TRUE)) {
+  stop("The Bioconductor package dada2 is required.", call. = FALSE)
+}
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  stop("The CRAN package ggplot2 is required.", call. = FALSE)
+}
+
+root <- normalizePath(args$project_root, mustWork = TRUE)
+manifest_path <- under_root(args$manifest, root)
+config_path <- under_root(args$run_config, root)
+output_dir <- under_root(args$output, root)
+taxonomy_path <- if (is.na(args$taxonomy)) NA_character_ else under_root(args$taxonomy, root)
+species_path <- if (is.na(args$species)) NA_character_ else under_root(args$species, root)
+
+if (!file.exists(manifest_path)) stop("Missing manifest: ", manifest_path, call. = FALSE)
+if (!file.exists(config_path)) stop("Missing run config: ", config_path, call. = FALSE)
+if (!is.na(taxonomy_path) && !file.exists(taxonomy_path)) {
+  stop("Missing taxonomy training FASTA: ", taxonomy_path, call. = FALSE)
+}
+if (!is.na(species_path) && !file.exists(species_path)) {
+  stop("Missing species training FASTA: ", species_path, call. = FALSE)
+}
+if (!is.na(species_path) && is.na(taxonomy_path)) {
+  stop("--species requires --taxonomy.", call. = FALSE)
+}
+
+manifest <- read.csv(
+  manifest_path,
+  stringsAsFactors = FALSE,
+  check.names = FALSE,
+  na.strings = c("", "NA")
+)
+config <- read.csv(
+  config_path,
+  stringsAsFactors = FALSE,
+  check.names = FALSE,
+  na.strings = c("", "NA")
+)
+
+numeric_config <- c(
+  "trim_left_f", "trim_left_r", "trunc_len_f", "trunc_len_r",
+  "max_ee_f", "max_ee_r", "trunc_q", "min_len", "max_n",
+  "min_overlap", "max_mismatch", "threads"
+)
+
+required_manifest <- c(
+  "sample_id", "run_id", "forward_path", "reverse_path", "include"
+)
+required_config <- c(
+  "run_id", "trim_left_f", "trim_left_r", "trunc_len_f", "trunc_len_r",
+  "max_ee_f", "max_ee_r", "trunc_q", "min_len", "max_n", "rm_phix",
+  "min_overlap", "max_mismatch", "pool", "threads"
+)
+if (!all(required_manifest %in% names(manifest))) {
+  stop(
+    "Manifest is missing: ",
+    paste(setdiff(required_manifest, names(manifest)), collapse = ", "),
+    call. = FALSE
+  )
+}
+if (!all(required_config %in% names(config))) {
+  stop(
+    "Run config is missing: ",
+    paste(setdiff(required_config, names(config)), collapse = ", "),
+    call. = FALSE
+  )
+}
+bad_numeric_config <- numeric_config[
+  vapply(config[numeric_config], function(x) any(is.na(x)), logical(1))
+]
+if (length(bad_numeric_config)) {
+  stop(
+    "Run config has missing/non-numeric values in: ",
+    paste(bad_numeric_config, collapse = ", "),
+    call. = FALSE
+  )
+}
+
+manifest <- manifest[as_flag(manifest$include), , drop = FALSE]
+if (!nrow(manifest)) stop("No included samples in manifest.", call. = FALSE)
+if (anyDuplicated(manifest$sample_id)) {
+  stop("Included sample_id values must be unique across the joint study.", call. = FALSE)
+}
+if (anyDuplicated(config$run_id)) {
+  stop("run_id values must be unique in the run config.", call. = FALSE)
+}
+missing_config <- setdiff(unique(manifest$run_id), config$run_id)
+if (length(missing_config)) {
+  stop(
+    "No run configuration for: ",
+    paste(missing_config, collapse = ", "),
+    call. = FALSE
+  )
+}
+
+manifest$forward_file <- vapply(
+  manifest$forward_path,
+  under_root,
+  root = root,
+  FUN.VALUE = character(1)
+)
+manifest$reverse_file <- vapply(
+  manifest$reverse_path,
+  under_root,
+  root = root,
+  FUN.VALUE = character(1)
+)
+missing_fastqs <- unique(c(
+  manifest$forward_file[!file.exists(manifest$forward_file)],
+  manifest$reverse_file[!file.exists(manifest$reverse_file)]
+))
+if (length(missing_fastqs)) {
+  stop(
+    "Missing FASTQ file(s): ",
+    paste(head(missing_fastqs, 20), collapse = ", "),
+    if (length(missing_fastqs) > 20) " ..." else "",
+    call. = FALSE
+  )
+}
+
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+completed_output <- file.path(output_dir, "sequence_table_asv.rds")
+if (file.exists(completed_output)) {
+  stop(
+    "A completed DADA2 result already exists at ",
+    completed_output,
+    ". Use a new --output directory to preserve the existing run.",
+    call. = FALSE
+  )
+}
+write_csv(manifest, file.path(output_dir, "manifest_used.csv"))
+write_csv(config, file.path(output_dir, "run_config_used.csv"))
+writeLines(
+  paste(c(file.path(R.home("bin"), "Rscript"), commandArgs()), collapse = " "),
+  file.path(output_dir, "command_used.txt")
+)
+write_csv(
+  data.frame(
+    parameter = c("random_seed", "dada2_version", "r_version"),
+    value = c(
+      as.character(args$seed),
+      as.character(utils::packageVersion("dada2")),
+      R.version.string
+    ),
+    stringsAsFactors = FALSE
+  ),
+  file.path(output_dir, "workflow_versions.csv")
+)
+run_tables <- list()
+tracking_by_run <- list()
+
+for (run_id in unique(manifest$run_id)) {
+  message("\n=== Processing ", run_id, " ===")
+  run_samples <- manifest[manifest$run_id == run_id, , drop = FALSE]
+  run_samples <- run_samples[order(run_samples$sample_id), , drop = FALSE]
+  cfg <- config[config$run_id == run_id, , drop = FALSE]
+  run_dir <- file.path(output_dir, "runs", run_id)
+  filtered_dir <- file.path(run_dir, "filtered")
+  dir.create(filtered_dir, recursive = TRUE, showWarnings = FALSE)
+
+  forward_in <- run_samples$forward_file
+  reverse_in <- run_samples$reverse_file
+  names(forward_in) <- run_samples$sample_id
+  names(reverse_in) <- run_samples$sample_id
+  forward_filtered <- file.path(
+    filtered_dir,
+    paste0(run_samples$sample_id, "_F_filt.fastq.gz")
+  )
+  reverse_filtered <- file.path(
+    filtered_dir,
+    paste0(run_samples$sample_id, "_R_filt.fastq.gz")
+  )
+  names(forward_filtered) <- run_samples$sample_id
+  names(reverse_filtered) <- run_samples$sample_id
+
+  quality_pdf <- file.path(run_dir, "quality_profiles_input.pdf")
+  if (!file.exists(quality_pdf)) {
+    warning(
+      "Quality profiles were not generated in step 3; creating a small set now. ",
+      "Pause and review ", quality_pdf, " if trimming settings are uncertain."
+    )
+    quality_n <- min(6L, nrow(run_samples))
+    grDevices::pdf(quality_pdf, width = 9, height = 6, onefile = TRUE)
+    for (i in seq_len(quality_n)) {
+      print(dada2::plotQualityProfile(forward_in[[i]]) +
+        ggplot2::ggtitle(paste(run_samples$sample_id[[i]], "forward")))
+      print(dada2::plotQualityProfile(reverse_in[[i]]) +
+        ggplot2::ggtitle(paste(run_samples$sample_id[[i]], "reverse")))
+    }
+    grDevices::dev.off()
+  }
+
+  filter_stats <- dada2::filterAndTrim(
+    fwd = forward_in,
+    filt = forward_filtered,
+    rev = reverse_in,
+    filt.rev = reverse_filtered,
+    trimLeft = c(cfg$trim_left_f, cfg$trim_left_r),
+    truncLen = c(cfg$trunc_len_f, cfg$trunc_len_r),
+    maxEE = c(cfg$max_ee_f, cfg$max_ee_r),
+    truncQ = cfg$trunc_q,
+    minLen = cfg$min_len,
+    maxN = cfg$max_n,
+    rm.phix = as_flag(cfg$rm_phix),
+    compress = TRUE,
+    multithread = cfg$threads,
+    verbose = TRUE
+  )
+  filter_stats <- as.data.frame(filter_stats)
+  if (nrow(filter_stats) != length(forward_in)) {
+    stop("Unexpected filter-tracking row count for ", run_id, call. = FALSE)
+  }
+  filter_stats$sample_id <- names(forward_in)
+  rownames(filter_stats) <- NULL
+  write_csv(filter_stats, file.path(run_dir, "filter_tracking.csv"))
+
+  retained <- filter_stats$reads.out > 0
+  if (!all(retained)) {
+    warning(
+      "Dropping samples with zero reads after filtering: ",
+      paste(filter_stats$sample_id[!retained], collapse = ", ")
+    )
+  }
+  retained_ids <- filter_stats$sample_id[retained]
+  forward_filtered <- forward_filtered[retained_ids]
+  reverse_filtered <- reverse_filtered[retained_ids]
+  if (!length(retained_ids)) {
+    stop("No samples survived filtering for ", run_id, call. = FALSE)
+  }
+
+  error_f <- dada2::learnErrors(
+    forward_filtered,
+    multithread = cfg$threads,
+    randomize = TRUE
+  )
+  error_r <- dada2::learnErrors(
+    reverse_filtered,
+    multithread = cfg$threads,
+    randomize = TRUE
+  )
+  saveRDS(error_f, file.path(run_dir, "error_model_forward.rds"))
+  saveRDS(error_r, file.path(run_dir, "error_model_reverse.rds"))
+
+  grDevices::pdf(file.path(run_dir, "error_models.pdf"), width = 9, height = 6)
+  print(dada2::plotErrors(error_f, nominalQ = TRUE))
+  print(dada2::plotErrors(error_r, nominalQ = TRUE))
+  grDevices::dev.off()
+
+  pool_setting <- as_pool(cfg$pool)
+  dada_f <- dada2::dada(
+    forward_filtered,
+    err = error_f,
+    pool = pool_setting,
+    multithread = cfg$threads
+  )
+  dada_r <- dada2::dada(
+    reverse_filtered,
+    err = error_r,
+    pool = pool_setting,
+    multithread = cfg$threads
+  )
+  mergers <- dada2::mergePairs(
+    dada_f,
+    forward_filtered,
+    dada_r,
+    reverse_filtered,
+    minOverlap = cfg$min_overlap,
+    maxMismatch = cfg$max_mismatch,
+    verbose = TRUE
+  )
+  seqtab <- dada2::makeSequenceTable(mergers)
+  saveRDS(seqtab, file.path(run_dir, "sequence_table_prechimera.rds"))
+  run_tables[[run_id]] <- seqtab
+
+  track <- data.frame(
+    sample_id = retained_ids,
+    run_id = run_id,
+    input = filter_stats$reads.in[match(retained_ids, filter_stats$sample_id)],
+    filtered = filter_stats$reads.out[match(retained_ids, filter_stats$sample_id)],
+    denoised_forward = vapply(dada_f, get_n, numeric(1)),
+    denoised_reverse = vapply(dada_r, get_n, numeric(1)),
+    merged = vapply(mergers, get_n, numeric(1)),
+    stringsAsFactors = FALSE
+  )
+  tracking_by_run[[run_id]] <- track
+  write_csv(track, file.path(run_dir, "read_tracking_prechimera.csv"))
+}
+
+merged_args <- c(run_tables, list(tryRC = FALSE))
+sequence_table <- do.call(dada2::mergeSequenceTables, merged_args)
+threads_final <- max(config$threads[config$run_id %in% unique(manifest$run_id)])
+sequence_table_nochim <- dada2::removeBimeraDenovo(
+  sequence_table,
+  method = "consensus",
+  multithread = threads_final,
+  verbose = TRUE
+)
+saveRDS(sequence_table, file.path(output_dir, "sequence_table_all_prechimera.rds"))
+saveRDS(sequence_table_nochim, file.path(output_dir, "sequence_table_asv.rds"))
+
+tracking <- do.call(rbind, tracking_by_run)
+tracking$nonchim <- 0
+tracked_samples <- intersect(tracking$sample_id, rownames(sequence_table_nochim))
+tracking$nonchim[match(tracked_samples, tracking$sample_id)] <- rowSums(
+  sequence_table_nochim[tracked_samples, , drop = FALSE]
+)
+tracking <- tracking[order(tracking$sample_id), , drop = FALSE]
+write_csv(tracking, file.path(output_dir, "read_tracking.csv"))
+
+sequences <- colnames(sequence_table_nochim)
+abundance <- colSums(sequence_table_nochim)
+sequence_order <- order(-abundance, sequences)
+sequence_table_nochim <- sequence_table_nochim[, sequence_order, drop = FALSE]
+sequences <- colnames(sequence_table_nochim)
+abundance <- colSums(sequence_table_nochim)
+asv_id <- sprintf("ASV_%06d", seq_along(sequences))
+
+asv_table <- data.frame(
+  sample_id = rownames(sequence_table_nochim),
+  sequence_table_nochim,
+  check.names = FALSE,
+  stringsAsFactors = FALSE
+)
+names(asv_table)[-1] <- asv_id
+write_csv(asv_table, file.path(output_dir, "asv_count_table.csv"))
+write_csv(
+  data.frame(
+    asv_id = asv_id,
+    sequence = sequences,
+    total_abundance = as.numeric(abundance),
+    sequence_length = nchar(sequences),
+    stringsAsFactors = FALSE
+  ),
+  file.path(output_dir, "asv_sequences.csv")
+)
+
+fasta_lines <- as.vector(rbind(paste0(">", asv_id), sequences))
+writeLines(fasta_lines, file.path(output_dir, "asv_sequences.fasta"))
+
+if (!is.na(taxonomy_path)) {
+  taxonomy <- dada2::assignTaxonomy(
+    sequences,
+    taxonomy_path,
+    multithread = threads_final,
+    tryRC = TRUE
+  )
+  if (!is.na(species_path)) {
+    taxonomy <- dada2::addSpecies(taxonomy, species_path, allowMultiple = TRUE)
+  }
+  taxonomy_out <- data.frame(
+    asv_id = asv_id,
+    taxonomy,
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+  write_csv(taxonomy_out, file.path(output_dir, "asv_taxonomy.csv"))
+  saveRDS(taxonomy, file.path(output_dir, "asv_taxonomy.rds"))
+}
+
+sample_qc <- merge(
+  manifest,
+  tracking,
+  by = c("sample_id", "run_id"),
+  all.x = TRUE,
+  sort = TRUE
+)
+write_csv(sample_qc, file.path(output_dir, "sample_metadata_and_read_tracking.csv"))
+
+capture.output(sessionInfo(), file = file.path(output_dir, "session_info.txt"))
+message("\nDADA2 workflow complete: ", normalizePath(output_dir))

@@ -1,0 +1,15 @@
+"metric","value"
+"FASTQ files",240
+"paired libraries",120
+"sample-list rows",119
+"mapped without normalization",118
+"mapped after site-code normalization",1
+"unresolved libraries",1
+"planktonic streamwater libraries",24
+"hyporheic-water libraries",36
+"stream-sediment libraries",45
+"terrestrial-soil libraries",15
+"aquatic sites represented",59
+"complete aquatic triplets",10
+"incomplete aquatic sites",49
+"soil metadata rows without sequences",3

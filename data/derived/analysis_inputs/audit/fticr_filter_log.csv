@@ -1,0 +1,6 @@
+"step","retained_features","rule"
+"raw_features",33741,"none"
+"mass_200_to_900",22546,"measured_mz >= 200 and <= 900"
+"then_c13_indicator_zero",20771,"c13_indicator <= 0"
+"then_detected_in_at_least_2_sites",9563,"site intensity > 0 in at least 2 of 60 site columns"
+"then_formula_assigned_carbon_count_gt_zero",4760,"carbon_count > 0"
