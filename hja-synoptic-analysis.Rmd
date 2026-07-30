@@ -69,7 +69,10 @@ options(readr.default_locale=readr::locale(tz="America/Los_Angeles"))
 env.aquatic <- read_csv("data/hja-env_data_clean.csv",
                       col_types = cols(
                         Date = col_date(format = "%Y-%m-%d"),
-                        Time = col_time(format = "%H:%M")))
+                        Time = col_time(format = "%H:%M")), n_max = 186)
+env.aquatic <- env.aquatic %>% 
+  rename("Site.Code" = "Site Code",
+         "Sample.Type" = "Sample Type")
 #env.aquatic$Site.Code <- env.aquatic$`Site Code`
 
 env.soils <- read_csv("data/hja-synoptic_env-data-soils.csv",
@@ -87,7 +90,7 @@ sort(rowSums(OTUs))
 hist(log10(rowSums(OTUs)), breaks = 30)
 
 # Filter samples with fewer than 5000 reads (removes 10 sites)
-OTUs <- OTUs[which(rowSums(OTUs)>5000),]
+OTUs <- OTUs[which(rowSums(OTUs)>3000),]
 
 # check if order is the same
 design <- subset(design, Sample.Name %in% rownames(OTUs))
@@ -223,14 +226,16 @@ DOM_env_df <- left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Co
 
 # Plot 
 hja_synoptic_DOM_ordination <- DOM_env_df %>% 
-  ggplot(aes(x = PCoA1, y = PCoA2, color = log10(`Drainage_area_ha`))) + 
-  geom_point(aes( size = log10(Drainage_area_ha)), alpha = 0.5) + 
+  ggplot(aes(x = PCoA1, y = PCoA2, color = as.factor(Stream_Order))) + 
+  geom_point(alpha = 0.5) + 
   #stat_ellipse() +
   coord_fixed() +
-  geom_text_repel(aes(label = Site.Code)) +
+  geom_text_repel(aes(label = Site.Code), show.legend = F) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
-       y = paste0("PCoA2 (", round(var2,2),"%)")) +
-  scale_color_viridis_c(begin = 0.1, end = 0.9)
+       y = paste0("PCoA2 (", round(var2,2),"%)"), 
+       color = "Stream Order") +
+  scale_color_viridis_d(begin = 0.1, end = 0.9, direction = -1)
+hja_synoptic_DOM_ordination
 
 ggsave(filename = here("figures/hja-synoptic-ordination-dom.pdf"), 
        plot = hja_synoptic_DOM_ordination, dpi = 600, width = 6, height = 6, units = "in")
@@ -291,8 +296,8 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Site.Code"),
   coord_fixed() +
   geom_text_repel(aes(label = Site.Code)) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
-       y = paste0("PCoA2 (", round(var2,2),"%)")) +
-  ggsave("figures/sed_molecular_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
+       y = paste0("PCoA2 (", round(var2,2),"%)"))
+ggsave("figures/sed_molecular_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
 
 
 
@@ -318,8 +323,8 @@ left_join(rownames_to_column(as.data.frame(pcdims), var = "Sample.Name"), design
   geom_text_repel(aes(label = Site.Code), max.overlaps = 20) +
   labs(x = paste0("PCoA1 (", round(var1,2),"%)"),
        y = paste0("PCoA3 (", round(var3,2),"%)")) +
-  scale_color_brewer("", palette = "Dark2") +
-  ggsave("figures/sed_microbial_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
+  scale_color_brewer("", palette = "Dark2")
+ggsave("figures/sed_microbial_pcoa.png", dpi = 600, width = 6, height = 3/4*6)
 
 
 scores(sed_pcoa)
@@ -358,8 +363,18 @@ cbind(geo = soil.geo, com = soil.dists) %>% as_tibble() %>%
   geom_point() +
   geom_smooth(method = 'lm')
 
-sed.dat <- inner_join(design[which(design$Sample.Type == "Sediment"),], (env.aquatic))
-sed.geo <- dist(SoDA::geoXY(aquatic.dat$latitude, aquatic.dat$longitude))
+
+aquatic.dat <- inner_join(design[which(design$Sample.Type == "Stream"),], (env.aquatic))
+aquatic.geo <- sqrt(dist(aquatic.dat$Stream_Centerline_UTM_Zone_10N_X_m)^2 + dist(aquatic.dat$Stream_Centerline_UTM_Zone_10N_Y_m)^2)
+aquatic.otus <- OTUs.hel[aquatic.dat$Sample.Name,]
+aquatic.dists <- vegdist(aquatic.otus, method = "euclid")
+cbind(geo = aquatic.geo, com = aquatic.dists) %>% as_tibble() %>% 
+  ggplot(aes(x = geo, y = com)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
+sed.dat <- inner_join(design[which(design$Sample.Type == "Sediment"),], env.aquatic)
+sed.geo <- sqrt(dist(aquatic.dat$Stream_Centerline_UTM_Zone_10N_X_m)^2 + dist(aquatic.dat$Stream_Centerline_UTM_Zone_10N_Y_m)^2)
 sed.otus <- OTUs.hel[sed.dat$Sample.Name,]
 sed.dists <- vegdist(sed.otus, method = "euclid")
 cbind(geo = sed.geo, com = sed.dists) %>% as_tibble() %>% 
@@ -367,14 +382,7 @@ cbind(geo = sed.geo, com = sed.dists) %>% as_tibble() %>%
   geom_point() +
   geom_smooth(method = 'lm')
 
-aquatic.dat <- inner_join(design[which(design$Sample.Type == "Surface water"),], (env.aquatic))
-aquatic.geo <- dist(SoDA::geoXY(aquatic.dat$latitude, aquatic.dat$longitude))
-aquatic.otus <- OTUs.hel[aquatic.dat$Sample.Name,]
-aquatic.dists <- vegdist(aquatic.otus, method = "euclid")
-cbind(geo = aquatic.geo, com = aquatic.dists) %>% as_tibble() %>% 
-  ggplot(aes(x = geo, y = com)) +
-  geom_point() +
-  geom_smooth(method = 'lm')
+
 
 
 hypor.dat <- inner_join(design[which(design$Sample.Type == "Hyporheic water"),], (env.aquatic))
