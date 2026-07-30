@@ -33,6 +33,36 @@ run_script <- function(path, args = character()) {
 The equivalent `Rscript ...` commands can be pasted directly into the RStudio
 Terminal.
 
+## Fresh cluster run
+
+The Slurm entry point is:
+
+`analysis/cluster/run_dada2.sh`
+
+It is configured for the remote repository at
+`/mnt/home/niw7/scratch/GitHub/hja-synoptic` and requests one node, 8 CPUs,
+128 GB RAM, and 24 hours. From that repository:
+
+```sh
+mkdir -p logs
+sbatch analysis/cluster/run_dada2.sh
+```
+
+The job assumes a fresh output path. It rebuilds the 2016 manifest, checks that
+all 240 FASTQs and required R packages are present, runs DADA2, and creates the
+QC summaries. It refuses to write into an existing output directory.
+
+By default the output is `results/dada2_2016`. To preserve a separate attempt:
+
+```sh
+sbatch --export=ALL,DADA2_OUTPUT_DIR=results/dada2_2016_attempt2 \
+  analysis/cluster/run_dada2.sh
+```
+
+If the SILVA genus training file is present under `reference/`, the job assigns
+taxonomy; otherwise it completes ASV inference without taxonomy. Slurm output
+and error logs are written under `logs/`.
+
 ## 1. Rebuild and review the sample manifest
 
 ```r

@@ -44,6 +44,10 @@ results/
 data/derived/analysis_inputs/**/*.rds
 data/derived/analysis_inputs/**/*.csv.gz
 
+# Slurm logs.
+logs/*.out
+logs/*.err
+
 # Keep taxonomy references local; retain the directory documentation.
 reference/*
 !reference/README.md
