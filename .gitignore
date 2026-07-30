@@ -40,6 +40,10 @@ rsconnect/
 sequences/
 results/
 
+# Large analysis matrices are rebuilt by analysis/data_prep/.
+data/derived/analysis_inputs/**/*.rds
+data/derived/analysis_inputs/**/*.csv.gz
+
 # Keep taxonomy references local; retain the directory documentation.
 reference/*
 !reference/README.md
