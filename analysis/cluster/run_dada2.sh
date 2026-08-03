@@ -5,11 +5,14 @@
 # Submit from the repository root with:
 #   sbatch analysis/cluster/run_dada2.sh
 #
+# Explicitly replace the incomplete default output and start from raw FASTQs:
+#   sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh
+#
 # Override the output directory for a separate attempt with:
 #   sbatch --export=ALL,DADA2_OUTPUT_DIR=results/dada2_2016_attempt2 \
 #     analysis/cluster/run_dada2.sh
 
-#SBATCH --time=24:00:00
+#SBATCH --time=96:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -35,10 +38,25 @@ else
 fi
 
 if [[ -e "${HJA_OUTPUT_PATH}" ]]; then
-  echo "Refusing to reuse an existing DADA2 output path:"
+  if [[ "${DADA2_OVERWRITE:-0}" != "1" ]]; then
+    echo "Refusing to reuse an existing DADA2 output path:"
+    echo "  ${HJA_OUTPUT_PATH}"
+    echo "To replace the incomplete default output, submit with:"
+    echo "  sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh"
+    echo "To preserve it, choose a new path with DADA2_OUTPUT_DIR."
+    exit 2
+  fi
+  HJA_DEFAULT_OUTPUT="${HJA_PROJECT_ROOT}/results/dada2_2016"
+  if [[ "${HJA_OUTPUT_PATH}" != "${HJA_DEFAULT_OUTPUT}" ]]; then
+    echo "For safety, overwrite is permitted only for the default output:"
+    echo "  ${HJA_DEFAULT_OUTPUT}"
+    echo "Resolved requested output:"
+    echo "  ${HJA_OUTPUT_PATH}"
+    exit 2
+  fi
+  echo "Removing the explicitly authorized incomplete DADA2 output:"
   echo "  ${HJA_OUTPUT_PATH}"
-  echo "Choose a new path with DADA2_OUTPUT_DIR."
-  exit 2
+  rm -rf -- "${HJA_OUTPUT_PATH}"
 fi
 
 required_inputs=(

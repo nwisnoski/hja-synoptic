@@ -41,7 +41,7 @@ The Slurm entry point is:
 
 It is configured for the remote repository at
 `/mnt/home/niw7/scratch/GitHub/hja-synoptic` and requests one node, 8 CPUs,
-128 GB RAM, and 24 hours. From that repository:
+128 GB RAM, and 48 hours. From that repository:
 
 ```sh
 mkdir -p logs
@@ -50,7 +50,17 @@ sbatch analysis/cluster/run_dada2.sh
 
 The job assumes a fresh output path. It rebuilds the 2016 manifest, checks that
 all 240 FASTQs and required R packages are present, runs DADA2, and creates the
-QC summaries. It refuses to write into an existing output directory.
+QC summaries. It refuses to write into an existing output directory unless
+replacement of the default output is explicitly authorized:
+
+```sh
+sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh
+```
+
+That command permanently removes only
+`results/dada2_2016` and then starts the complete workflow from the raw FASTQs.
+It does not reuse any intermediate files from the interrupted run. Overwrite is
+deliberately restricted to that exact default output path.
 
 By default the output is `results/dada2_2016`. To preserve a separate attempt:
 
@@ -202,8 +212,10 @@ interpret the numeric label itself as a taxonomic or functional identifier.
 - `sequences/`, `results/`, and taxonomy FASTA files are ignored by Git.
 - Rerunning step 1 replaces only `data/derived/hja_2016_*` mapping tables.
 - Rerunning step 3 replaces only quality PDFs and their sample index.
-- Step 4 stops if a completed `sequence_table_asv.rds` already exists. Pass a
-  new directory with `--output` to preserve and compare analysis attempts.
+- Step 4 stops if `sequence_table_asv.rds` already exists. On the cluster, set
+  `DADA2_OVERWRITE=1` to remove the incomplete default output and rerun the
+  entire workflow, or use a new output directory for a deliberately separate
+  analysis attempt.
 - If filtering or merging is poor, change the configuration and use a new
   output directory so the attempts remain auditable.
 
