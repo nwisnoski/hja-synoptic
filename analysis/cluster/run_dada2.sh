@@ -1,11 +1,16 @@
 #!/bin/bash -l
 
-# Temporarily continue the 2016 HJA DADA2 run from the completed per-run
-# pre-chimera sequence tables. Restore the fresh-output guard after the final
-# outputs are generated and the full R processing block is re-enabled.
+# Fresh 2016 HJA DADA2 run on the Slurm cluster.
 #
 # Submit from the repository root with:
 #   sbatch analysis/cluster/run_dada2.sh
+#
+# Explicitly replace the default output and start from raw FASTQs:
+#   sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh
+#
+# Override the output directory for a separate attempt with:
+#   sbatch --export=ALL,DADA2_OUTPUT_DIR=results/dada2_2016_attempt2 \
+#     analysis/cluster/run_dada2.sh
 
 #SBATCH --time=96:00:00
 #SBATCH --nodes=1
@@ -32,22 +37,27 @@ else
   HJA_OUTPUT_PATH="${HJA_PROJECT_ROOT}/${HJA_OUTPUT_SETTING}"
 fi
 
-if [[ ! -d "${HJA_OUTPUT_PATH}" ]]; then
-  echo "Missing the existing DADA2 output directory containing checkpoints:"
+if [[ -e "${HJA_OUTPUT_PATH}" ]]; then
+  if [[ "${DADA2_OVERWRITE:-0}" != "1" ]]; then
+    echo "Refusing to reuse an existing DADA2 output path:"
+    echo "  ${HJA_OUTPUT_PATH}"
+    echo "To replace the default output, submit with:"
+    echo "  sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh"
+    echo "To preserve it, choose a new path with DADA2_OUTPUT_DIR."
+    exit 2
+  fi
+  HJA_DEFAULT_OUTPUT="${HJA_PROJECT_ROOT}/results/dada2_2016"
+  if [[ "${HJA_OUTPUT_PATH}" != "${HJA_DEFAULT_OUTPUT}" ]]; then
+    echo "For safety, overwrite is permitted only for the default output:"
+    echo "  ${HJA_DEFAULT_OUTPUT}"
+    echo "Resolved requested output:"
+    echo "  ${HJA_OUTPUT_PATH}"
+    exit 2
+  fi
+  echo "Removing the explicitly authorized DADA2 output:"
   echo "  ${HJA_OUTPUT_PATH}"
-  exit 2
+  rm -rf -- "${HJA_OUTPUT_PATH}"
 fi
-for run_id in HJA2016_Plate1 HJA2016_Plate2; do
-  for checkpoint in \
-    sequence_table_prechimera.rds \
-    read_tracking_prechimera.csv; do
-    checkpoint_path="${HJA_OUTPUT_PATH}/runs/${run_id}/${checkpoint}"
-    if [[ ! -f "${checkpoint_path}" ]]; then
-      echo "Missing required checkpoint: ${checkpoint_path}"
-      exit 2
-    fi
-  done
-done
 
 required_inputs=(
   "analysis/build_sample_manifest.R"
@@ -82,8 +92,8 @@ if [[ "${fastq_count}" != "240" ]]; then
 fi
 
 module load R/4.4.0
+mkdir -p "${HJA_OUTPUT_PATH}"
 
-HJA_ENVIRONMENT_FILE="${HJA_OUTPUT_PATH}/cluster_environment_continuation.txt"
 {
   echo "job_id=${SLURM_JOB_ID:-not_available}"
   echo "job_name=${SLURM_JOB_NAME:-not_available}"
@@ -95,7 +105,7 @@ HJA_ENVIRONMENT_FILE="${HJA_OUTPUT_PATH}/cluster_environment_continuation.txt"
   echo "fastq_count=${fastq_count}"
   module list
   R --version
-} > "${HJA_ENVIRONMENT_FILE}" 2>&1
+} > "${HJA_OUTPUT_PATH}/cluster_environment.txt" 2>&1
 
 echo "[$(date --iso-8601=seconds)] Rebuilding the 2016 sample manifest."
 Rscript --vanilla analysis/build_sample_manifest.R \
@@ -131,5 +141,5 @@ Rscript --vanilla analysis/summarize_dada2_results.R \
   --input "${HJA_OUTPUT_PATH}"
 
 echo "end_time=$(date --iso-8601=seconds)" \
-  >> "${HJA_ENVIRONMENT_FILE}"
+  >> "${HJA_OUTPUT_PATH}/cluster_environment.txt"
 echo "[$(date --iso-8601=seconds)] DADA2 cluster workflow complete."

@@ -1,0 +1,26 @@
+job_id=409339
+job_name=hja2016_dada2
+host=lughc7
+start_time=2026-08-03T10:53:30-05:00
+project_root=/mnt/home/niw7/scratch/GitHub/hja-synoptic
+output_path=/mnt/home/niw7/scratch/GitHub/hja-synoptic/results/dada2_2016
+allocated_cpus=9
+fastq_count=240
+
+Currently Loaded Modules:
+  1) autotools      4) hwloc/2.12.0       7) openmpi4/4.1.5
+  2) prun/2.2       5) ucx/1.18.0         8) ohpc
+  3) gnu12/12.2.0   6) libfabric/1.18.0   9) R/4.4.0
+
+ 
+
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under the terms of the
+GNU General Public License versions 2 or 3.
+For more information about these matters see
+https://www.gnu.org/licenses/.
+

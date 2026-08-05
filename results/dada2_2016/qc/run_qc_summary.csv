@@ -1,0 +1,3 @@
+"run_id","samples","input_reads","filtered_reads","merged_reads","nonchim_reads","median_filter_retention","median_merge_retention","median_final_retention","flagged_samples"
+"HJA2016_Plate1",62,12412149,10878648,9240137,9016152,0.868769174557314,0.861009193795907,0.746484090828141,0
+"HJA2016_Plate2",58,9055820,8393532,7382301,7207368,0.926373937479114,0.884150845311128,0.792246051155963,1
