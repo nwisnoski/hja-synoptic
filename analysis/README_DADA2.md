@@ -33,7 +33,7 @@ run_script <- function(path, args = character()) {
 The equivalent `Rscript ...` commands can be pasted directly into the RStudio
 Terminal.
 
-## Fresh cluster run
+## Cluster run
 
 The Slurm entry point is:
 
@@ -41,33 +41,24 @@ The Slurm entry point is:
 
 It is configured for the remote repository at
 `/mnt/home/niw7/scratch/GitHub/hja-synoptic` and requests one node, 8 CPUs,
-128 GB RAM, and 48 hours. From that repository:
+128 GB RAM, and 96 hours. From that repository:
 
 ```sh
 mkdir -p logs
 sbatch analysis/cluster/run_dada2.sh
 ```
 
-The job assumes a fresh output path. It rebuilds the 2016 manifest, checks that
-all 240 FASTQs and required R packages are present, runs DADA2, and creates the
-QC summaries. It refuses to write into an existing output directory unless
-replacement of the default output is explicitly authorized:
+The scripts are temporarily configured to continue from the successfully saved
+Plate 1 and Plate 2 `sequence_table_prechimera.rds` and
+`read_tracking_prechimera.csv` files in `results/dada2_2016/runs/`. The job
+validates and loads those four files, then performs the combined-table merge,
+chimera removal, ASV export, taxonomy assignment, and QC summaries. It does not
+repeat filtering, error learning, or denoising, and it does not delete the
+existing output directory.
 
-```sh
-sbatch --export=ALL,DADA2_OVERWRITE=1 analysis/cluster/run_dada2.sh
-```
-
-That command permanently removes only
-`results/dada2_2016` and then starts the complete workflow from the raw FASTQs.
-It does not reuse any intermediate files from the interrupted run. Overwrite is
-deliberately restricted to that exact default output path.
-
-By default the output is `results/dada2_2016`. To preserve a separate attempt:
-
-```sh
-sbatch --export=ALL,DADA2_OUTPUT_DIR=results/dada2_2016_attempt2 \
-  analysis/cluster/run_dada2.sh
-```
+After the final outputs are generated, restore the full workflow by removing
+the marked temporary checkpoint-loading block in `analysis/dada2_pipeline.R`
+and re-enabling the processing block currently enclosed by `if (FALSE)`.
 
 If the SILVA genus training file is present under `reference/`, the job assigns
 taxonomy; otherwise it completes ASV inference without taxonomy. Slurm output
@@ -212,10 +203,9 @@ interpret the numeric label itself as a taxonomic or functional identifier.
 - `sequences/`, `results/`, and taxonomy FASTA files are ignored by Git.
 - Rerunning step 1 replaces only `data/derived/hja_2016_*` mapping tables.
 - Rerunning step 3 replaces only quality PDFs and their sample index.
-- Step 4 stops if `sequence_table_asv.rds` already exists. On the cluster, set
-  `DADA2_OVERWRITE=1` to remove the incomplete default output and rerun the
-  entire workflow, or use a new output directory for a deliberately separate
-  analysis attempt.
+- Step 4 stops if `sequence_table_asv.rds` already exists. The current
+  temporary cluster configuration expects the two completed pre-chimera
+  checkpoints and continues from them without replacing the output directory.
 - If filtering or merging is poor, change the configuration and use a new
   output directory so the attempts remain auditable.
 
