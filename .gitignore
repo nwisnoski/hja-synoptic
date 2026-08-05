@@ -36,9 +36,15 @@ vignettes/*.pdf
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 
-# Raw reads and generated DADA2 products are local, large, and reproducible.
+# Keep raw reads and regenerable filtered DADA2 FASTQs local. Track the final
+# 2016 DADA2 products, QC, provenance, and compact per-run diagnostics so
+# downstream analyses can be regenerated directly from the repository.
 sequences/
-results/
+results/*
+!results/dada2_2016/
+!results/dada2_2016/**
+results/dada2_2016/runs/*/filtered/
+results/dada2_2016/**/.DS_Store
 
 # Large analysis matrices are rebuilt by analysis/data_prep/.
 data/derived/analysis_inputs/**/*.rds
