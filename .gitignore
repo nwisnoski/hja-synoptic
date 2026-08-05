@@ -40,9 +40,6 @@ rsconnect/
 # 2016 DADA2 products, QC, provenance, and compact per-run diagnostics so
 # downstream analyses can be regenerated directly from the repository.
 sequences/
-results/*
-!results/dada2_2016/
-!results/dada2_2016/**
 results/dada2_2016/runs/*/filtered/
 results/dada2_2016/**/.DS_Store
 
