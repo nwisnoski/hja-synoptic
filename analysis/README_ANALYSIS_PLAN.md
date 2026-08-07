@@ -36,7 +36,7 @@ the explicit in-memory analysis views.
 
 ## 2. Microbial habitat and spatial patterns
 
-Planned script group: `analysis/microbes/`.
+Implemented script group: [`analysis/microbes/`](microbes/README.md).
 
 1. Report sample counts and site overlap before hypothesis tests.
 2. Summarize sequencing depth, ASV richness, and composition by planktonic,
@@ -46,6 +46,13 @@ Planned script group: `analysis/microbes/`.
    valley geomorphology, and spatial coordinates.
 5. Treat repeated site codes as blocks where habitats are compared at a site;
    do not imply a complete three-habitat design.
+
+Run the complete baseline with:
+
+```sh
+Rscript analysis/microbes/01_prepare_diversity.R
+Rscript analysis/microbes/02_basic_diversity.R
+```
 
 The terrestrial soils are a regional comparison set, not paired observations
 from the aquatic sites.
