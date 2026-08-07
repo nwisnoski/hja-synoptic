@@ -42,6 +42,24 @@ read_matrix_csv <- function(path, id_column = 1L) {
   values
 }
 
+read_dada2_asv_rds <- function(sequence_table_path, sequence_map_path) {
+  values <- readRDS(sequence_table_path)
+  sequence_map <- read_analysis_csv(sequence_map_path)
+  required <- c("asv_id", "sequence")
+  if (!all(required %in% names(sequence_map))) {
+    stop("DADA2 sequence map is missing asv_id or sequence.", call. = FALSE)
+  }
+  asv_rows <- match(colnames(values), sequence_map$sequence)
+  if (anyNA(asv_rows)) {
+    stop("Some DADA2 sequence-table columns lack ASV identifiers.", call. = FALSE)
+  }
+  if (anyDuplicated(sequence_map$asv_id[asv_rows])) {
+    stop("DADA2 ASV identifiers are not unique.", call. = FALSE)
+  }
+  colnames(values) <- sequence_map$asv_id[asv_rows]
+  values
+}
+
 assert_file_set <- function(paths, label) {
   missing <- paths[!file.exists(paths)]
   if (length(missing)) {
@@ -113,7 +131,13 @@ load_hja_analysis_data <- function(
     crosswalk = file.path(audit_root, "sediment_site_crosswalk.csv"),
     variable_dictionary = file.path(audit_root, "environment_variable_dictionary.csv"),
     missingness = file.path(audit_root, "environment_missingness_44_sites.csv"),
+    aquatic_missingness = file.path(
+      audit_root, "environment_missingness_aquatic_59_sites.csv"
+    ),
     fticr_filter_log = file.path(audit_root, "fticr_filter_log.csv"),
+    environment_aquatic = file.path(
+      environment_root, "aquatic_59_site_environment.csv"
+    ),
     environment_60 = file.path(environment_root, "fticr_60_site_environment.csv"),
     environment_44 = file.path(environment_root, "sediment_44_environment.csv"),
     fticr_raw = file.path(fticr_root, "fticr_site_by_peak.rds"),
@@ -141,6 +165,10 @@ load_hja_analysis_data <- function(
   crosswalk <- read_analysis_csv(base_paths[["crosswalk"]])
   variable_dictionary <- read_analysis_csv(base_paths[["variable_dictionary"]])
   environmental_missingness <- read_analysis_csv(base_paths[["missingness"]])
+  aquatic_environmental_missingness <- read_analysis_csv(
+    base_paths[["aquatic_missingness"]]
+  )
+  environment_aquatic <- read_analysis_csv(base_paths[["environment_aquatic"]])
   environment_60 <- read_analysis_csv(base_paths[["environment_60"]])
   environment_44 <- read_analysis_csv(base_paths[["environment_44"]])
   fticr_raw <- readRDS(base_paths[["fticr_raw"]])
@@ -150,6 +178,9 @@ load_hja_analysis_data <- function(
   peak_filter_status <- read_analysis_csv(base_paths[["peak_filter_status"]])
 
   assert_unique_ids(crosswalk$site_code, "FT-ICR site crosswalk")
+  assert_unique_ids(
+    environment_aquatic$site_code, "59-site aquatic environmental table"
+  )
   assert_unique_ids(environment_60$site_code, "60-site environmental table")
   assert_unique_ids(environment_44$site_code, "44-site environmental table")
   assert_unique_ids(peak_metadata$peak_id, "FT-ICR peak metadata")
@@ -206,10 +237,13 @@ load_hja_analysis_data <- function(
       source_inventory = inventory,
       site_crosswalk = crosswalk,
       environmental_variables = variable_dictionary,
+      environmental_missingness_aquatic_59 =
+        aquatic_environmental_missingness,
       environmental_missingness_44 = environmental_missingness,
       fticr_filter_log = read_analysis_csv(base_paths[["fticr_filter_log"]])
     ),
     environment = list(
+      aquatic_59_sites = environment_aquatic,
       fticr_60_sites = environment_60,
       sediment_44_sites = environment_44,
       sediment_44_declared_primary_predictors = environment_44[
@@ -256,7 +290,8 @@ load_hja_analysis_data <- function(
   sediment_root <- file.path(input_root, "sediment_multiblock")
   source_root <- file.path(input_root, "source_pools")
   microbial_paths <- c(
-    asv_all = file.path(dada2_root, "asv_count_table.csv"),
+    asv_all = file.path(dada2_root, "sequence_table_asv.rds"),
+    asv_sequences = file.path(dada2_root, "asv_sequences.csv"),
     sample_metadata = file.path(dada2_root, "sample_metadata_and_read_tracking.csv"),
     sediment_metadata = file.path(sediment_root, "sediment_44_sample_metadata.csv"),
     sediment_environment = file.path(sediment_root, "sediment_44_environment.csv"),
@@ -285,7 +320,10 @@ load_hja_analysis_data <- function(
     )
   )
 
-  asv_all <- read_matrix_csv(microbial_paths[["asv_all"]])
+  asv_all <- read_dada2_asv_rds(
+    microbial_paths[["asv_all"]],
+    microbial_paths[["asv_sequences"]]
+  )
   sample_metadata <- read_analysis_csv(microbial_paths[["sample_metadata"]])
   assert_unique_ids(rownames(asv_all), "DADA2 ASV count-table rows")
   assert_unique_ids(sample_metadata$sample_id, "DADA2 sample metadata")
@@ -392,6 +430,10 @@ load_hja_analysis_data <- function(
 
 print.hja_analysis_data <- function(x, ...) {
   cat("HJA analysis data\n")
+  cat(
+    "  Sequenced aquatic sites: ",
+    nrow(x$environment$aquatic_59_sites), "\n", sep = ""
+  )
   cat("  FT-ICR sites: ", nrow(x$environment$fticr_60_sites), "\n", sep = "")
   cat(
     "  Primary FT-ICR features: ",

@@ -15,6 +15,7 @@ filter, and—after DADA2 finishes—the 44-site multiblock alignment.
 ## Main objects
 
 - `hja$environment$fticr_60_sites`
+- `hja$environment$aquatic_59_sites`
 - `hja$environment$sediment_44_sites`
 - `hja$environment$sediment_44_complete_primary_predictors`
 - `hja$environment$sediment_44_incomplete_primary_predictors`

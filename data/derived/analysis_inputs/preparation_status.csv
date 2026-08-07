@@ -2,5 +2,5 @@
 "inventory_and_crosswalk","complete",""
 "environment","complete",""
 "fticr","complete",""
-"sediment_multiblock","waiting_for_dada2","results/dada2_2016/session_info.txt"
-"source_pool_tables","waiting_for_dada2","results/dada2_2016/session_info.txt"
+"sediment_multiblock","complete","results/dada2_2016/session_info.txt"
+"source_pool_tables","complete","results/dada2_2016/session_info.txt"

@@ -47,6 +47,41 @@ results/dada2_2016/**/.DS_Store
 data/derived/analysis_inputs/**/*.rds
 data/derived/analysis_inputs/**/*.csv.gz
 
+# Machine-specific session snapshots are regenerated when workflows run.
+data/derived/analysis_inputs/audit/session_info_*.txt
+results/diversity_2016/audit/session_info_*.txt
+
+# Joined microbial inputs duplicate the tracked DADA2 products and are rebuilt
+# by analysis/microbes/01_prepare_diversity.R. Keep the compact canonical 10K
+# table and analysis metadata trackable.
+results/diversity_2016/derived/diversity_input.rds
+results/diversity_2016/derived/asv_sequence_metadata.csv
+results/diversity_2016/derived/asv_taxonomy.csv
+
+# Outputs from retired exploratory diversity scripts. These remain local but
+# are not part of the current 10K workflow.
+results/diversity_2016/audit/beta_analysis_summary.csv
+results/diversity_2016/audit/predictor_coverage.csv
+results/diversity_2016/audit/transformation_log.csv
+results/diversity_2016/tables/alpha_diversity_by_sample.csv
+results/diversity_2016/tables/alpha_diversity_habitat_summary.csv
+results/diversity_2016/tables/alpha_habitat_models.csv
+results/diversity_2016/tables/alpha_habitat_nonparametric_tests.csv
+results/diversity_2016/tables/alpha_predictor_screen.csv
+results/diversity_2016/tables/alpha_technical_batch_sensitivity.csv
+results/diversity_2016/tables/beta_dispersion_test.csv
+results/diversity_2016/tables/beta_permanova_habitat.csv
+results/diversity_2016/tables/beta_predictor_screen.csv
+results/diversity_2016/tables/beta_technical_batch_sensitivity.csv
+results/diversity_2016/tables/bray_nmds_scores.csv
+results/diversity_2016/tables/bray_pcoa_scores.csv
+results/diversity_2016/tables/deep_sample_richness_loss_at_1000.csv
+results/diversity_2016/tables/pcoa_axis_associations.csv
+results/diversity_2016/tables/pcoa_high_axis2_samples.csv
+results/diversity_2016/tables/rarefaction_depth_by_sample.csv
+results/diversity_2016/tables/rarefaction_depth_summary.csv
+results/diversity_2016/tables/recommended_depth_tiers.csv
+
 # Slurm logs.
 logs/*.out
 logs/*.err
