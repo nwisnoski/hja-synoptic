@@ -54,6 +54,11 @@ Rscript analysis/microbes/01_prepare_diversity.R
 Rscript analysis/microbes/02_basic_diversity.R
 ```
 
+These scripts assume the repository root is the working folder and take no
+command-line arguments. The first writes inspectable flat tables to
+`data/derived/microbial_diversity_2016/`; the second reads those tables and
+writes the diversity results and figures.
+
 The terrestrial soils are a regional comparison set, not paired observations
 from the aquatic sites.
 
@@ -104,9 +109,8 @@ alone.
 
 Every analysis script should:
 
-- read only declared inputs from `data/derived/analysis_inputs/` or completed
-  DADA2 outputs;
+- read only declared inputs using paths relative to the repository root;
 - record all exclusions, transformations, and model formulas in code;
 - write tables and figures to a dedicated generated-results directory;
-- save a small run summary and `sessionInfo()`;
-- fail on duplicate or misaligned sample identifiers.
+- write inspectable flat tables when an intermediate data product is needed;
+- fail when sample identifiers or count tables are misaligned.
