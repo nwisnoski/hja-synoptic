@@ -52,6 +52,8 @@ Run the complete baseline with:
 ```sh
 Rscript analysis/microbes/01_prepare_diversity.R
 Rscript analysis/microbes/02_basic_diversity.R
+Rscript analysis/microbes/03_build_phylogeny.R
+Rscript analysis/microbes/04_network_environment.R
 ```
 
 These scripts assume the repository root is the working folder and take no
@@ -59,8 +61,23 @@ command-line arguments. The first writes inspectable flat tables to
 `data/derived/microbial_diversity_2016/`; the second reads those tables and
 writes the diversity results and figures.
 
+The network/environment script first makes descriptive figures within habitats;
+it does not launch a grid of models or permutation tests. Formal tests should be
+chosen only after inspecting those patterns. Catchment-gradient plots use
+drainage area and distance to the outlet; formal stream-network autocorrelation
+will require a connected reach topology or pairwise along-network distances
+that are not currently in the derived data.
+
 The terrestrial soils are a regional comparison set, not paired observations
 from the aquatic sites.
+
+All microbial analyses retain assigned Bacteria and Archaea and remove
+chloroplast and mitochondrial sequences before depth filtering, rarefaction,
+diversity estimation, or phylogeny construction.
+
+The phylogeny is constructed once from the full screened ASV catalog, not from
+a rarefied table. Each phylogenetic analysis then prunes that master tree to
+the ASVs present in its selected community table.
 
 ## 3. Sediment FT-ICR-MS patterns
 
