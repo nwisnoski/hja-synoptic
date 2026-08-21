@@ -18,6 +18,39 @@ count_table$sample_id <- NULL
 raw_counts <- as.matrix(count_table)
 storage.mode(raw_counts) <- "integer"
 
+# Keep bacterial and archaeal 16S sequences only. SILVA places chloroplast and
+# mitochondrial sequences within Bacteria, so remove those assignments too.
+taxonomy <- read.csv(
+  "results/dada2_2016/asv_taxonomy.csv",
+  stringsAsFactors = FALSE,
+  na.strings = c("", "NA", "NaN")
+)
+taxonomy <- taxonomy[match(colnames(raw_counts), taxonomy$asv_id), ]
+if (anyNA(taxonomy$asv_id)) stop("Some ASVs do not have taxonomy records.")
+
+organelle <- apply(
+  taxonomy[c("Class", "Order", "Family", "Genus")],
+  1,
+  function(x) any(grepl("mitochond|chloroplast", x, ignore.case = TRUE))
+)
+target_asvs <- taxonomy$Kingdom %in% c("Bacteria", "Archaea") & !organelle
+target_counts <- raw_counts[, target_asvs, drop = FALSE]
+
+# Save the full screened ASV catalog for the master phylogeny. This catalog is
+# independent of sample-depth thresholds and rarefaction.
+sequences <- read.csv(
+  "results/dada2_2016/asv_sequences.csv",
+  stringsAsFactors = FALSE
+)
+sequences <- sequences[match(colnames(raw_counts), sequences$asv_id), ]
+if (anyNA(sequences$asv_id) || anyDuplicated(sequences$asv_id)) {
+  stop("Some ASVs are missing sequences or have duplicate sequence records.")
+}
+screened_asvs <- cbind(
+  sequences[target_asvs, ],
+  taxonomy[target_asvs, setdiff(names(taxonomy), "asv_id")]
+)
+
 metadata <- read.csv(
   "results/dada2_2016/sample_metadata_and_read_tracking.csv",
   stringsAsFactors = FALSE,
@@ -97,18 +130,20 @@ metadata <- cbind(metadata, fticr_values)
 metadata$fticr_profile_available <- aquatic &
   !is.na(metadata$detected_primary_features)
 
-# Summarize the raw sequencing results and select the 10K analysis set.
-metadata$sequence_reads <- rowSums(raw_counts)
-metadata$observed_asvs <- specnumber(raw_counts)
-metadata$singleton_asvs <- rowSums(raw_counts == 1)
-metadata$goods_coverage <- 1 - metadata$singleton_asvs / metadata$sequence_reads
-metadata$included_10k <- metadata$sequence_reads >= rarefaction_depth
+# Summarize sequencing after target filtering and select the 10K analysis set.
+metadata$dada2_reads <- rowSums(raw_counts)
+metadata$target_reads <- rowSums(target_counts)
+metadata$non_target_reads_removed <- metadata$dada2_reads - metadata$target_reads
+metadata$observed_asvs <- specnumber(target_counts)
+metadata$singleton_asvs <- rowSums(target_counts == 1)
+metadata$goods_coverage <- 1 - metadata$singleton_asvs / metadata$target_reads
+metadata$included_10k <- metadata$target_reads >= rarefaction_depth
 
-if (!all(metadata$sequence_reads == metadata$nonchim)) {
+if (!all(metadata$dada2_reads == metadata$nonchim)) {
   stop("ASV counts do not agree with the DADA2 read totals.")
 }
 
-unrarefied_counts <- raw_counts[metadata$included_10k, , drop = FALSE]
+unrarefied_counts <- target_counts[metadata$included_10k, , drop = FALSE]
 unrarefied_counts <- unrarefied_counts[
   , colSums(unrarefied_counts) > 0, drop = FALSE
 ]
@@ -144,6 +179,12 @@ write.csv(
   counts_10k_table,
   file.path(output_dir, "asv_counts_10k.csv"),
   row.names = FALSE
+)
+write.csv(
+  screened_asvs,
+  file.path(output_dir, "asv_metadata_screened.csv"),
+  row.names = FALSE,
+  na = ""
 )
 
 print(table(metadata$habitat, metadata$included_10k))

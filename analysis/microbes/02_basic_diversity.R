@@ -64,7 +64,7 @@ alpha <- data.frame(
   sample_id = metadata$sample_id,
   site_code = metadata$site_code,
   habitat = as.character(metadata$habitat),
-  original_reads = metadata$sequence_reads,
+  original_reads = metadata$target_reads,
   q0 = specnumber(counts),
   q1 = exp(diversity(counts, index = "shannon")),
   q2 = diversity(counts, index = "invsimpson")
