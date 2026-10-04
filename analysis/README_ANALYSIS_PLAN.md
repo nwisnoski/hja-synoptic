@@ -81,12 +81,38 @@ the ASVs present in its selected community table.
 
 ## 3. Sediment FT-ICR-MS patterns
 
-Planned script group: `analysis/fticr/`.
+Initial descriptive workflow implemented in [`analysis/fticr/`](fticr/README.md).
+`01_explore_sediment.R` uses presence/absence for molecular analyses and saves
+Jaccard PCoA, van Krevelen, and feature-count figures. Raw intensities are used
+only for detection and QC diagnostics. `02_river_composition.R` now explores
+chemical signatures, drainage associations, replacement/nestedness-resultant
+components, and repeated equal-feature subsampling. See the
+[river-composition report](fticr/README_RIVER_COMPOSITION.md) for results and
+published PNNL/GitHub precedents. Sediment-property models remain planned.
+
+`03_dom_optical_integration.R` now compares EEM peak summaries, fluorescence
+index, and SUVA254 across water compartments and against molecular composition.
+`04_integrated_chemistry_pca.R` supplies FT-ICR property and joint chemistry
+axes with explicit block weighting. See [DOM integration](fticr/README_DOM_INTEGRATION.md).
+
+`05_network_dispersion.R` now uses all 44 sites in three-group dispersion and
+richness-constrained Raup–Crick comparisons (headwater, intermediate, mainstem).
+The equal-feature sensitivity shows an ordered decline in dispersion, but
+complete-profile, chemical-property, replacement, and RC omnibus tests are
+not significant. Balanced draws retain six sites per group on distinct mapped
+segments. See [network dispersion](fticr/README_NETWORK_DISPERSION.md), including
+RC saturation and geographic-extent limitations.
+
+`06_aquatic_microbe_chemistry.R` adds habitat-matched aquatic comparisons:
+20 planktonic communities/surface optics and 31 hyporheic communities/hyporheic
+optics. Contextual sediment FT-ICR matches are 19/30, using fixed property-PC
+projections from the earlier reference. None of four partial RDA models survives
+correction. See [aquatic microbial chemistry](fticr/README_AQUATIC_MICROBE_CHEMISTRY.md).
 
 1. Describe retained-feature counts and total signal, with laboratory standards
    reported separately.
-2. Examine molecular composition using both primary intensities and
-   presence/absence as sensitivity views.
+2. Examine molecular composition using presence/absence only, following the
+   user's decision on 2026-10-03. Retain intensities for detection/QC only.
 3. Relate molecular patterns to landscape position, hydrology, sediment
    organic content and enzyme activities, surface/hyporheic DOM optics, and
    nutrient chemistry.
@@ -99,8 +125,22 @@ analysis scripts.
 
 ## 4. Paired sediment integration
 
-Planned script group: `analysis/integration/`. The primary sample universe is
-the 44 sites with sediment ASVs, an FT-ICR-MS profile, and master-table rows.
+Planned script group: `analysis/integration/`. The initial biogeochemistry
+universe is 44 sites with sediment libraries, molecular profiles, and
+master-table rows. The verified fixed-10K microbial intersection is 33 sites:
+site `43` has a retained microbial sample but no molecular profile. Paired
+analyses must use this intersection rather than assume all 34 retained sediment
+samples have molecular data.
+
+Initial paired dissimilarity, two-axis Procrustes, and one chemical-signature
+model are implemented in `fticr/02_river_composition.R`. They provide no robust
+overall molecular–microbial concordance under the examined comparisons; specific
+taxon/formula associations and variation partitioning remain planned.
+
+The subsequent chemistry-axis partial RDA finds a modest FT-ICR property
+association after conditioning on drainage and detection count;
+adding water optics does not strengthen it. Broad environmental variation
+partitioning and taxon/formula associations remain prospective.
 
 1. Compare whole-community microbial and molecular dissimilarity patterns.
 2. Ask whether shared environmental gradients explain both data blocks.

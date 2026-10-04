@@ -57,3 +57,16 @@ logs/*.err
 # Keep taxonomy references local; retain the directory documentation.
 reference/*
 !reference/README.md
+
+# Reproducible exploratory figures retained locally; selected figures are tracked.
+/figures/2016_dom_fluorescence_index_drainage.pdf
+/figures/2016_dom_optical_molecular_protein_comparison.pdf
+/figures/2016_dom_suva254_drainage.pdf
+/figures/2016_dom_t_c_ratio_drainage.pdf
+/figures/2016_fticr_h_c_drainage.pdf
+/figures/2016_fticr_pcoa_formula_overlay.pdf
+/figures/2016_fticr_protein_like_drainage.pdf
+/figures/2016_fticr_replacement_pcoa.pdf
+/figures/2016_integrated_chemistry_pca.pdf
+/figures/2016_microbial_pca_integrated_chemistry.pdf
+/figures/2016_paired_molecular_microbes_procrustes.pdf

@@ -43,6 +43,9 @@ Dropbox access. New explicit user instructions take precedence.
   code. Never silently rename samples or restructure source worksheets.
 - Ground scientific methods and interpretations in published literature.
   Keep inference proportional to this unbalanced, cross-sectional design.
+- Exclude sequencing plate from ecological predictors and conditioning
+  covariates, per the user's clarification on 2026-10-03. Retain plate only
+  as technical metadata for lab QC and plate-specific DADA2 error learning.
 - Use American English in code, variables, documentation, and commit text.
   For manuscript prose, use the writing guide: precise technical vocabulary,
   calibrated claims, and transitions that express actual logic. Avoid generic
@@ -133,7 +136,9 @@ the 44-site sediment biogeochemistry set first, then join the 34 sediment
 samples retained at 10K; verify the exact overlap rather than assuming it.
 Relate microbial and molecular composition to network position, geomorphology,
 sediment properties, DOM optics/EEMs, nutrients, and enzyme activities using
-small models, Hellinger ordinations, Procrustes, and variation partitioning.
+small models, microbial Hellinger ordinations, molecular presence/absence
+distances, Procrustes, and variation partitioning. Use molecular incidence only
+for ecological analyses; retain raw signal for detection and QC diagnostics.
 Much of this integration is planned rather than implemented.
 
 Catchment iCAMP supplies habitat-assembly context; sediment iCAMP supports the
@@ -183,7 +188,106 @@ and [FEAST, Shenhav et al. 2019](https://doi.org/10.1038/s41592-019-0431-x).
   192 GB, 96 hours. Create `logs/` before submitting because Slurm opens logs
   before the script runs.
 
-### Last recorded handoff: 2026-10-02
+### Local analysis update: 2026-10-03
+
+The local checkout was clean at the start of this session. It lacked the ignored
+molecular matrices; `analysis/data_prep/03_prepare_fticr.R` rebuilt them from the
+raw workbook and reproduced 60 profiles x 4,760 primary features.
+
+The user specified presence/absence only for FT-ICR-MS ecological analyses.
+`analysis/fticr/01_explore_sediment.R` now audits the 44-site subset and saves
+Jaccard PCoA, van Krevelen, and detected-feature-count figures. Raw intensities
+are used only to define detections and for QC diagnostics. The constructed
+binary table is `data/derived/fticr_2016/sediment_44_presence_absence.csv`.
+`analysis/microbes/08_sediment_figures.R` makes sediment Hellinger PCA and Hill
+q = 1 figures from the fixed 10K microbial table. See `analysis/fticr/README.md`
+for methods, captions, diagnostics, and outputs. Tables are in
+`results/fticr_2016/tables/` and `results/diversity_2016/tables/`.
+
+Verified paired overlap is **33**, not 34: sediment site `43` is retained at
+10K but has no molecular profile. Microbial figures use all 34 sediment samples;
+paired analyses refit on the 33-site intersection. Detected molecular
+feature counts correlate with total primary signal (Spearman rho = 0.969), so
+inspect detection effects before interpreting richness.
+
+`analysis/fticr/02_river_composition.R` completed the initial river-composition
+and paired microbial exploration, plus 1,000 uniform draws of 391 detected
+features per site as a sensitivity analysis. Tables are in
+`results/fticr_2016/river_composition/`; seven additional PDFs are in `figures/`.
+See `analysis/fticr/README_RIVER_COMPOSITION.md` for published PNNL methods,
+inspected public analysis code, captions, and limitations. Exact HJA extraction
+and acquisition settings are not established from the related papers.
+
+PCoA1 tracks detection count (rho = −0.984). Drainage explains 5.15% of complete
+Jaccard variation (P = 0.0173), but 2.45% of mean equal-feature dissimilarity
+(P = 0.1339). Chemical signatures do not show a convincing monotonic downstream
+shift; 33-site molecular–microbial Mantel rho is 0.112 (P = 0.1019), and two-axis
+Procrustes correlation is 0.130 (P = 0.8281). These are exploratory results,
+not source or process attribution. All draws succeeded and figures passed
+rendered visual inspection. Sediment-property models and variation partitioning
+remain prospective.
+
+`03_dom_optical_integration.R` now audits surface/hyporheic EEM peaks A/C/T,
+fluorescence index, SUVA254, and secondary slope measures (59/56 water profiles;
+44/42 molecular matches). `04_integrated_chemistry_pca.R` combines three chemistry
+blocks at 42 sites, giving each block equal total variance. All 33 microbial
+matches retain both optical compartments. Reports and captions are in
+`analysis/fticr/README_DOM_INTEGRATION.md`; new tables are in
+`results/fticr_2016/dom_optical_integration/` and `integrated_chemistry/`.
+
+Water optics show a modest aromatic/humic-like versus protein-like contrast,
+but no clear drainage gradient or consistent FI corroboration. The first two
+FT-ICR property PCs explain 9.84% additional microbial variation, or 4.04% after
+adjustment, conditioning on drainage and detection count (P = 0.0103,
+FDR-adjusted P = 0.0309). Joint chemistry PCs explain an adjusted 2.04%
+(P = 0.0912). These are exploratory associations; source percentages and algal
+contributions are not established. Leave-one-microbial-site-out adjusted
+fractions for the FT-ICR model range 3.12–4.81%. Eleven new PDFs were rendered
+and inspected. Full EEM matrices were not located; HIX, BIX, and PARAFAC are
+not reconstructed from peak summaries.
+
+This local checkout lacks `05_unifrac.R`, both iCAMP scripts, the master tree,
+and `analysis/README_SEDIMENT_INTEGRATION.md` named above. Their historical
+completion/status has not been verified from this machine. No remote action,
+commit, or push was performed. The new local work is uncommitted; cluster status
+below remains historical and requires an approved check.
+
+Local network heterogeneity work is complete in
+`analysis/fticr/05_network_dispersion.R`; methods and results are in
+`analysis/fticr/README_NETWORK_DISPERSION.md`. Primary tests include **all 44
+sites**, split into 24 first/second-order headwaters, 14 third/fourth-order
+intermediate sites, and six fifth-order mainstem sites. Six vector figures
+are in `figures/`; tables are in `results/fticr_2016/network_dispersion/`.
+Equal-feature mean Jaccard dispersion declines across groups (omnibus
+BH-adjusted P = 0.003), with headwater/mainstem ratio 1.104. All 1,000 draws
+of six distinct segments per group retain higher headwater and intermediate
+dispersion than mainstem. Complete profiles, replacement, chemical properties,
+and RC do not have significant omnibus tests. RC saturates at -1 in 867/946
+pairs; interpret its limited resolution explicitly. Headwaters span a wider
+geographic extent, so network position is not isolated causally.
+Centerline D is basin-outlet stream distance; prepared
+`site_distance_to_outlet_m` is valley-local. All site coordinates and stream
+orders match the recorded centerline segments. Null outputs reuse only an
+input-checksum/seed/simulation-count/method/tie-rule match. Raw inputs remain
+intact; no commit, push, or remote action was performed.
+
+Aquatic microbial/chemical comparisons are complete in
+`analysis/fticr/06_aquatic_microbe_chemistry.R`; see
+`analysis/fticr/README_AQUATIC_MICROBE_CHEMISTRY.md`. All 20 planktonic samples
+match surface-water optics; all 31 hyporheic samples match hyporheic-water optics.
+The full 60-profile FT-ICR set matches 19/30 of these communities (planktonic
+site 67 and hyporheic site 43 lack FT-ICR). FT-ICR is contextual sediment/site
+chemistry, not a separately measured water-compartment formula inventory.
+The new 60-site binary and property inputs are in `data/derived/fticr_2016/`;
+the original 42-site property-PC reference is preserved and checked numerically.
+Adjusted microbial fractions for matched water optics are 4.30%/0.49%, and
+for contextual FT-ICR PCs 1.74%/-0.14%; none of four partial RDA tests survives
+BH correction. The planktonic FT-ICR hint is sensitive to site removal.
+Results and audits are in `results/fticr_2016/aquatic_microbe_chemistry/`;
+three vector PDFs are in `figures/`. Habitats are analyzed separately, all
+network orders are retained, and rank/within-order/influence checks are exported.
+
+### Historical cluster handoff: 2026-10-02
 
 Catchment job **431635** was submitted on 2026-09-30 and verified running on
 `lughc2` that day. Installed cluster packages were ape 5.8.1, phangorn 2.12.1,
