@@ -1,0 +1,4 @@
+network_group,sites,segments,minimum_features,maximum_features
+Headwater,24,16,391,2638
+Intermediate,14,13,617,1849
+Mainstem,6,6,596,1609
