@@ -287,6 +287,59 @@ Results and audits are in `results/fticr_2016/aquatic_microbe_chemistry/`;
 three vector PDFs are in `figures/`. Habitats are analyzed separately, all
 network orders are retained, and rank/within-order/influence checks are exported.
 
+### Local microbial network dispersion update: 2026-10-04
+
+`analysis/microbes/09_network_dispersion.R` now compares network-group
+dispersion separately for all 34 sediment, 31 hyporheic, and 20 planktonic
+fixed-10K samples. Headwater/intermediate/mainstem counts are 19/10/5,
+15/11/5, and 10/7/3, respectively. Methods, captions, results, and deferred
+beta-NTI design are in `analysis/microbes/README_NETWORK_DISPERSION.md`.
+Seven vector PDFs are in `figures/`; tables and audits are in
+`results/diversity_2016/network_dispersion/`.
+
+Bray-Curtis headwater/mainstem dispersion ratios are 0.927 (sediment),
+1.015 (hyporheic), and 1.118 (planktonic); all three-group tests are
+nonsignificant (BH-adjusted P = 0.751/0.751/0.822). Binary Jaccard
+sensitivities and all secondary contrasts are also nonsignificant.
+One thousand segment-balanced draws per habitat retain higher sediment
+mainstem than headwater dispersion in 97.1% of Bray-Curtis draws, while
+planktonic headwater dispersion is higher in 83.4%. Draw fractions are
+descriptive sensitivities, not P values; planktonic mainstem has only three
+sites. All 6,000 fits succeeded without diagnostic flags. All seven PDFs
+were rendered and visually inspected; input checksums remained unchanged.
+All microbial network positions and orders match their recorded centerlines.
+Beta-NTI remains uncalculated; the master tree is absent locally. No remote
+action or push was performed. The full-site microbial and matched sediment
+dispersion analyses are committed together with their figures and results.
+
+### Matched sediment dispersion update: 2026-10-04
+
+For direct microbial/molecular network comparisons, use
+`analysis/fticr/07_matched_sediment_dispersion.R` and
+`analysis/fticr/README_MATCHED_SEDIMENT_DISPERSION.md`. Both datasets use
+the identical 33-site intersection: 18 headwater, 10 intermediate, and five
+mainstem sites. Site 43 and 11 molecular sites without retained 10K sediment
+samples are excluded explicitly. Four composition views are refitted on this
+subset, with 1,000 shared segment-balanced site selections for every view.
+The established 1,000 molecular feature draws at 391 detections are reused;
+the minimum remains 391 in the matched set. Fixed microbial rarefaction is
+retained. Original full-site outputs are preserved and checksum-verified.
+
+Matched equal-feature molecular headwater/mainstem dispersion ratio is 1.126
+(omnibus raw P = 0.0004, BH-adjusted P = 0.0008 across two primary views).
+Sediment microbial Bray-Curtis ratio is 0.927 (P = 0.5174); complete molecular
+and binary microbial Jaccard sensitivities are nonsignificant. Molecular
+headwater dispersion exceeds mainstem in all shared balanced draws, while
+microbial mainstem exceeds headwater in 97.9%. These are sensitivity fractions,
+not independent tests; contrasting significance does not itself test a
+difference between responses. All 4,000 fits succeeded without diagnostics.
+Three new matched-site PDFs are in `figures/`; tables, aligned distance
+matrices, selections, and audits are in
+`results/fticr_2016/matched_sediment_dispersion/`. All PDFs were rendered and
+visually inspected. No remote action, push, or beta-NTI calculation was
+performed. This matched analysis is committed together with the full-site
+microbial dispersion analysis, figures, results, and documentation.
+
 ### Historical cluster handoff: 2026-10-02
 
 Catchment job **431635** was submitted on 2026-09-30 and verified running on

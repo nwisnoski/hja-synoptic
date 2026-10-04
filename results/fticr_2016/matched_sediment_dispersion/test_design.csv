@@ -1,0 +1,5 @@
+metric,role,label,seed
+molecular_equal_features,primary,Molecular signatures (equal-feature Jaccard),20261015
+microbial_bray,primary,Sediment microbes (Bray-Curtis),20261015
+molecular_jaccard,sensitivity,Molecular signatures (complete Jaccard),20261015
+microbial_jaccard,sensitivity,Sediment microbes (binary Jaccard),20261015

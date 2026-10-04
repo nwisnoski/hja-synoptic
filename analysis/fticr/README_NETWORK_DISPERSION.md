@@ -1,5 +1,9 @@
 # Molecular heterogeneity across the stream network
 
+For comparisons with sediment microbial dispersion, use the separate
+[matched 33-site analysis](README_MATCHED_SEDIMENT_DISPERSION.md). The results
+below retain the full 44-site molecular sampling design.
+
 Run `source(here::here("analysis", "fticr", "05_network_dispersion.R"))` in R or
 Positron. This script uses existing preparation and river-composition outputs;
 it does not change raw data or weight ecological comparisons by FT-ICR signal.

@@ -1,0 +1,7 @@
+habitat,metric,test_id,seed,role
+sediment,bray,1,20261013,primary
+sediment,jaccard,2,20261014,incidence sensitivity
+hyporheic,bray,3,20261015,primary
+hyporheic,jaccard,4,20261016,incidence sensitivity
+planktonic,bray,5,20261017,primary
+planktonic,jaccard,6,20261018,incidence sensitivity

@@ -103,6 +103,14 @@ not significant. Balanced draws retain six sites per group on distinct mapped
 segments. See [network dispersion](fticr/README_NETWORK_DISPERSION.md), including
 RC saturation and geographic-extent limitations.
 
+`07_matched_sediment_dispersion.R` now aligns the molecular and sediment
+microbial network comparison on the same 33 sites and uses identical
+segment-balanced site selections for both datasets. The equal-feature
+molecular pattern persists; microbial group tests remain nonsignificant.
+Use these matched figures for direct manuscript comparisons, retaining the
+full-site results as sampling summaries. See
+[matched sediment dispersion](fticr/README_MATCHED_SEDIMENT_DISPERSION.md).
+
 `06_aquatic_microbe_chemistry.R` adds habitat-matched aquatic comparisons:
 20 planktonic communities/surface optics and 31 hyporheic communities/hyporheic
 optics. Contextual sediment FT-ICR matches are 19/30, using fixed property-PC

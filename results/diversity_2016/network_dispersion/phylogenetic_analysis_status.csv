@@ -1,0 +1,2 @@
+method,calculated,local_master_tree_present,status
+beta-NTI,FALSE,FALSE,"Deferred: verify master tree, phylogenetic signal, null pool and runtime before calculation"

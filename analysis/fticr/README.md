@@ -18,6 +18,7 @@ source(here::here("analysis", "fticr", "03_dom_optical_integration.R"))
 source(here::here("analysis", "fticr", "04_integrated_chemistry_pca.R"))
 source(here::here("analysis", "fticr", "05_network_dispersion.R"))
 source(here::here("analysis", "fticr", "06_aquatic_microbe_chemistry.R"))
+source(here::here("analysis", "fticr", "07_matched_sediment_dispersion.R"))
 source(here::here("analysis", "microbes", "08_sediment_figures.R"))
 ```
 
@@ -47,6 +48,12 @@ set: site `43` has a retained microbial sample but no FT-ICR-MS profile. Eleven
 sites in the 44-site set have no sediment sample retained at 10K. The microbial
 figures use all 34 sediment samples; paired integration must use the audited
 33-site intersection and refit ordinations on that subset.
+
+`07_matched_sediment_dispersion.R` refits molecular and microbial network
+dispersion on those same 33 sites, using identical site selections in balanced
+draws. It preserves the full-site figures and results. See
+[matched sediment dispersion](README_MATCHED_SEDIMENT_DISPERSION.md) for the
+matched comparison, sensitivity design, outputs, and captions.
 
 `results/fticr_2016/tables/site_overlap_audit.csv` records membership and analysis
 roles for all molecular profiles plus the unmatched sediment site. Raw-source

@@ -1,0 +1,13 @@
+metric,role,contrast,difference,ratio,p_value,p_bh
+molecular_equal_features,primary,Headwater-Intermediate,0.020535611953165,1.0330326524995395,0.0253,0.0759
+molecular_equal_features,primary,Headwater-Mainstem,0.07206304474479697,1.1263934191725815,0.0024,0.0144
+molecular_equal_features,primary,Intermediate-Mainstem,0.051527432791631966,1.0903754266112935,0.054,0.108
+microbial_bray,primary,Headwater-Intermediate,0.011342315721045992,1.0259695783378835,0.6947,0.6947
+microbial_bray,primary,Headwater-Mainstem,-0.03513078038794587,0.9272996384935014,0.2423,0.36345
+microbial_bray,primary,Intermediate-Mainstem,-0.04647309610899186,0.9038276164053208,0.3933,0.47195999999999994
+molecular_jaccard,sensitivity,Headwater-Intermediate,0.03249982890531905,1.095366642907982,0.4361,0.91
+molecular_jaccard,sensitivity,Headwater-Mainstem,0.016817897922440928,1.047178978850352,0.7643,0.91
+molecular_jaccard,sensitivity,Intermediate-Mainstem,-0.015681930982878123,0.956007730955088,0.7861,0.91
+microbial_jaccard,sensitivity,Headwater-Intermediate,-0.0018196205437773783,0.9965577333020885,0.91,0.91
+microbial_jaccard,sensitivity,Headwater-Mainstem,-0.019136026856965138,0.9649476807346338,0.3319,0.91
+microbial_jaccard,sensitivity,Intermediate-Mainstem,-0.01731640631318776,0.9682807613536698,0.5903,0.91

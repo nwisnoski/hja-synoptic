@@ -1,0 +1,5 @@
+metric,draws,successful_draws,failed_draws,draws_with_diagnostics,median_ratio,min_ratio,max_ratio,fraction_headwater_greater_mainstem,fraction_intermediate_greater_mainstem,fraction_headwater_greater_intermediate
+microbial_bray,1000,1000,0,0,0.9189768676457769,0.6690205940040824,1.0301506263690716,0.021,0.073,0.543
+microbial_jaccard,1000,1000,0,0,0.9624555323968438,0.7892745946302789,1.0275394862912621,0.052,0.117,0.481
+molecular_equal_features,1000,1000,0,0,1.121564784463422,1.0609245891202408,1.1535144342929602,1,1,0.923
+molecular_jaccard,1000,1000,0,0,1.054943036128027,0.7681656685948742,1.3535773035581942,0.659,0.308,0.759

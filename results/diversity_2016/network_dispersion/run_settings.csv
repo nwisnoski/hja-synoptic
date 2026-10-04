@@ -1,0 +1,2 @@
+n_permutations,n_balanced_draws,target_depth,balanced_runtime_seconds
+9999,1000,10000,34.071

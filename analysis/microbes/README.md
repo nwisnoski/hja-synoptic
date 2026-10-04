@@ -59,3 +59,11 @@ and plots alpha diversity and community scores along drainage area, distance to
 the outlet, planar coordinates, and sediment EEA. It fits no permutation tests
 or environmental models. Inspect these figures before choosing a small number
 of models in the next analysis step.
+
+`09_network_dispersion.R` compares headwater, intermediate, and mainstem
+microbial beta diversity separately for sediment, hyporheic, and planktonic
+communities. It uses the fixed 10K table, Bray-Curtis dispersion, a Jaccard
+incidence sensitivity, and segment-balanced resampling. It runs directly
+with `source(here::here("analysis", "microbes", "09_network_dispersion.R"))`.
+See [README_NETWORK_DISPERSION.md](README_NETWORK_DISPERSION.md) for methods,
+sample counts, results, figure captions, and the deferred beta-NTI design.
