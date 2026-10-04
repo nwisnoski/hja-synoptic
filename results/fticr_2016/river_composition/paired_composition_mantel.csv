@@ -1,0 +1,5 @@
+molecular_view,permutation_scheme,n_sites,mantel_rho,p_value,p_fdr
+jaccard,unrestricted,33,0.11176271671710779,0.1019,0.1301
+jaccard,within_stream_order,33,0.11176271671710779,0.1301,0.1301
+replacement,unrestricted,33,0.11942884740805225,0.06,0.12
+replacement,within_stream_order,33,0.11942884740805225,0.0128,0.0512
