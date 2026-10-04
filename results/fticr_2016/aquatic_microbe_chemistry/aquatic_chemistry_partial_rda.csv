@@ -1,0 +1,5 @@
+habitat,chemistry,model_id,sites,seed,constraints,condition_rank,residual_df,fraction_total_variation,adjusted_unique_fraction,pseudo_f,p_value,p_within_stream_order,used_order_permutations,p_bh_four_models,p_order_bh_four_models
+planktonic,matched_water_optics,1,20,20261012,3,1,15,0.19423727206074867,0.042992605375707815,1.26532810328375,0.1101,0.1014,9999,0.3192,0.3676
+hyporheic,matched_water_optics,2,31,20261013,3,1,26,0.10409457880479515,0.0049051168328211325,1.0477249259450367,0.181,0.2757,9999,0.3192,0.3676
+planktonic,sediment_fticr_properties,3,19,20261014,2,2,14,0.12503837345533064,0.017429396604261127,1.141427864823696,0.2394,0.2692,9999,0.3192,0.3676
+hyporheic,sediment_fticr_properties,4,30,20261015,2,2,25,0.06733924699690957,-0.0013865225118775415,0.9811904779299885,0.5642,0.4278,9999,0.5642,0.4278

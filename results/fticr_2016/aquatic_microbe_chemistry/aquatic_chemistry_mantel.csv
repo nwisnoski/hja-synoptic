@@ -1,0 +1,5 @@
+habitat,signature,sites,spearman_rho,p_value,p_within_stream_order,p_bh_four_tests,p_order_bh_four_tests
+planktonic,Matched water optical distance,20,0.1266228398220683,0.1012,0.0266,0.2024,0.065
+hyporheic,Matched water optical distance,31,-0.02953937851785723,0.5845,0.5858,0.5845,0.5858
+planktonic,Contextual sediment binary Jaccard,19,0.2791993664050688,0.0223,0.0325,0.0892,0.065
+hyporheic,Contextual sediment binary Jaccard,30,0.05879658258690607,0.2805,0.1006,0.374,0.13413333333333333
