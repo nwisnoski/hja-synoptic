@@ -1,0 +1,16 @@
+analysis_column,source_column,source_sample_type,available_sites,source_values_match
+surface_npoc_mg_l,NPOC_mg/L,Stream,59,TRUE
+surface_suva254,SUVA254,Stream,59,TRUE
+surface_spectral_slope_ratio,Spectral_Slope_Ratio,Stream,59,TRUE
+surface_spectral_slope_ratio_275_295_to_300_350,Spectral_Slope_Ratio_(Slope_of_Abs275-295/300-350),Stream,59,TRUE
+surface_eem_peak_a_ru,Intensity_of_EEM_peak_A_(250-450)_Raman_units,Stream,59,TRUE
+surface_eem_peak_c_ru,Intensity_of_EEM_peak_C_(350-450)_Raman_units,Stream,59,TRUE
+surface_eem_peak_t_ru,Intensity_of_EEM_peak_T_(275-340)_Raman_units,Stream,59,TRUE
+surface_fluorescence_index,Fluorescence_Index_(Cory_et_al._2010),Stream,59,TRUE
+hyporheic_npoc_mg_l,NPOC_mg/L,Hyporheic,56,TRUE
+hyporheic_suva254,SUVA254,Hyporheic,56,TRUE
+hyporheic_spectral_slope_ratio,Spectral_Slope_Ratio,Hyporheic,56,TRUE
+hyporheic_eem_peak_a_ru,Intensity_of_EEM_peak_A_(250-450)_Raman_units,Hyporheic,56,TRUE
+hyporheic_eem_peak_c_ru,Intensity_of_EEM_peak_C_(350-450)_Raman_units,Hyporheic,56,TRUE
+hyporheic_eem_peak_t_ru,Intensity_of_EEM_peak_T_(275-340)_Raman_units,Hyporheic,56,TRUE
+hyporheic_fluorescence_index,Fluorescence_Index_(Cory_et_al._2010),Hyporheic,56,TRUE

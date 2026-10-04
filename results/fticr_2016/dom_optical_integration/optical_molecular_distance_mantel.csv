@@ -1,0 +1,7 @@
+compartment,molecular_view,n_sites,rho,p_value,p_fdr
+surface,jaccard,44,0.13600150269743394,0.0662,0.3282
+surface,replacement,44,-0.028399211648413174,0.6519,0.78228
+surface,equal_feature_mean,44,0.049800321782836936,0.3124,0.4686
+hyporheic,jaccard,42,0.08921695610493531,0.1641,0.3282
+hyporheic,replacement,42,-0.10311857865720372,0.8964,0.8964
+hyporheic,equal_feature_mean,42,0.13873657141578702,0.113,0.3282

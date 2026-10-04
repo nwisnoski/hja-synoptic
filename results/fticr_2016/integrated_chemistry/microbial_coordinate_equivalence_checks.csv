@@ -1,0 +1,4 @@
+view,max_inertia_difference,adjusted_r_squared_difference,full_response_columns,coordinate_response_columns
+fticr_only,1.361577517400292e-12,3.2585045772748344e-13,17764,33
+integrated,1.361577517400292e-12,2.673417043297377e-13,17764,33
+integrated_rank,1.361577517400292e-12,2.569056078982612e-13,17764,33
