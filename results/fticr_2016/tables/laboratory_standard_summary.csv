@@ -1,0 +1,3 @@
+qc_sample_id,detected_raw_features,total_raw_intensity,detected_site_filtered_features,total_site_filtered_intensity
+LAB_QC_1,3792,22502762467.299595,1712,16953836458.799915
+LAB_QC_2,3638,21304712213.599613,1702,16220744224.899902

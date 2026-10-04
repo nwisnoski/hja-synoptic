@@ -1,0 +1,2 @@
+method,sites,features_detected_in_subset,axis1_percent,axis2_percent,correction,additive_constant,uncorrected_negative_eigenvalues
+Jaccard incidence PCoA,44,4718,27.26896864278638,10.544011101247543,lingoes,1.1168925430181876e-16,0
