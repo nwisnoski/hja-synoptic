@@ -1,0 +1,2 @@
+"asvs","minimum_sequence_length","median_sequence_length","maximum_sequence_length","alignment_columns","tree_tips","fasttree_model","rooted"
+74782,240,253,394,1262,74782,"GTR+CAT followed by Gamma20 branch-length rescaling",FALSE

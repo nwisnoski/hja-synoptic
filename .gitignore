@@ -78,3 +78,7 @@ reference/*
 /figures/pilot_2016_sediment_bipartite_groups.pdf
 /figures/pilot_2016_sediment_bipartite_association_matrix.png
 /figures/pilot_2016_sediment_bipartite_stable_group.pdf
+
+# Regenerable phylogeny alignment and verbose log; retain the tree and provenance.
+/results/phylogeny_2016/asv_alignment_screened.fasta
+/results/phylogeny_2016/fasttree_screened.log

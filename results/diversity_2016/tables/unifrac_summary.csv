@@ -1,0 +1,2 @@
+"samples","asvs","reads_per_sample","rooting","unweighted_pcoa1_percent","unweighted_pcoa2_percent","weighted_pcoa1_percent","weighted_pcoa2_percent"
+100,49260,10000,"midpoint root applied after pruning to the 10K table",15.2536050277493,12.0229548491933,23.9513295023106,14.8000013079266

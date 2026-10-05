@@ -1,0 +1,24 @@
+job_id=422850
+host=lughc7
+start_time=2026-08-21T17:58:15-05:00
+allocated_cpus=9
+fasttree=/mnt/home/niw7//scratch/shared/bioinformatics/FastTree/FastTree
+
+Currently Loaded Modules:
+  1) autotools      4) ohpc           7) libfabric/1.18.0
+  2) prun/2.2       5) hwloc/2.12.0   8) openmpi4/4.1.5
+  3) gnu12/12.2.0   6) ucx/1.18.0     9) R/4.4.0
+
+ 
+
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under the terms of the
+GNU General Public License versions 2 or 3.
+For more information about these matters see
+https://www.gnu.org/licenses/.
+
+end_time=2026-08-21T22:15:30-05:00
