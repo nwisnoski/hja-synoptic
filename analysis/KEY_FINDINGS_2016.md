@@ -5,8 +5,22 @@ map-based interpretation and proposed follow-up. The sediment integration uses
 33 paired sites; descriptive microbial and molecular coverage is 34 and 44
 sites, respectively. Molecular ecological analyses use incidence, and microbial
 analyses use the fixed 10K ASV table.
+The catchment-wide microbial set contains 100 samples: 34 sediment, 31
+hyporheic, 20 planktonic, and 15 soil. This is a living synthesis; retain the
+evidence links and revise interpretations as new results become available.
 
-## Working integration finding
+## Working synthesis
+
+Habitat-specific community structure and soil-ASV sharing provide the
+catchment-wide context; geographically localized sediment microbial-molecular
+associations provide a focused integration result. Sediments are consistently
+diverse and share much more of the sampled soil inventory than water
+communities. Neither microbial dispersion nor soil-detected fractions show
+a universal downstream decline. Thus, the emerging story concerns habitat
+and spatially patchy sediment signatures rather than a uniform longitudinal
+transition. This framing extends the multilayer dendritic perspective of
+[Wisnoski and Lennon (2021)](https://doi.org/10.1007/s00442-020-04767-w)
+without attributing these patterns to assembly processes that remain untested.
 
 Microbial–molecular correspondence may be concentrated in geographically
 structured subsets of features. Whole-composition comparisons show weak
@@ -18,6 +32,13 @@ confluence. The geographic observation has not yet been quantified with an
 audited branch assignment. This group provides a focused integration result
 and a hypothesis about a shared drainage-associated microbial–molecular
 signature, even where aggregate compositional correspondence is weak.
+
+The new soil results add broad sediment-soil sharing and modest contributing-
+drainage localization, not demonstrated terrestrial recruitment. The soil
+inventories, soil-defined branch signatures, and bipartite core 2 are separate
+analyses; their overlap has not been established. Shared sediment conditions,
+organic-matter inputs, and local geography are candidate explanations for the
+combined patterns, not measured transport or metabolic mechanisms.
 
 ## Key findings so far
 
@@ -55,6 +76,8 @@ signature, even where aggregate compositional correspondence is weak.
    selection-adjusted significance test. The completed network results support
    an exploratory association signature, while specific microbial–chemical
    coupling remains unresolved.
+   The distinction between co-distribution and direct interaction follows
+   [Carr et al. (2019)](https://doi.org/10.1038/s41396-019-0459-z).
    [Null comparisons](../results/fticr_2016/bipartite_networks/null_tests.csv).
 
 4. **Molecular and microbial dispersion have different descriptive network
@@ -64,6 +87,11 @@ signature, even where aggregate compositional correspondence is weak.
    microbial Jaccard sensitivities are nonsignificant. Geography and detection
    remain relevant, and contrasting significance does not itself test a
    difference between the two responses.
+   This is a detection-equalized molecular-convergence signal without a
+   corresponding supported microbial decline, not evidence of chemostasis
+   or a common homogenization mechanism. River-continuum DOM expectations
+   provide context ([Creed et al. 2015](https://doi.org/10.1139/cjfas-2014-0400)),
+   but these sediment spatial data do not measure temporal stabilization.
    [Matched-site dispersion](fticr/README_MATCHED_SEDIMENT_DISPERSION.md)
    and [test results](../results/fticr_2016/matched_sediment_dispersion/three_group_tests.csv).
 
@@ -100,10 +128,60 @@ signature, even where aggregate compositional correspondence is weak.
    [Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499).
    Retain both richness and read rows for now; the paper will likely use one
    row, with the choice deferred.
+   In 1,000 equal-sample inventories, mean sediment soil-detected richness
+   fractions remain nonmonotonic (34.0/29.3/33.0%), compared with
+   60.0/53.5/57.4% in the full inventory. Absolute fractions therefore depend
+   strongly on soil-inventory coverage. The sensitivity balances the original
+   habitat-stage sample counts, not detection completeness or the merged
+   water-versus-sediment pool sizes. These results support habitat-specific
+   sharing, not percentages of communities originating in soils.
    [Methods and captions](microbes/README_SOIL_STREAM_LOCALIZATION.md#earliest-detection-along-network-stages),
    [richness row](../figures/2016_first_detection_richness_percent.pdf),
    [read row](../figures/2016_first_detection_read_percent.pdf), and
    [plotted summaries](../results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv).
+
+8. **Habitat structures microbial composition; sediment richness is not
+   unequivocally highest.** Habitat accounts for 15.6% adjusted variation in
+   the Hellinger community table; the baseline RDA reports an effect size,
+   not a permutation-based significance test. Median observed richness at
+   10K is 2,906 ASVs in planktonic samples, 2,846 in sediment, 1,835 in soil,
+   and 759 in hyporheic samples. Sediment is consistently diverse, whereas
+   planktonic diversity spans a wider range. This replaces a blanket claim
+   that sediment is the richest habitat.
+   [Alpha diversity](../figures/2016_alpha_hill_by_habitat.pdf),
+   [Hellinger PCA](../figures/2016_hellinger_pca_by_habitat.pdf),
+   [Hill numbers](../results/diversity_2016/tables/alpha_hill_numbers.csv), and
+   [habitat effect](../results/diversity_2016/tables/hellinger_rda_habitat_summary.csv).
+
+## Current figure narrative
+
+1. Habitat diversity and Hellinger composition establish the microbial context.
+2. [Soil-sharing versus drainage area](../figures/2016_soil_asv_catchment_pattern.pdf)
+   and the [grouped detection inventory](../figures/2016_first_detection_flowpaths.pdf)
+   show the persistent sediment-water contrast; retain both inventory rows
+   until the manuscript metric is selected.
+3. [Matched-site dispersion](../figures/2016_matched_sediment_dispersion_comparison.pdf)
+   separates the molecular sensitivity result from microbial heterogeneity.
+4. The molecular-property association and
+   [core-2 maps](../figures/2016_sediment_stable_group_catchment_maps.pdf)
+   connect modest aggregate chemistry information to a localized feature set.
+
+The initial soil branch/example/distance figures are archived, not active
+manuscript results. Their tables remain available for refining comparisons.
+
+## Interpretation still to resolve
+
+- Measured enzyme activities, grain size, hydraulic conductivity, nutrients,
+  and other sediment conditions are candidate explanatory variables. The
+  current exploratory EEA plots do not establish a functional bridge between
+  microbial composition and molecular signatures.
+- No completed ecological iCAMP results are available in this checkout. The
+  [rerun notes](README_ICAMP_RERUN.md) record the pilot submission; current
+  remote status has not been checked for this synthesis.
+- Soil sharing does not establish movement direction or viable colonization;
+  core-2 taxa and elemental formulas do not identify a metabolic guild.
+  Prioritize measured sediment context and audited spatial contrasts before
+  inferring specific production, consumption, or source contributions.
 
 ## Priority follow-up: Lookout Mountain drainage and the confluence
 
