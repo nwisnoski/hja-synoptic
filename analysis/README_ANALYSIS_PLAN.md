@@ -54,6 +54,7 @@ Rscript analysis/microbes/01_prepare_diversity.R
 Rscript analysis/microbes/02_basic_diversity.R
 Rscript analysis/microbes/03_build_phylogeny.R
 Rscript analysis/microbes/04_network_environment.R
+Rscript analysis/microbes/05_unifrac.R
 ```
 
 These scripts assume the repository root is the working folder and take no
@@ -78,6 +79,22 @@ diversity estimation, or phylogeny construction.
 The phylogeny is constructed once from the full screened ASV catalog, not from
 a rarefied table. Each phylogenetic analysis then prunes that master tree to
 the ASVs present in its selected community table.
+
+Process inference uses two nested scales: a catchment-wide iCAMP analysis of all
+four habitats and a sediment-only iCAMP analysis of the 34 sediment libraries
+retained at 10,000 reads. An additional aquatic-only run is not planned because
+it would add computation and interpretation without a distinct primary
+question. Submit `analysis/cluster/run_icamp_sediment.sh` for the sediment run
+and `analysis/cluster/run_icamp_catchment.sh` for the catchment run.
+The two-scale design and the linked FT-ICR-MS analysis sequence are documented
+in `analysis/README_SEDIMENT_INTEGRATION.md`.
+
+The catchment job timed out before null randomization. Both scripts now use
+validated castor tip distances and fresh `_castor` output directories. Review
+[the rerun plan](README_ICAMP_RERUN.md) for the pilot before submitting either job.
+For completed microbial network dispersion, use
+`analysis/microbes/09_network_dispersion.R` and its
+[methods report](microbes/README_NETWORK_DISPERSION.md).
 
 ## 3. Sediment FT-ICR-MS patterns
 
@@ -142,13 +159,18 @@ samples have molecular data.
 
 Initial paired dissimilarity, two-axis Procrustes, and one chemical-signature
 model are implemented in `fticr/02_river_composition.R`. They provide no robust
-overall molecular–microbial concordance under the examined comparisons; specific
-taxon/formula associations and variation partitioning remain planned.
+overall molecular–microbial concordance under the examined comparisons.
+Broader environmental variation partitioning remains planned.
 
 The subsequent chemistry-axis partial RDA finds a modest FT-ICR property
 association after conditioning on drainage and detection count;
 adding water optics does not strengthen it. Broad environmental variation
-partitioning and taxon/formula associations remain prospective.
+partitioning remains prospective. Exploratory taxon/formula association
+networks and stable-group distributions are implemented in
+`fticr/08_bipartite_feasibility.R` through `11_stable_group_distribution.R`;
+see [the bipartite report](fticr/README_BIPARTITE_NETWORKS.md) and
+[current findings](KEY_FINDINGS_2016.md). These associations do not establish
+metabolic guilds or molecular production/consumption.
 
 1. Compare whole-community microbial and molecular dissimilarity patterns.
 2. Ask whether shared environmental gradients explain both data blocks.
@@ -168,7 +190,8 @@ sediment–hyporheic sites, and 10 sites with both water sources. Regional soil
 samples can describe a terrestrial source pool but cannot support same-site
 source attribution. These analyses can compare ASV sharing or compositional
 similarity; they should not infer colonization direction from this cross-section
-alone.
+alone. Catchment-wide iCAMP provides habitat-filtering context but is not a
+source-tracking method.
 
 The descriptive soil-sharing maps and catchment-wide soil-ASV plot are now
 implemented. The catchment plot includes small habitat-specific smooths in

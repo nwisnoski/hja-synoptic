@@ -25,13 +25,18 @@ pending refinement; the Python drainage backbone and analysis tables remain.
 Open the repository as the working folder in Positron. The scripts require no
 command-line arguments.
 
-Run these files in order:
+Run the relevant files in order; the completed phylogeny need not be rebuilt.
+The revised iCAMP scripts are ready for a cluster pilot; obtain approval
+before transferring files or submitting jobs. See the rerun plan below.
 
 ```r
 source("analysis/microbes/01_prepare_diversity.R")
 source("analysis/microbes/02_basic_diversity.R")
 source("analysis/microbes/03_build_phylogeny.R")
 source("analysis/microbes/04_network_environment.R")
+source("analysis/microbes/05_unifrac.R")
+# Submit analysis/cluster/run_icamp_sediment.sh for the long iCAMP run.
+# Submit analysis/cluster/run_icamp_catchment.sh for the catchment run.
 ```
 
 `01_prepare_diversity.R` joins the DADA2 samples to the environmental metadata,
@@ -82,6 +87,62 @@ the outlet, planar coordinates, and sediment EEA. It fits no permutation tests
 or environmental models. Inspect these figures before choosing a small number
 of models in the next analysis step.
 
+`05_unifrac.R` prunes the completed master tree to the ASVs in the fixed 10K
+table, roots it at its midpoint in memory, and calculates unweighted and
+weighted UniFrac with `phyloseq`. It writes the distance matrices and PCoA
+scores to `results/diversity_2016/tables/` and the ordination figure to
+`figures/`. The full tree on disk is not changed and is retained for later
+iCAMP analyses. Phylogenetic Hill diversity is not calculated because the
+current implementation is impractically slow for this 75K-tip microbial tree.
+
+The iCAMP analysis uses two scales: all four habitats together to test
+catchment-wide habitat assembly, and sediment alone for the detailed microbial,
+FT-ICR-MS, and sediment-environment integration. An aquatic-only intermediate
+run is intentionally omitted.
+
+`06_icamp_sediment.R` runs the sediment analysis on the 34 sediment libraries
+retained at 10K reads. It uses the pruned sediment tree, 1,000 null
+randomizations, and writes pairwise and bin-level process tables to
+`results/icamp_2016/sediment_castor/`. Run it on the cluster with:
+
+```sh
+mkdir -p logs
+sbatch analysis/cluster/run_icamp_sediment.sh
+```
+
+`07_icamp_catchment.R` uses all 100 libraries in the fixed 10K table and one
+observed catchment-wide metacommunity pool. It uses the same iCAMP settings as
+the sediment run, prunes the tree to the 49,260 observed ASVs, and writes
+results to `results/icamp_2016/catchment_castor/`. The pairwise CSV includes habitat
+labels; `process_importance_by_habitat_pair.csv` gives descriptive mean process
+fractions and pair counts for each within- or across-habitat comparison.
+
+For the final run, submit from the repository root after the approved pilot:
+
+```sh
+mkdir -p logs
+sbatch analysis/cluster/run_icamp_catchment.sh
+```
+
+The existing catchment job requests 32 CPUs, 256 GB RAM, and 96 hours; the
+replacement walltime will be selected after the distance/pilot benchmarks.
+Both analyses
+retain a detailed RDS checkpoint alongside inspectable CSV results. The
+phylogenetic distance matrices are large computational intermediates. Both
+scripts calculate tip distances with castor, validate their disk-backed copy,
+and pass the completed matrix explicitly to iCAMP. A completion record and
+input hashes prevent silent reuse of partial or outdated matrices. No ASVs
+or samples are removed to speed up the distance calculation. Set `test_run`
+near the top of the same R script for a 100-draw pilot with separate outputs;
+leave it `FALSE` for the final 1,000-draw analysis. No command-line arguments
+or separate resume script are required.
+
+See `analysis/README_SEDIMENT_INTEGRATION.md` for the sediment FT-ICR-MS,
+environmental, enzyme, and source-context analysis plan.
+
+`08_sediment_figures.R` summarizes the 34 fixed-10K sediment samples with
+Hellinger PCA and Hill q = 1 figures.
+
 `09_network_dispersion.R` compares headwater, intermediate, and mainstem
 microbial beta diversity separately for sediment, hyporheic, and planktonic
 communities. It uses the fixed 10K table, Bray-Curtis dispersion, a Jaccard
@@ -89,3 +150,8 @@ incidence sensitivity, and segment-balanced resampling. It runs directly
 with `source(here::here("analysis", "microbes", "09_network_dispersion.R"))`.
 See [README_NETWORK_DISPERSION.md](README_NETWORK_DISPERSION.md) for methods,
 sample counts, results, figure captions, and the deferred beta-NTI design.
+
+Catchment iCAMP job 431635 timed out during distance construction. See
+[the rerun plan](../README_ICAMP_RERUN.md) before submitting another job;
+the existing distance matrix is incomplete and must not be reused. The revised
+scripts use fresh `_castor` output folders and leave the original intact.

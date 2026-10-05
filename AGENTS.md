@@ -123,7 +123,10 @@ Soils are a regional comparison pool, not paired aquatic-site observations.
    taxonomic randomization across all taxa. With these settings, the pairwise
    result is `icamp_result$CbMPDiCBraya`. Check package arguments and output
    names before changing versions. Detailed checkpoints and CSV exports go
-   to `results/icamp_2016/sediment/` or `results/icamp_2016/catchment/`.
+   to `results/icamp_2016/sediment_castor/` or `results/icamp_2016/catchment_castor/`.
+   Both scripts now calculate tip distances with castor, validate the disk-backed
+   matrix, and pass its descriptor/tip order explicitly to iCAMP. Never reuse a
+   distance descriptor without its completion record and matching input hashes.
 
 The fixed 10K table currently has 100 samples and 49,260 ASVs: 20 planktonic,
 31 hyporheic, 34 sediment, and 15 soil samples. The sediment subset has 17,946
@@ -132,14 +135,17 @@ ASVs. Recheck these counts if the upstream tables change.
 ## Integration questions
 
 Use `analysis/README_SEDIMENT_INTEGRATION.md` as the detailed design. Analyze
-the 44-site sediment biogeochemistry set first, then join the 34 sediment
-samples retained at 10K; verify the exact overlap rather than assuming it.
+the 44-site sediment biogeochemistry set first, then use the verified 33-site
+intersection with the 34 sediment samples retained at 10K. Site 43 lacks a
+molecular profile; retain it in sediment-only microbial analyses.
 Relate microbial and molecular composition to network position, geomorphology,
 sediment properties, DOM optics/EEMs, nutrients, and enzyme activities using
 small models, microbial Hellinger ordinations, molecular presence/absence
 distances, Procrustes, and variation partitioning. Use molecular incidence only
 for ecological analyses; retain raw signal for detection and QC diagnostics.
-Much of this integration is planned rather than implemented.
+Composition, chemistry, network dispersion, and exploratory bipartite analyses
+are implemented; consult `analysis/KEY_FINDINGS_2016.md` and the dated updates
+below. Broader environmental partitioning and iCAMP integration remain planned.
 
 Catchment iCAMP supplies habitat-assembly context; sediment iCAMP supports the
 FT-ICR comparison. Different null pools answer different questions, so their
@@ -246,7 +252,7 @@ fractions for the FT-ICR model range 3.12–4.81%. Eleven new PDFs were rendered
 and inspected. Full EEM matrices were not located; HIX, BIX, and PARAFAC are
 not reconstructed from peak summaries.
 
-This local checkout lacks `05_unifrac.R`, both iCAMP scripts, the master tree,
+The laptop checkout at that time lacked `05_unifrac.R`, both iCAMP scripts, the master tree,
 and `analysis/README_SEDIMENT_INTEGRATION.md` named above. Their historical
 completion/status has not been verified from this machine. No remote action,
 commit, or push was performed. The new local work is uncommitted; cluster status
@@ -447,6 +453,42 @@ verbose logs need deliberate transfer/version-control decisions. The iCAMP,
 UniFrac, phylogeny, and integration documentation changes were still uncommitted
 at this handoff. Update this dated section after meaningful progress so future
 agents can distinguish completed work from plans and historical job status.
+
+### Reconciled checkout and iCAMP status: 2026-10-05
+
+This checkout now includes the nine laptop commits through `f11cdc6`, with
+the local UniFrac/iCAMP README additions merged and their scripts/tree retained.
+The merge preserves the new presence/absence FT-ICR decision and verified
+33-site paired overlap. Older statements about missing local files describe
+the laptop at the time of its analysis, not this reconciled checkout.
+
+An approved cluster check found job 431635 timed out on October 4 after 96
+hours during phylogenetic-distance construction, before null randomization.
+The saved distance matrix is incomplete and must not be reused merely because
+its descriptor exists. No final 1,000-draw or sediment job has been submitted.
+`analysis/README_ICAMP_RERUN.md` records the implemented faster tip-distance
+calculation and full-community, 100-draw cluster pilot. Local castor
+benchmarks on 500/2,000/5,000-tip subsets matched ape and pruning checks to
+numerical precision. Both scripts passed small local end-to-end iCAMP/export
+diagnostics, including cache reuse and incomplete-cache rejection (iCAMP 1.8.6).
+The cluster pilot still needs to validate iCAMP 1.9.1 and measure full-size
+runtime. Fresh `_castor`
+directories leave the failed outputs intact; `test_run <- FALSE` is the default
+in both local repository R scripts. The final 1,000-draw job is still pending.
+An approved remote check and installation on October 5 confirmed castor 1.8.7,
+here 1.0.2, and iCAMP 1.9.1 under cluster R 4.4. Catchment pilot copies were
+transferred with approval on October 5 (100 null draws, normal partition,
+32 CPUs, 256 GB, 24 hours). Rsync completed successfully; original cluster
+scripts have suffix `.before-castor-pilot-20261005-8zLKhk`. The local repository
+scripts retain the final-run defaults. Sediment scripts have not been transferred.
+Pilot job **432023** was submitted with approval on October 5. Its current
+queue/run state has not been checked; do not claim it is running or complete
+without an approved status check. Logs are `logs/hja2016_icamp_pilot-432023.out`
+and `.err`; outputs belong in `results/icamp_2016/catchment_castor/pilot/`.
+Review pilot timing, memory, distance checks, binning, and exports before
+proposing final-run resources. Do not modify the active cluster scripts.
+Obtain approval before each remote action and before any commit or push of
+these local changes.
 
 ### Local soil drainage localization update: 2026-10-05
 
