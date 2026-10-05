@@ -1,0 +1,13 @@
+detection_threshold,habitat,pool,eligible_asvs,asvs_detected_anywhere,more_detection_contributing,equal_detection,more_detection_noncontributing,more_abundant_contributing,median_detection_difference
+1,hyporheic,soil_detected,7526,1852,755,5690,1081,636,0
+1,hyporheic,soil_enriched,2321,219,103,2102,116,90,0
+1,planktonic,soil_detected,3034,475,131,2561,342,113,0
+1,planktonic,soil_enriched,1395,114,32,1281,82,29,0
+1,sediment,soil_detected,7512,4035,1611,3614,2287,1562,0
+1,sediment,soil_enriched,2317,1210,510,1127,680,479,0
+3,hyporheic,soil_detected,3442,831,342,2619,481,342,0
+3,hyporheic,soil_enriched,1784,123,47,1662,75,66,0
+3,planktonic,soil_detected,1720,184,40,1536,144,67,0
+3,planktonic,soil_enriched,1075,41,9,1034,32,24,0
+3,sediment,soil_detected,3440,1475,573,2007,860,876,0
+3,sediment,soil_enriched,1785,432,189,1356,240,410,0

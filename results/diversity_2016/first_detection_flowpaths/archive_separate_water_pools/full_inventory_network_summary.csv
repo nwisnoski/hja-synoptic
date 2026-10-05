@@ -1,0 +1,46 @@
+draw_id,habitat,network_group,category,samples,richness_percent,read_percent
+0,hyporheic,Headwater,Hyporheic first,15,41.7971024416148,37.758
+0,hyporheic,Headwater,Multiple aquatic habitats,15,26.036899996734522,27.552666666666667
+0,hyporheic,Headwater,Planktonic first,15,0,0
+0,hyporheic,Headwater,Sediment first,15,0,0
+0,hyporheic,Headwater,Soil,15,32.16599756165068,34.68933333333333
+0,hyporheic,Intermediate,Hyporheic first,11,34.14794604673699,28.68181818181818
+0,hyporheic,Intermediate,Multiple aquatic habitats,11,22.78083261798811,30.925454545454546
+0,hyporheic,Intermediate,Planktonic first,11,10.863772969741376,10.266363636363636
+0,hyporheic,Intermediate,Sediment first,11,5.093155520326479,4.121818181818182
+0,hyporheic,Intermediate,Soil,11,27.114292845207046,26.004545454545454
+0,hyporheic,Mainstem,Hyporheic first,5,40.846511567874586,38.442
+0,hyporheic,Mainstem,Multiple aquatic habitats,5,15.971128398596754,19.636
+0,hyporheic,Mainstem,Planktonic first,5,1.2611655423161332,1.732
+0,hyporheic,Mainstem,Sediment first,5,7.75511620670701,6.51
+0,hyporheic,Mainstem,Soil,5,34.16607828450552,33.68
+0,planktonic,Headwater,Hyporheic first,10,0,0
+0,planktonic,Headwater,Multiple aquatic habitats,10,33.649436032020134,40.388
+0,planktonic,Headwater,Planktonic first,10,47.19681252319266,39.581
+0,planktonic,Headwater,Sediment first,10,0,0
+0,planktonic,Headwater,Soil,10,19.15375144478721,20.031
+0,planktonic,Intermediate,Hyporheic first,7,3.639105946240438,2.4414285714285713
+0,planktonic,Intermediate,Multiple aquatic habitats,7,33.607941995913706,45.97714285714286
+0,planktonic,Intermediate,Planktonic first,7,37.01398117871977,27.032857142857143
+0,planktonic,Intermediate,Sediment first,7,3.890060614329407,3.738571428571429
+0,planktonic,Intermediate,Soil,7,21.848910264796682,20.810000000000002
+0,planktonic,Mainstem,Hyporheic first,3,5.7536435701629856,4.67
+0,planktonic,Mainstem,Multiple aquatic habitats,3,39.17734491203897,52.95333333333333
+0,planktonic,Mainstem,Planktonic first,3,38.076047179837545,26.60333333333333
+0,planktonic,Mainstem,Sediment first,3,3.1079973456687364,2.2666666666666666
+0,planktonic,Mainstem,Soil,3,13.884966992291766,13.506666666666668
+0,sediment,Headwater,Hyporheic first,19,0,0
+0,sediment,Headwater,Multiple aquatic habitats,19,15.07264800843824,12.892631578947368
+0,sediment,Headwater,Planktonic first,19,0,0
+0,sediment,Headwater,Sediment first,19,24.907414892145617,14.844736842105263
+0,sediment,Headwater,Soil,19,60.01993709941614,72.26263157894736
+0,sediment,Intermediate,Hyporheic first,10,0.717971658521412,0.348
+0,sediment,Intermediate,Multiple aquatic habitats,10,14.405793638024658,12.349
+0,sediment,Intermediate,Planktonic first,10,0.2953808742489872,0.129
+0,sediment,Intermediate,Sediment first,10,31.11222328396987,19.436
+0,sediment,Intermediate,Soil,10,53.46863054523507,67.738
+0,sediment,Mainstem,Hyporheic first,5,0.7304891165512347,0.28800000000000003
+0,sediment,Mainstem,Multiple aquatic habitats,5,14.638464100083066,13.464
+0,sediment,Mainstem,Planktonic first,5,0.386912444631368,0.148
+0,sediment,Mainstem,Sediment first,5,26.86701371862429,16.2
+0,sediment,Mainstem,Soil,5,57.37712062011004,69.9

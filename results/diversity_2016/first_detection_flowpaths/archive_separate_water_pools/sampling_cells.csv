@@ -1,0 +1,11 @@
+cell,habitat,network_group,samples,segments
+hyporheic_Headwater,hyporheic,Headwater,15,12
+hyporheic_Intermediate,hyporheic,Intermediate,11,10
+hyporheic_Mainstem,hyporheic,Mainstem,5,5
+planktonic_Headwater,planktonic,Headwater,10,7
+planktonic_Intermediate,planktonic,Intermediate,7,7
+planktonic_Mainstem,planktonic,Mainstem,3,3
+sediment_Headwater,sediment,Headwater,19,13
+sediment_Intermediate,sediment,Intermediate,10,9
+sediment_Mainstem,sediment,Mainstem,5,5
+soil_Soil,soil,Soil,15,0

@@ -1,0 +1,7 @@
+habitat,pool,samples,soil_pool_asvs,soil_pool_asvs_detected,median_read_percent
+planktonic,soil_detected,20,13969,1959,17.4
+planktonic,soil_enriched,20,3479,254,0.7
+hyporheic,soil_detected,31,13969,3022,33.07
+hyporheic,soil_enriched,31,3479,324,1.31
+sediment,soil_detected,34,13969,6070,70.25999999999999
+sediment,soil_enriched,34,3479,1534,5.355

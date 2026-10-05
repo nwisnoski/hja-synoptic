@@ -1,0 +1,341 @@
+sample_id,site_code,habitat,network_group,cell,category,asvs_detected,observed_asvs,richness_percent,reads,read_percent
+hja2016_001,50,planktonic,Mainstem,planktonic_Mainstem,Soil,87,327,26.605504587155963,2317,23.17
+hja2016_008,WS3-1,hyporheic,Headwater,hyporheic_Headwater,Soil,299,792,37.75252525252525,4298,42.98
+hja2016_009,60,hyporheic,Headwater,hyporheic_Headwater,Soil,263,726,36.225895316804404,4196,41.96
+hja2016_010,164,planktonic,Intermediate,planktonic_Intermediate,Soil,60,247,24.291497975708502,2298,22.98
+hja2016_011,WS1-6,planktonic,Headwater,planktonic_Headwater,Soil,488,1358,35.93519882179676,4058,40.58
+hja2016_013,WS1-4,planktonic,Headwater,planktonic_Headwater,Soil,293,898,32.628062360801785,3469,34.69
+hja2016_014,WS1-6,hyporheic,Headwater,hyporheic_Headwater,Soil,217,751,28.8948069241012,3307,33.07
+hja2016_015,47,hyporheic,Intermediate,hyporheic_Intermediate,Soil,142,409,34.71882640586797,3438,34.38
+hja2016_016,74,hyporheic,Headwater,hyporheic_Headwater,Soil,78,267,29.213483146067414,5544,55.44
+hja2016_018,WS1-5,hyporheic,Headwater,hyporheic_Headwater,Soil,316,1168,27.054794520547944,1957,19.57
+hja2016_019,155,hyporheic,Headwater,hyporheic_Headwater,Soil,282,660,42.72727272727273,4315,43.15
+hja2016_020,WS1-2,hyporheic,Headwater,hyporheic_Headwater,Soil,559,1614,34.63444857496902,4022,40.22
+hja2016_021,156,hyporheic,Mainstem,hyporheic_Mainstem,Soil,131,360,36.388888888888886,3211,32.11
+hja2016_027,WS3-6,planktonic,Headwater,planktonic_Headwater,Soil,238,828,28.743961352657006,2937,29.37
+hja2016_065,68,hyporheic,Mainstem,hyporheic_Mainstem,Soil,366,898,40.75723830734967,4160,41.6
+hja2016_066,49,hyporheic,Mainstem,hyporheic_Mainstem,Soil,396,1335,29.662921348314608,3396,33.96
+hja2016_070,56,hyporheic,Intermediate,hyporheic_Intermediate,Soil,172,654,26.299694189602448,2409,24.09
+hja2016_071,164,hyporheic,Intermediate,hyporheic_Intermediate,Soil,562,1522,36.925098554533506,4086,40.86
+hja2016_075,260,hyporheic,Intermediate,hyporheic_Intermediate,Soil,266,688,38.66279069767442,4139,41.39
+hja2016_078,CC-1,hyporheic,Headwater,hyporheic_Headwater,Soil,258,759,33.99209486166008,3468,34.68
+hja2016_079,64,hyporheic,Headwater,hyporheic_Headwater,Soil,328,855,38.36257309941521,3810,38.1
+hja2016_084,177,hyporheic,Headwater,hyporheic_Headwater,Soil,232,680,34.11764705882353,3757,37.57
+hja2016_127,60,sediment,Headwater,sediment_Headwater,Soil,1508,2860,52.72727272727273,6657,66.57
+hja2016_129,72,sediment,Intermediate,sediment_Intermediate,Soil,1712,3137,54.57443417277654,7024,70.24
+hja2016_131,74,sediment,Headwater,sediment_Headwater,Soil,1896,3715,51.03633916554509,6883,68.83
+hja2016_132,84,sediment,Intermediate,sediment_Intermediate,Soil,1953,3372,57.91814946619217,7520,75.2
+hja2016_133,161,sediment,Mainstem,sediment_Mainstem,Soil,1830,2693,67.95395469736353,7885,78.85
+hja2016_135,169,sediment,Headwater,sediment_Headwater,Soil,1790,2780,64.38848920863309,7912,79.12
+hja2016_136,190,sediment,Headwater,sediment_Headwater,Soil,1479,2739,53.997809419496164,6702,67.02
+hja2016_139,CC-2,sediment,Headwater,sediment_Headwater,Soil,1946,3154,61.699429296131896,7672,76.72
+hja2016_140,CC-3,sediment,Headwater,sediment_Headwater,Soil,1479,2845,51.98594024604569,6651,66.51
+hja2016_141,CC-4,sediment,Headwater,sediment_Headwater,Soil,1447,2638,54.852160727824106,6758,67.58
+hja2016_142,KC-1,sediment,Intermediate,sediment_Intermediate,Soil,1439,3069,46.888237210817856,6264,62.64
+hja2016_144,KC-3,sediment,Intermediate,sediment_Intermediate,Soil,1329,2875,46.22608695652174,6377,63.77
+hja2016_145,155,sediment,Headwater,sediment_Headwater,Soil,1749,3229,54.16537627748529,7023,70.23
+hja2016_146,156,sediment,Mainstem,sediment_Mainstem,Soil,1359,2773,49.00829426613776,6455,64.55
+hja2016_147,163,sediment,Mainstem,sediment_Mainstem,Soil,1964,2882,68.14712005551701,7831,78.31
+hja2016_148,165,sediment,Headwater,sediment_Headwater,Soil,1909,3066,62.263535551206786,7700,77
+hja2016_150,53,sediment,Intermediate,sediment_Intermediate,Soil,1557,3037,51.26769838656569,6668,66.68
+hja2016_151,64,sediment,Headwater,sediment_Headwater,Soil,2212,3661,60.4206500956023,7366,73.66
+hja2016_152,66,sediment,Intermediate,sediment_Intermediate,Soil,1443,3029,47.63948497854077,6128,61.28
+hja2016_155,82,sediment,Headwater,sediment_Headwater,Soil,1932,3128,61.76470588235294,7589,75.89
+hja2016_157,43,sediment,Headwater,sediment_Headwater,Soil,1581,2846,55.551651440618414,6918,69.18
+hja2016_159,49,sediment,Mainstem,sediment_Mainstem,Soil,1579,2842,55.559465165376494,7112,71.12
+hja2016_160,50,sediment,Mainstem,sediment_Mainstem,Soil,1130,2445,46.21676891615542,5667,56.67
+hja2016_031,161,hyporheic,Mainstem,hyporheic_Mainstem,Soil,82,235,34.8936170212766,2781,27.81
+hja2016_032,54,hyporheic,Intermediate,hyporheic_Intermediate,Soil,136,377,36.07427055702918,3271,32.71
+hja2016_035,192,hyporheic,Headwater,hyporheic_Headwater,Soil,148,551,26.860254083484573,2823,28.23
+hja2016_037,43,hyporheic,Headwater,hyporheic_Headwater,Soil,117,376,31.117021276595743,3224,32.24
+hja2016_042,165,planktonic,Headwater,planktonic_Headwater,Soil,72,335,21.492537313432837,1962,19.62
+hja2016_043,KC-2,hyporheic,Intermediate,hyporheic_Intermediate,Soil,179,413,43.34140435835351,4355,43.55
+hja2016_049,67,planktonic,Intermediate,planktonic_Intermediate,Soil,69,215,32.093023255813954,2858,28.58
+hja2016_050,165,hyporheic,Headwater,hyporheic_Headwater,Soil,329,831,39.59085439229843,3494,34.94
+hja2016_052,163,hyporheic,Mainstem,hyporheic_Mainstem,Soil,374,1284,29.12772585669782,3292,32.92
+hja2016_056,KC-1,hyporheic,Intermediate,hyporheic_Intermediate,Soil,402,996,40.36144578313253,2733,27.33
+hja2016_057,71,hyporheic,Intermediate,hyporheic_Intermediate,Soil,113,456,24.780701754385966,2114,21.14
+hja2016_059,KC-2,planktonic,Intermediate,planktonic_Intermediate,Soil,371,707,52.475247524752476,4195,41.95
+hja2016_062,WS3-3,hyporheic,Headwater,hyporheic_Headwater,Soil,507,1485,34.14141414141414,3020,30.2
+hja2016_064,WS3-4,planktonic,Headwater,planktonic_Headwater,Soil,215,529,40.64272211720227,3864,38.64
+hja2016_099,162,planktonic,Mainstem,planktonic_Mainstem,Soil,226,3405,6.6372980910425845,816,8.16
+hja2016_100,64,planktonic,Headwater,planktonic_Headwater,Soil,150,2970,5.05050505050505,592,5.92
+hja2016_101,58,planktonic,Intermediate,planktonic_Intermediate,Soil,238,3234,7.359307359307359,855,8.55
+hja2016_102,73,hyporheic,Headwater,hyporheic_Headwater,Soil,224,2870,7.804878048780488,799,7.99
+hja2016_103,260,planktonic,Intermediate,planktonic_Intermediate,Soil,476,3072,15.494791666666666,1795,17.95
+hja2016_105,178,planktonic,Headwater,planktonic_Headwater,Soil,236,2969,7.9488043112158975,877,8.77
+hja2016_106,170,planktonic,Headwater,planktonic_Headwater,Soil,130,3434,3.7856726849155504,443,4.43
+hja2016_107,57,hyporheic,Intermediate,hyporheic_Intermediate,Soil,299,4255,7.027027027027027,832,8.32
+hja2016_109,169,planktonic,Headwater,planktonic_Headwater,Soil,198,2842,6.9669247009148485,902,9.02
+hja2016_110,76,hyporheic,Intermediate,hyporheic_Intermediate,Soil,196,2999,6.535511837279093,839,8.39
+hja2016_111,160,planktonic,Mainstem,planktonic_Mainstem,Soil,267,3174,8.41209829867675,919,9.19
+hja2016_114,WS1-5,planktonic,Headwater,planktonic_Headwater,Soil,284,3404,8.343125734430082,927,9.27
+hja2016_116,53,planktonic,Intermediate,planktonic_Intermediate,Soil,278,3531,7.873123760974228,881,8.81
+hja2016_119,56,planktonic,Intermediate,planktonic_Intermediate,Soil,525,3931,13.355380310353599,1685,16.85
+hja2016_121,84,hyporheic,Intermediate,hyporheic_Intermediate,Soil,120,3399,3.5304501323918798,389,3.89
+hja2016_122,45,sediment,Intermediate,sediment_Intermediate,Soil,1715,2808,61.07549857549858,7538,75.38
+hja2016_125,56,sediment,Intermediate,sediment_Intermediate,Soil,1715,2731,62.79751006957159,7601,76.01
+hja2016_164,260,sediment,Intermediate,sediment_Intermediate,Soil,1720,2844,60.47819971870605,7028,70.28
+hja2016_166,57,sediment,Intermediate,sediment_Intermediate,Soil,1239,2704,45.821005917159766,5590,55.9
+hja2016_167,WS3-1,sediment,Headwater,sediment_Headwater,Soil,1868,2518,74.18586179507545,8142,81.42
+hja2016_169,WS3-2,sediment,Headwater,sediment_Headwater,Soil,1966,2677,73.44041837878221,8187,81.87
+hja2016_170,WS3-3,sediment,Headwater,sediment_Headwater,Soil,1837,2875,63.89565217391304,6986,69.86
+hja2016_177,WS1-3,sediment,Headwater,sediment_Headwater,Soil,1832,2693,68.02822131451913,8059,80.59
+hja2016_179,WS1-5,sediment,Headwater,sediment_Headwater,Soil,1385,2287,60.559685177087886,7115,71.15
+hja2016_180,WS1-6,sediment,Headwater,sediment_Headwater,Soil,1305,2551,51.15640925127401,5914,59.14
+hja2016_181,177,sediment,Headwater,sediment_Headwater,Soil,1904,2963,64.2591967600405,7065,70.65
+hja2016_001,50,planktonic,Mainstem,planktonic_Mainstem,Sediment,29,327,8.868501529051988,662,6.62
+hja2016_008,WS3-1,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,792,0,0,0
+hja2016_009,60,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,726,0,0,0
+hja2016_010,164,planktonic,Intermediate,planktonic_Intermediate,Sediment,17,247,6.882591093117409,761,7.61
+hja2016_011,WS1-6,planktonic,Headwater,planktonic_Headwater,Sediment,0,1358,0,0,0
+hja2016_013,WS1-4,planktonic,Headwater,planktonic_Headwater,Sediment,0,898,0,0,0
+hja2016_014,WS1-6,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,751,0,0,0
+hja2016_015,47,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,27,409,6.601466992665037,542,5.42
+hja2016_016,74,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,267,0,0,0
+hja2016_018,WS1-5,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,1168,0,0,0
+hja2016_019,155,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,660,0,0,0
+hja2016_020,WS1-2,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,1614,0,0,0
+hja2016_021,156,hyporheic,Mainstem,hyporheic_Mainstem,Sediment,44,360,12.222222222222221,1147,11.47
+hja2016_027,WS3-6,planktonic,Headwater,planktonic_Headwater,Sediment,0,828,0,0,0
+hja2016_065,68,hyporheic,Mainstem,hyporheic_Mainstem,Sediment,81,898,9.020044543429844,757,7.57
+hja2016_066,49,hyporheic,Mainstem,hyporheic_Mainstem,Sediment,90,1335,6.741573033707865,588,5.88
+hja2016_070,56,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,29,654,4.434250764525994,424,4.24
+hja2016_071,164,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,135,1522,8.869908015768726,687,6.87
+hja2016_075,260,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,64,688,9.30232558139535,776,7.76
+hja2016_078,CC-1,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,759,0,0,0
+hja2016_079,64,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,855,0,0,0
+hja2016_084,177,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,680,0,0,0
+hja2016_127,60,sediment,Headwater,sediment_Headwater,Sediment,820,2860,28.67132867132867,1680,16.8
+hja2016_129,72,sediment,Intermediate,sediment_Intermediate,Sediment,892,3137,28.43481032833918,1669,16.69
+hja2016_131,74,sediment,Headwater,sediment_Headwater,Sediment,1254,3715,33.755047106325705,1931,19.31
+hja2016_132,84,sediment,Intermediate,sediment_Intermediate,Sediment,1039,3372,30.812574139976274,1772,17.72
+hja2016_133,161,sediment,Mainstem,sediment_Mainstem,Sediment,554,2693,20.57185295209803,1204,12.04
+hja2016_135,169,sediment,Headwater,sediment_Headwater,Sediment,673,2780,24.20863309352518,1434,14.34
+hja2016_136,190,sediment,Headwater,sediment_Headwater,Sediment,908,2739,33.15078495801387,2226,22.26
+hja2016_139,CC-2,sediment,Headwater,sediment_Headwater,Sediment,675,3154,21.401395053899808,1129,11.29
+hja2016_140,CC-3,sediment,Headwater,sediment_Headwater,Sediment,922,2845,32.40773286467487,2013,20.13
+hja2016_141,CC-4,sediment,Headwater,sediment_Headwater,Sediment,858,2638,32.52463987869598,2134,21.34
+hja2016_142,KC-1,sediment,Intermediate,sediment_Intermediate,Sediment,1203,3069,39.19843597262952,2534,25.34
+hja2016_144,KC-3,sediment,Intermediate,sediment_Intermediate,Sediment,1151,2875,40.03478260869565,2510,25.1
+hja2016_145,155,sediment,Headwater,sediment_Headwater,Sediment,959,3229,29.69959739857541,1715,17.15
+hja2016_146,156,sediment,Mainstem,sediment_Mainstem,Sediment,970,2773,34.980165885322755,2191,21.91
+hja2016_147,163,sediment,Mainstem,sediment_Mainstem,Sediment,581,2882,20.159611380985428,1212,12.12
+hja2016_148,165,sediment,Headwater,sediment_Headwater,Sediment,654,3066,21.3307240704501,1140,11.4
+hja2016_150,53,sediment,Intermediate,sediment_Intermediate,Sediment,982,3037,32.33454066513006,1989,19.89
+hja2016_151,64,sediment,Headwater,sediment_Headwater,Sediment,1077,3661,29.418191750887736,1765,17.65
+hja2016_152,66,sediment,Intermediate,sediment_Intermediate,Sediment,1061,3029,35.028062066688676,2208,22.08
+hja2016_155,82,sediment,Headwater,sediment_Headwater,Sediment,632,3128,20.20460358056266,1090,10.9
+hja2016_157,43,sediment,Headwater,sediment_Headwater,Sediment,717,2846,25.193253689388616,1370,13.7
+hja2016_159,49,sediment,Mainstem,sediment_Mainstem,Sediment,785,2842,27.621393384940184,1651,16.51
+hja2016_160,50,sediment,Mainstem,sediment_Mainstem,Sediment,758,2445,31.00204498977505,1842,18.42
+hja2016_031,161,hyporheic,Mainstem,hyporheic_Mainstem,Sediment,12,235,5.1063829787234045,295,2.95
+hja2016_032,54,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,27,377,7.161803713527852,827,8.27
+hja2016_035,192,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,551,0,0,0
+hja2016_037,43,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,376,0,0,0
+hja2016_042,165,planktonic,Headwater,planktonic_Headwater,Sediment,0,335,0,0,0
+hja2016_043,KC-2,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,34,413,8.232445520581114,638,6.38
+hja2016_049,67,planktonic,Intermediate,planktonic_Intermediate,Sediment,23,215,10.69767441860465,941,9.41
+hja2016_050,165,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,831,0,0,0
+hja2016_052,163,hyporheic,Mainstem,hyporheic_Mainstem,Sediment,73,1284,5.685358255451713,468,4.68
+hja2016_056,KC-1,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,70,996,7.028112449799197,421,4.21
+hja2016_057,71,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,18,456,3.9473684210526314,192,1.92
+hja2016_059,KC-2,planktonic,Intermediate,planktonic_Intermediate,Sediment,56,707,7.920792079207921,832,8.32
+hja2016_062,WS3-3,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,1485,0,0,0
+hja2016_064,WS3-4,planktonic,Headwater,planktonic_Headwater,Sediment,0,529,0,0,0
+hja2016_099,162,planktonic,Mainstem,planktonic_Mainstem,Sediment,8,3405,0.23494860499265785,9,0.09
+hja2016_100,64,planktonic,Headwater,planktonic_Headwater,Sediment,0,2970,0,0,0
+hja2016_101,58,planktonic,Intermediate,planktonic_Intermediate,Sediment,10,3234,0.30921459492888065,12,0.12
+hja2016_102,73,hyporheic,Headwater,hyporheic_Headwater,Sediment,0,2870,0,0,0
+hja2016_103,260,planktonic,Intermediate,planktonic_Intermediate,Sediment,18,3072,0.5859375,29,0.29
+hja2016_105,178,planktonic,Headwater,planktonic_Headwater,Sediment,0,2969,0,0,0
+hja2016_106,170,planktonic,Headwater,planktonic_Headwater,Sediment,0,3434,0,0,0
+hja2016_107,57,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,5,4255,0.11750881316098707,8,0.08
+hja2016_109,169,planktonic,Headwater,planktonic_Headwater,Sediment,0,2842,0,0,0
+hja2016_110,76,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,9,2999,0.3001000333444481,18,0.18
+hja2016_111,160,planktonic,Mainstem,planktonic_Mainstem,Sediment,7,3174,0.2205419029615627,9,0.09
+hja2016_114,WS1-5,planktonic,Headwater,planktonic_Headwater,Sediment,0,3404,0,0,0
+hja2016_116,53,planktonic,Intermediate,planktonic_Intermediate,Sediment,7,3531,0.19824412347776835,10,0.1
+hja2016_119,56,planktonic,Intermediate,planktonic_Intermediate,Sediment,25,3931,0.635970490969219,32,0.32
+hja2016_121,84,hyporheic,Intermediate,hyporheic_Intermediate,Sediment,1,3399,0.029420417769932334,1,0.01
+hja2016_122,45,sediment,Intermediate,sediment_Intermediate,Sediment,646,2808,23.005698005698004,1404,14.04
+hja2016_125,56,sediment,Intermediate,sediment_Intermediate,Sediment,582,2731,21.31087513731234,1328,13.28
+hja2016_164,260,sediment,Intermediate,sediment_Intermediate,Sediment,743,2844,26.125175808720112,1864,18.64
+hja2016_166,57,sediment,Intermediate,sediment_Intermediate,Sediment,942,2704,34.837278106508876,2158,21.58
+hja2016_167,WS3-1,sediment,Headwater,sediment_Headwater,Sediment,409,2518,16.24305003971406,1045,10.45
+hja2016_169,WS3-2,sediment,Headwater,sediment_Headwater,Sediment,453,2677,16.92192753081808,1016,10.16
+hja2016_170,WS3-3,sediment,Headwater,sediment_Headwater,Sediment,488,2875,16.973913043478262,989,9.89
+hja2016_177,WS1-3,sediment,Headwater,sediment_Headwater,Sediment,584,2693,21.68585220943186,1287,12.87
+hja2016_179,WS1-5,sediment,Headwater,sediment_Headwater,Sediment,541,2287,23.655443812855268,1542,15.42
+hja2016_180,WS1-6,sediment,Headwater,sediment_Headwater,Sediment,730,2551,28.61622892983144,1755,17.55
+hja2016_181,177,sediment,Headwater,sediment_Headwater,Sediment,509,2963,17.178535268309147,944,9.44
+hja2016_001,50,planktonic,Mainstem,planktonic_Mainstem,Aquatic,150,327,45.87155963302752,4868,48.68
+hja2016_008,WS3-1,hyporheic,Headwater,hyporheic_Headwater,Aquatic,303,792,38.25757575757576,3475,34.75
+hja2016_009,60,hyporheic,Headwater,hyporheic_Headwater,Aquatic,330,726,45.45454545454545,4067,40.67
+hja2016_010,164,planktonic,Intermediate,planktonic_Intermediate,Aquatic,136,247,55.06072874493927,5208,52.08
+hja2016_011,WS1-6,planktonic,Headwater,planktonic_Headwater,Aquatic,490,1358,36.08247422680412,2902,29.02
+hja2016_013,WS1-4,planktonic,Headwater,planktonic_Headwater,Aquatic,431,898,47.99554565701559,4700,47
+hja2016_014,WS1-6,hyporheic,Headwater,hyporheic_Headwater,Aquatic,433,751,57.656458055925434,5528,55.28
+hja2016_015,47,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,180,409,44.00977995110024,4419,44.19
+hja2016_016,74,hyporheic,Headwater,hyporheic_Headwater,Aquatic,135,267,50.561797752808985,3380,33.8
+hja2016_018,WS1-5,hyporheic,Headwater,hyporheic_Headwater,Aquatic,657,1168,56.25,7073,70.73
+hja2016_019,155,hyporheic,Headwater,hyporheic_Headwater,Aquatic,248,660,37.57575757575758,3967,39.67
+hja2016_020,WS1-2,hyporheic,Headwater,hyporheic_Headwater,Aquatic,692,1614,42.874845105328376,3732,37.32
+hja2016_021,156,hyporheic,Mainstem,hyporheic_Mainstem,Aquatic,124,360,34.44444444444444,3459,34.59
+hja2016_027,WS3-6,planktonic,Headwater,planktonic_Headwater,Aquatic,336,828,40.57971014492754,3896,38.96
+hja2016_065,68,hyporheic,Mainstem,hyporheic_Mainstem,Aquatic,335,898,37.30512249443207,3897,38.97
+hja2016_066,49,hyporheic,Mainstem,hyporheic_Mainstem,Aquatic,674,1335,50.48689138576779,4603,46.03
+hja2016_070,56,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,387,654,59.174311926605505,6293,62.93
+hja2016_071,164,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,596,1522,39.15900131406045,3631,36.31
+hja2016_075,260,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,222,688,32.26744186046512,3112,31.12
+hja2016_078,CC-1,hyporheic,Headwater,hyporheic_Headwater,Aquatic,303,759,39.92094861660079,4019,40.19
+hja2016_079,64,hyporheic,Headwater,hyporheic_Headwater,Aquatic,355,855,41.52046783625731,4176,41.76
+hja2016_084,177,hyporheic,Headwater,hyporheic_Headwater,Aquatic,350,680,51.470588235294116,4710,47.1
+hja2016_127,60,sediment,Headwater,sediment_Headwater,Aquatic,0,2860,0,0,0
+hja2016_129,72,sediment,Intermediate,sediment_Intermediate,Aquatic,24,3137,0.7650621613006057,32,0.32
+hja2016_131,74,sediment,Headwater,sediment_Headwater,Aquatic,0,3715,0,0,0
+hja2016_132,84,sediment,Intermediate,sediment_Intermediate,Aquatic,36,3372,1.0676156583629892,45,0.45
+hja2016_133,161,sediment,Mainstem,sediment_Mainstem,Aquatic,19,2693,0.7055328629780914,25,0.25
+hja2016_135,169,sediment,Headwater,sediment_Headwater,Aquatic,0,2780,0,0,0
+hja2016_136,190,sediment,Headwater,sediment_Headwater,Aquatic,0,2739,0,0,0
+hja2016_139,CC-2,sediment,Headwater,sediment_Headwater,Aquatic,0,3154,0,0,0
+hja2016_140,CC-3,sediment,Headwater,sediment_Headwater,Aquatic,0,2845,0,0,0
+hja2016_141,CC-4,sediment,Headwater,sediment_Headwater,Aquatic,0,2638,0,0,0
+hja2016_142,KC-1,sediment,Intermediate,sediment_Intermediate,Aquatic,41,3069,1.335940045617465,93,0.93
+hja2016_144,KC-3,sediment,Intermediate,sediment_Intermediate,Aquatic,48,2875,1.6695652173913043,95,0.95
+hja2016_145,155,sediment,Headwater,sediment_Headwater,Aquatic,0,3229,0,0,0
+hja2016_146,156,sediment,Mainstem,sediment_Mainstem,Aquatic,20,2773,0.7212405337179949,25,0.25
+hja2016_147,163,sediment,Mainstem,sediment_Mainstem,Aquatic,29,2882,1.0062456627342125,47,0.47
+hja2016_148,165,sediment,Headwater,sediment_Headwater,Aquatic,0,3066,0,0,0
+hja2016_150,53,sediment,Intermediate,sediment_Intermediate,Aquatic,20,3037,0.658544616397761,24,0.24
+hja2016_151,64,sediment,Headwater,sediment_Headwater,Aquatic,0,3661,0,0,0
+hja2016_152,66,sediment,Intermediate,sediment_Intermediate,Aquatic,38,3029,1.2545394519643447,53,0.53
+hja2016_155,82,sediment,Headwater,sediment_Headwater,Aquatic,0,3128,0,0,0
+hja2016_157,43,sediment,Headwater,sediment_Headwater,Aquatic,0,2846,0,0,0
+hja2016_159,49,sediment,Mainstem,sediment_Mainstem,Aquatic,40,2842,1.4074595355383532,64,0.64
+hja2016_160,50,sediment,Mainstem,sediment_Mainstem,Aquatic,57,2445,2.331288343558282,85,0.85
+hja2016_031,161,hyporheic,Mainstem,hyporheic_Mainstem,Aquatic,117,235,49.787234042553195,5969,59.69
+hja2016_032,54,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,158,377,41.90981432360743,4207,42.07
+hja2016_035,192,hyporheic,Headwater,hyporheic_Headwater,Aquatic,355,551,64.42831215970962,6232,62.32
+hja2016_037,43,hyporheic,Headwater,hyporheic_Headwater,Aquatic,197,376,52.3936170212766,5187,51.87
+hja2016_042,165,planktonic,Headwater,planktonic_Headwater,Aquatic,216,335,64.4776119402985,6616,66.16
+hja2016_043,KC-2,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,140,413,33.898305084745765,3601,36.01
+hja2016_049,67,planktonic,Intermediate,planktonic_Intermediate,Aquatic,95,215,44.18604651162791,5046,50.46
+hja2016_050,165,hyporheic,Headwater,hyporheic_Headwater,Aquatic,371,831,44.64500601684717,3883,38.83
+hja2016_052,163,hyporheic,Mainstem,hyporheic_Mainstem,Aquatic,725,1284,56.46417445482866,5362,53.62
+hja2016_056,KC-1,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,412,996,41.36546184738956,3087,30.87
+hja2016_057,71,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,268,456,58.771929824561404,5779,57.79
+hja2016_059,KC-2,planktonic,Intermediate,planktonic_Intermediate,Aquatic,182,707,25.742574257425744,3394,33.94
+hja2016_062,WS3-3,hyporheic,Headwater,hyporheic_Headwater,Aquatic,694,1485,46.734006734006734,3630,36.3
+hja2016_064,WS3-4,planktonic,Headwater,planktonic_Headwater,Aquatic,194,529,36.67296786389414,3886,38.86
+hja2016_099,162,planktonic,Mainstem,planktonic_Mainstem,Aquatic,3102,3405,91.10132158590308,8934,89.34
+hja2016_100,64,planktonic,Headwater,planktonic_Headwater,Aquatic,2774,2970,93.4006734006734,9288,92.88
+hja2016_101,58,planktonic,Intermediate,planktonic_Intermediate,Aquatic,2918,3234,90.22881880024737,8841,88.41
+hja2016_102,73,hyporheic,Headwater,hyporheic_Headwater,Aquatic,2563,2870,89.30313588850174,8940,89.4
+hja2016_103,260,planktonic,Intermediate,planktonic_Intermediate,Aquatic,2481,3072,80.76171875,7807,78.07
+hja2016_105,178,planktonic,Headwater,planktonic_Headwater,Aquatic,2662,2969,89.65981812057932,8825,88.25
+hja2016_106,170,planktonic,Headwater,planktonic_Headwater,Aquatic,3269,3434,95.19510774606873,9458,94.58
+hja2016_107,57,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,3876,4255,91.09283196239718,8925,89.25
+hja2016_109,169,planktonic,Headwater,planktonic_Headwater,Aquatic,2582,2842,90.8515130190007,8850,88.5
+hja2016_110,76,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,2742,2999,91.43047682560854,8887,88.87
+hja2016_111,160,planktonic,Mainstem,planktonic_Mainstem,Aquatic,2832,3174,89.2249527410208,8813,88.13
+hja2016_114,WS1-5,planktonic,Headwater,planktonic_Headwater,Aquatic,3021,3404,88.74853113983549,8777,87.77
+hja2016_116,53,planktonic,Intermediate,planktonic_Intermediate,Aquatic,3159,3531,89.46474086661003,8843,88.43
+hja2016_119,56,planktonic,Intermediate,planktonic_Intermediate,Aquatic,3269,3931,83.15950139913508,7907,79.07
+hja2016_121,84,hyporheic,Intermediate,hyporheic_Intermediate,Aquatic,3239,3399,95.29273315681083,9515,95.15
+hja2016_122,45,sediment,Intermediate,sediment_Intermediate,Aquatic,38,2808,1.3532763532763532,49,0.49
+hja2016_125,56,sediment,Intermediate,sediment_Intermediate,Aquatic,26,2731,0.9520322226290736,35,0.35
+hja2016_164,260,sediment,Intermediate,sediment_Intermediate,Aquatic,26,2844,0.9142053445850914,41,0.41
+hja2016_166,57,sediment,Intermediate,sediment_Intermediate,Aquatic,49,2704,1.8121301775147929,80,0.8
+hja2016_167,WS3-1,sediment,Headwater,sediment_Headwater,Aquatic,0,2518,0,0,0
+hja2016_169,WS3-2,sediment,Headwater,sediment_Headwater,Aquatic,0,2677,0,0,0
+hja2016_170,WS3-3,sediment,Headwater,sediment_Headwater,Aquatic,0,2875,0,0,0
+hja2016_177,WS1-3,sediment,Headwater,sediment_Headwater,Aquatic,0,2693,0,0,0
+hja2016_179,WS1-5,sediment,Headwater,sediment_Headwater,Aquatic,0,2287,0,0,0
+hja2016_180,WS1-6,sediment,Headwater,sediment_Headwater,Aquatic,0,2551,0,0,0
+hja2016_181,177,sediment,Headwater,sediment_Headwater,Aquatic,0,2963,0,0,0
+hja2016_001,50,planktonic,Mainstem,planktonic_Mainstem,Sediment + Aquatic,61,327,18.654434250764528,2153,21.53
+hja2016_008,WS3-1,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,190,792,23.98989898989899,2227,22.27
+hja2016_009,60,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,133,726,18.31955922865014,1737,17.37
+hja2016_010,164,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,34,247,13.765182186234817,1733,17.33
+hja2016_011,WS1-6,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,380,1358,27.982326951399116,3040,30.4
+hja2016_013,WS1-4,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,174,898,19.37639198218263,1831,18.31
+hja2016_014,WS1-6,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,101,751,13.448735019973368,1165,11.65
+hja2016_015,47,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,60,409,14.669926650366747,1601,16.01
+hja2016_016,74,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,54,267,20.224719101123597,1076,10.76
+hja2016_018,WS1-5,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,195,1168,16.695205479452056,970,9.7
+hja2016_019,155,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,130,660,19.696969696969695,1718,17.18
+hja2016_020,WS1-2,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,363,1614,22.490706319702603,2246,22.46
+hja2016_021,156,hyporheic,Mainstem,hyporheic_Mainstem,Sediment + Aquatic,61,360,16.944444444444443,2183,21.83
+hja2016_027,WS3-6,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,254,828,30.67632850241546,3167,31.67
+hja2016_065,68,hyporheic,Mainstem,hyporheic_Mainstem,Sediment + Aquatic,116,898,12.917594654788418,1186,11.86
+hja2016_066,49,hyporheic,Mainstem,hyporheic_Mainstem,Sediment + Aquatic,175,1335,13.108614232209737,1413,14.13
+hja2016_070,56,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,66,654,10.091743119266056,874,8.74
+hja2016_071,164,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,229,1522,15.04599211563732,1596,15.96
+hja2016_075,260,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,136,688,19.767441860465116,1973,19.73
+hja2016_078,CC-1,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,198,759,26.08695652173913,2513,25.13
+hja2016_079,64,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,172,855,20.116959064327485,2014,20.14
+hja2016_084,177,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,98,680,14.411764705882353,1533,15.33
+hja2016_127,60,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,532,2860,18.6013986013986,1663,16.63
+hja2016_129,72,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,509,3137,16.225693337583678,1275,12.75
+hja2016_131,74,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,565,3715,15.208613728129206,1186,11.86
+hja2016_132,84,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,344,3372,10.201660735468565,663,6.63
+hja2016_133,161,sediment,Mainstem,sediment_Mainstem,Sediment + Aquatic,290,2693,10.768659487560342,886,8.86
+hja2016_135,169,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,317,2780,11.402877697841726,654,6.54
+hja2016_136,190,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,352,2739,12.85140562248996,1072,10.72
+hja2016_139,CC-2,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,533,3154,16.899175649968296,1199,11.99
+hja2016_140,CC-3,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,444,2845,15.606326889279437,1336,13.36
+hja2016_141,CC-4,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,333,2638,12.62319939347991,1108,11.08
+hja2016_142,KC-1,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,386,3069,12.577386770935158,1109,11.09
+hja2016_144,KC-3,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,347,2875,12.069565217391304,1018,10.18
+hja2016_145,155,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,521,3229,16.1350263239393,1262,12.62
+hja2016_146,156,sediment,Mainstem,sediment_Mainstem,Sediment + Aquatic,424,2773,15.290299314821493,1329,13.29
+hja2016_147,163,sediment,Mainstem,sediment_Mainstem,Sediment + Aquatic,308,2882,10.687022900763358,910,9.1
+hja2016_148,165,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,503,3066,16.40574037834312,1160,11.6
+hja2016_150,53,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,478,3037,15.739216331906487,1319,13.19
+hja2016_151,64,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,372,3661,10.16115815350997,869,8.69
+hja2016_152,66,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,487,3029,16.077913502806208,1611,16.11
+hja2016_155,82,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,564,3128,18.0306905370844,1321,13.21
+hja2016_157,43,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,548,2846,19.255094869992973,1712,17.12
+hja2016_159,49,sediment,Mainstem,sediment_Mainstem,Sediment + Aquatic,438,2842,15.411681914144967,1173,11.73
+hja2016_160,50,sediment,Mainstem,sediment_Mainstem,Sediment + Aquatic,500,2445,20.449897750511248,2406,24.06
+hja2016_031,161,hyporheic,Mainstem,hyporheic_Mainstem,Sediment + Aquatic,24,235,10.212765957446809,955,9.55
+hja2016_032,54,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,56,377,14.854111405835544,1695,16.95
+hja2016_035,192,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,48,551,8.711433756805807,945,9.45
+hja2016_037,43,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,62,376,16.48936170212766,1589,15.89
+hja2016_042,165,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,47,335,14.029850746268657,1422,14.22
+hja2016_043,KC-2,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,60,413,14.527845036319613,1406,14.06
+hja2016_049,67,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,28,215,13.023255813953488,1155,11.55
+hja2016_050,165,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,131,831,15.764139590854393,2623,26.23
+hja2016_052,163,hyporheic,Mainstem,hyporheic_Mainstem,Sediment + Aquatic,112,1284,8.722741433021806,878,8.78
+hja2016_056,KC-1,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,112,996,11.244979919678714,3759,37.59
+hja2016_057,71,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,57,456,12.5,1915,19.15
+hja2016_059,KC-2,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,98,707,13.861386138613861,1579,15.79
+hja2016_062,WS3-3,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,284,1485,19.124579124579125,3350,33.5
+hja2016_064,WS3-4,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,120,529,22.68431001890359,2250,22.5
+hja2016_099,162,planktonic,Mainstem,planktonic_Mainstem,Sediment + Aquatic,69,3405,2.026431718061674,241,2.41
+hja2016_100,64,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,46,2970,1.5488215488215489,120,1.2
+hja2016_101,58,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,68,3234,2.102659245516388,292,2.92
+hja2016_102,73,hyporheic,Headwater,hyporheic_Headwater,Sediment + Aquatic,83,2870,2.8919860627177703,261,2.61
+hja2016_103,260,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,97,3072,3.1575520833333335,369,3.69
+hja2016_105,178,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,71,2969,2.3913775682047826,298,2.98
+hja2016_106,170,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,35,3434,1.019219569015725,99,0.99
+hja2016_107,57,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,75,4255,1.762632197414806,235,2.35
+hja2016_109,169,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,62,2842,2.1815622800844476,248,2.48
+hja2016_110,76,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,52,2999,1.7339113037679226,256,2.56
+hja2016_111,160,planktonic,Mainstem,planktonic_Mainstem,Sediment + Aquatic,68,3174,2.1424070573408946,259,2.59
+hja2016_114,WS1-5,planktonic,Headwater,planktonic_Headwater,Sediment + Aquatic,99,3404,2.90834312573443,296,2.96
+hja2016_116,53,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,87,3531,2.463891248937978,266,2.66
+hja2016_119,56,planktonic,Intermediate,planktonic_Intermediate,Sediment + Aquatic,112,3931,2.8491477995421013,376,3.76
+hja2016_121,84,hyporheic,Intermediate,hyporheic_Intermediate,Sediment + Aquatic,39,3399,1.147396293027361,95,0.95
+hja2016_122,45,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,409,2808,14.565527065527066,1009,10.09
+hja2016_125,56,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,408,2731,14.939582570487001,1036,10.36
+hja2016_164,260,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,355,2844,12.482419127988749,1067,10.67
+hja2016_166,57,sediment,Intermediate,sediment_Intermediate,Sediment + Aquatic,474,2704,17.52958579881657,2172,21.72
+hja2016_167,WS3-1,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,241,2518,9.571088165210485,813,8.13
+hja2016_169,WS3-2,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,258,2677,9.637654090399701,797,7.97
+hja2016_170,WS3-3,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,550,2875,19.130434782608695,2025,20.25
+hja2016_177,WS1-3,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,277,2693,10.285926476049015,654,6.54
+hja2016_179,WS1-5,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,361,2287,15.784871010056843,1343,13.43
+hja2016_180,WS1-6,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,516,2551,20.22736181889455,2331,23.31
+hja2016_181,177,sediment,Headwater,sediment_Headwater,Sediment + Aquatic,550,2963,18.562267971650353,1991,19.91

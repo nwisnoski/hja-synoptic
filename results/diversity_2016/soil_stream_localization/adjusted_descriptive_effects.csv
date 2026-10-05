@@ -1,0 +1,13 @@
+habitat,pool,response,pairs,soils,samples,contributing_effect,full_rank,diagnostic
+planktonic,soil_detected,soil_asv_detection_fraction,202,13,16,0.0032143538413279423,TRUE,Descriptive; no calibrated P value
+planktonic,soil_detected,aquatic_read_percent,202,13,16,0.10443417956114978,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,soil_asv_detection_fraction,202,13,16,6.497696695147326e-4,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,aquatic_read_percent,202,13,16,0.017876631106580457,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,soil_asv_detection_fraction,315,13,25,0.0017619274561040267,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,aquatic_read_percent,315,13,25,0.023786161212712018,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,soil_asv_detection_fraction,315,13,25,7.172089237670929e-4,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,aquatic_read_percent,315,13,25,-0.05801833471014334,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,soil_asv_detection_fraction,341,13,27,0.015342775969765238,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,aquatic_read_percent,341,13,27,1.3937955524468246,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,soil_asv_detection_fraction,341,13,27,0.01678229992777229,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,aquatic_read_percent,341,13,27,0.4339540300743947,TRUE,Descriptive; no calibrated P value

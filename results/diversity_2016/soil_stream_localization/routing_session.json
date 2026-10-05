@@ -1,0 +1,19 @@
+{
+  "pysheds_version": "0.5",
+  "elapsed_seconds": 8.123154292000436,
+  "routing": "D8",
+  "snap_radii_m": [
+    15,
+    30,
+    50
+  ],
+  "soil_offsets_m": [
+    -20,
+    0,
+    20
+  ],
+  "acceptable_area_ratio": [
+    0.5,
+    2.0
+  ]
+}

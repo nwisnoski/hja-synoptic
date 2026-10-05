@@ -1,6 +1,6 @@
 # 2016 synoptic key findings and follow-up
 
-Updated October 4, 2026. This synthesis distinguishes completed analyses from
+Updated October 5, 2026. This synthesis distinguishes completed analyses from
 map-based interpretation and proposed follow-up. The sediment integration uses
 33 paired sites; descriptive microbial and molecular coverage is 34 and 44
 sites, respectively. Molecular ecological analyses use incidence, and microbial
@@ -87,6 +87,24 @@ signature, even where aggregate compositional correspondence is weak.
    comparisons, so compartment-specific molecular associations remain untested.
    [Aquatic integration report](fticr/README_AQUATIC_MICROBE_CHEMISTRY.md).
 
+7. **Soil-associated sharing distinguishes sediment from water across the
+   network.** In the grouped detection inventory, soil-detected ASVs comprise
+   mean sediment read percentages of 72.3/67.7/69.9% across headwater,
+   intermediate, and mainstem samples. Water communities contain a larger
+   fraction of ASVs assigned to the combined hyporheic/planktonic detection
+   pool. Soil-detected percentages do not decline monotonically in every
+   habitat. The four inventory labels are Soil, Sediment, Aquatic, and
+   Sediment + Aquatic; they describe earliest observed detections, not proven
+   sources or movement. This is a growing descriptive result and a candidate
+   manuscript figure, adapted from
+   [Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499).
+   Retain both richness and read rows for now; the paper will likely use one
+   row, with the choice deferred.
+   [Methods and captions](microbes/README_SOIL_STREAM_LOCALIZATION.md#earliest-detection-along-network-stages),
+   [richness row](../figures/2016_first_detection_richness_percent.pdf),
+   [read row](../figures/2016_first_detection_read_percent.pdf), and
+   [plotted summaries](../results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv).
+
 ## Priority follow-up: Lookout Mountain drainage and the confluence
 
 **Status: noted, not implemented.** The spatial interpretation comes from
@@ -120,3 +138,105 @@ mechanisms established by the group.
 The aim is to determine whether the candidate group reflects a shared
 catchment-associated environmental signature and whether cross-type associations
 persist after that spatial context is considered.
+
+## Soil ASVs and contributing drainage areas: October 5, 2026
+
+The new soil analysis uses the fixed-10K communities and public-terrain drainage
+areas for individual aquatic sites. Thirteen of 15 soils have resolved identities
+and GPS coordinates; the other two remain in general sharing. Forty-six of 54
+aquatic site catchments pass all outlet-snapping QC scenarios. Unstable soil
+memberships and failed catchments are flagged and excluded from spatial
+comparisons, while all microbial profiles remain in general sharing.
+
+Of 13,969 soil-detected ASVs, 6,593 occur aquatically and 4,033 occur in mainstem
+samples. A descriptive model accounting for aquatic-sample identity, soil-profile
+identity, and geographic proximity estimates modest positive localization in
+sediment: +1.53 percentage points in the fraction of soil ASVs detected, or
++1.68 points for the operational soil-enriched subset. Water-column effects are
+small, and individual-ASV responses include positive, absent, and reversed
+associations. No calibrated spatial P values or soil-source percentages are
+claimed.
+
+Two disjoint tributary drainage areas above sites 47 and 66 contain two and
+three confidently assigned soil profiles. A soil-only abundance/prevalence
+screen retains 225/291 branch-concentrated ASVs. Aggregate sediment signatures
+are weakly differentiated between the sampled branches and occur downstream
+in fifth-order mainstem samples (median read percentages 4.98%/5.62%).
+Individual examples show stronger differentiation: Nocardioides ASV_000708
+is detected in 3/5 sediment samples in its sampled soil branch, 0/4 in the
+other, and 2/3 downstream; it also occurs at seven other sediment sites.
+This supports spatially variable sharing rather than exclusive branch sources.
+The small water-column branch coverage and shared sediment segments constrain
+inference. These branch signatures are separate from the previously selected
+bipartite core 2; its branch hypothesis remains untested.
+
+See [soil drainage methods, results, and captions](microbes/README_SOIL_STREAM_LOCALIZATION.md).
+Source identities, individual-ASV contrasts, drainage uncertainties, and
+mainstem profiles are exported to
+`results/diversity_2016/soil_stream_localization/`. All 11 vector figures were
+rendered and visually inspected. Scientific framing follows
+[Crump et al. (2012)](https://doi.org/10.1038/ismej.2012.9) and
+[Read et al. (2015)](https://doi.org/10.1038/ismej.2014.166).
+
+The distance-only follow-up in `analysis/microbes/13_soil_stream_distance.R`
+uses straight-line soil-to-aquatic-site distance as an explicitly approved
+nearness proxy, independent of drainage assignments. It retains all 13 mapped
+soils and 85 aquatic samples. Descriptive soil/site-adjusted distance slopes
+are small and mixed in sign, with no consistent aggregate decline in sharing.
+Individual soil and ASV correlations vary; 513 of 877 eligible soil-enriched
+sediment ASVs have negative nearest-soil distance–abundance correlations
+(median rho -0.0485). These are descriptive associations, not calibrated
+locality tests. Distance inputs and results are in
+`data/derived/soil_stream_distance_2016/` and
+`results/diversity_2016/soil_stream_distance/`; the additional vector figure
+passed rendered visual inspection.
+
+
+### Soil figure refinement and earliest detection: October 5, 2026
+
+Following figure review, ASV-example and distance-correlation plots are
+removed from active outputs; initial branch plots are archived pending a
+revised comparison. The three ASV-sharing maps remain active, and Python
+drainage preprocessing, uncertainty audits, and all analysis tables remain
+intact. Archived PDFs are in `figures/archive/soil_first_pass/`; plot generation
+is disabled by default in the corresponding scripts.
+
+The catchment soil-ASV figure now has separate descriptive GAM curves in
+log10 drainage area for each habitat (REML, basis dimension four). Sediment
+is approximately linear; water-compartment curves allow modest curvature.
+No spatially calibrated tests or confidence bands are asserted.
+
+`analysis/microbes/15_first_detection_flowpaths.R` adapts
+[Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499)
+using soils first, then the earliest aquatic network class detecting each
+remaining ASV. The current source inventory combines hyporheic and
+planktonic water detections as Aquatic, with four categories: Soil, Sediment,
+Aquatic, and Sediment + Aquatic. The shared category retains sediment-water
+ties at the earliest network stage. Receiving habitat panels remain separate.
+Mean within-sample richness and read percentages are displayed
+across headwater (orders 1-2), intermediate (3-4), and mainstem (5) groups.
+Spatial pairing is not required. This is an observed detection inventory,
+not source attribution or a verified connected sequence of flowpaths.
+
+Soil-detected richness percentages are 60.0/53.5/57.4% in sediment,
+32.2/27.1/34.2% in hyporheic samples, and 19.2/21.8/13.9% in planktonic
+samples across the three stages. There is no universal monotonic decline.
+A 1,000-draw sensitivity selecting three profiles per habitat-stage cell
+and three soils lowers absolute soil-detected percentages substantially,
+while retaining these broad shapes. Equal sample numbers do not establish
+equal detection completeness.
+
+Tables, ASV assignments, sampling selections, and validation records are in
+`results/diversity_2016/first_detection_flowpaths/`. The combined figure is
+`figures/2016_first_detection_flowpaths.pdf`, with both individual rows also
+saved. All revised/new PDFs passed rendered visual inspection; input hashes
+remained unchanged. No remote action, commit, or push was performed.
+
+Water-pool simplification on October 5 preserves all soil percentages and
+earliest network stages. The former shared category splits into 2,744
+water-only ties now assigned to Aquatic and 2,134 sediment-water ties retained
+as Sediment + Aquatic. Original separate-water tables are archived under
+`results/diversity_2016/first_detection_flowpaths/archive_separate_water_pools/`.
+The sampling sensitivity still balances original habitats (three profiles
+per cell), so the merged water inventory has six profiles per stage versus
+three for sediment; it does not balance the merged source pools.

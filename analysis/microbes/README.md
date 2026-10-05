@@ -1,5 +1,27 @@
 # 2016 microbial diversity
 
+Soil-to-stream sharing and drainage localization are implemented in
+`10_soil_drainage_routing.py`, `11_soil_stream_localization.R`, and
+`12_soil_branch_signatures.R`. See
+[the soil drainage report](README_SOIL_STREAM_LOCALIZATION.md) for definitions,
+GPS exclusions, public terrain provenance, results, and figure captions.
+`13_soil_stream_distance.R` provides an independent distance-only nearness
+analysis requiring no terrain or drainage-membership inputs.
+`14_soil_asv_catchment_figure.R` makes one combined-habitat plot of drainage
+area against soil-detected ASV read percentage, with an optional richness
+fraction setting. Separate descriptive GAM curves show habitat-specific
+patterns across drainage area. `15_first_detection_flowpaths.R` adapts the
+Ruiz-Gonzalez upstream-first detection inventory to Soil, Sediment, Aquatic
+(combined hyporheic/planktonic detections), and Sediment + Aquatic ties across
+headwater, intermediate, and mainstem groups. Receiving habitat panels remain
+separate, with a 1,000-draw equal-sample sensitivity. The flowpath figure is
+recorded as a growing descriptive result; retain both rows while the
+manuscript choice of richness or read percentages remains open.
+
+ASV example and distance-correlation plots are disabled and archived under
+`figures/archive/soil_first_pass/`. The initial branch plots are also archived
+pending refinement; the Python drainage backbone and analysis tables remain.
+
 Open the repository as the working folder in Positron. The scripts require no
 command-line arguments.
 

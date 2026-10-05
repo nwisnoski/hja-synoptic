@@ -447,3 +447,132 @@ verbose logs need deliberate transfer/version-control decisions. The iCAMP,
 UniFrac, phylogeny, and integration documentation changes were still uncommitted
 at this handoff. Update this dated section after meaningful progress so future
 agents can distinguish completed work from plans and historical job status.
+
+### Local soil drainage localization update: 2026-10-05
+
+`analysis/microbes/10_soil_drainage_routing.py`,
+`11_soil_stream_localization.R`, and `12_soil_branch_signatures.R` analyze
+soil ASV sharing and contributing drainage membership. Methods, results,
+definitions, and captions are in `README_SOIL_STREAM_LOCALIZATION.md` in that
+directory. Frozen public USGS 3DEP terrain and partial gaged-watershed polygons
+are in `data/spatial/soil_routing/`, with source/datum assumptions documented.
+This current terrain reference is not the original 2008 LiDAR model. The
+Python preprocessing uses pysheds 0.5 and NumPy 2.3.5; a pinned requirements
+file is provided. Constructed catchments and membership sensitivities are in
+`data/derived/soil_drainage_2016/`.
+
+All fixed-10K samples remain in general sharing. Thirteen soils have resolved
+identities and GPS; soil 04 lacks GPS and hja2016_200 remains unresolved.
+D8 catchments use 30-m outlet snapping, checked at 15/50 m and nine soil
+coordinate offsets. Forty-six of 54 distinct aquatic sites pass all area/edge
+QC scenarios. Eight failing catchments and 23 unstable soil-site memberships
+retain flagged audit rows; 581 stable soil-site pairs enter spatial comparisons.
+Never infer contribution by Euclidean nearest-stream distance alone.
+
+Of 13,969 soil-detected ASVs, 6,593 occur aquatically and 4,033 in fifth-order
+mainstem samples. A sample/source/proximity-adjusted descriptive comparison
+shows modest sediment localization (+1.53 percentage points in soil-ASV
+detection fraction; +1.68 for the operational soil-enriched sensitivity),
+with small water-column effects and variable individual responses. Two disjoint
+tributary source pools above sites 47/66 contain soils 12/19 versus 07/08/09;
+soil 10 is excluded from that source contrast for divide sensitivity. Their
+soil-only, branch-concentrated signatures contain 225/291 ASVs and are broadly
+detected, including downstream mainstem sediment. Site identifiers label the
+verified drainage areas; named-creek/mountain attribution is not established
+here. These signatures are separate from bipartite core 2.
+
+Tables, source identities, per-ASV contrasts, and checksums are in
+`results/diversity_2016/soil_stream_localization/`; 11 vector PDFs are in
+`figures/` and were rendered and visually inspected. Input checksums remained
+unchanged. This is exploratory spatial sharing, not calibrated transport/source
+attribution: pairs share profiles, ASVs, and stream segments. No remote action,
+commit, push, DADA2 rerun, or phylogeny rebuild was performed. All work from
+this update remains uncommitted.
+
+Nathan subsequently approved geographic soil-to-stream-sampling-site distance
+as a proxy for nearness even when drainage membership is uncertain.
+`analysis/microbes/13_soil_stream_distance.R` implements this independently of
+terrain/routing inputs, retaining all 13 mapped soils and 85 aquatic samples.
+Use Euclidean distance for descriptive nearness; do not label it verified
+contribution. Soil-to-nearest-channel distance is a separate exported audit.
+The descriptive source/site-adjusted distance slopes are small and mixed in
+sign; individual profiles and ASVs vary. Constructed inputs are in
+`data/derived/soil_stream_distance_2016/`, and results are in
+`results/diversity_2016/soil_stream_distance/`. Methods and the additional
+vector figure caption are appended to the soil drainage report. The figure
+was rendered and inspected, all models are full rank, and input checksums
+remained unchanged. This follow-up is also uncommitted; no remote action or
+push occurred.
+
+`analysis/microbes/14_soil_asv_catchment_figure.R` adds the requested single-panel
+catchment-wide figure: drainage area (ha, log scale) versus soil-detected ASV
+reads (%), colored by the three aquatic habitats. It retains all 85 aquatic
+samples and the ASV detection pool from all 15 soils. Its settings also allow
+the soil-detected fraction of aquatic observed ASV richness. The vector PDF
+is `figures/2016_soil_asv_catchment_pattern.pdf`; plot data and input hashes
+are in the soil-localization results directory. Counts were verified against
+the fixed-10K matrix and the PDF was rendered and inspected. No commit or
+push was performed.
+
+
+### Soil figure review and grouped detection update: 2026-10-05
+
+Following Nathan's review, ASV-example and distance-correlation plots are
+disabled by default and archived under `figures/archive/soil_first_pass/`.
+The initial branch map/signature plots are also archived pending a better
+comparison; retain the Python drainage backbone and all source/membership
+tables. Do not reinstate these figures on ordinary reruns. ASV-sharing maps
+and the catchment-wide figure remain active. Script 14 now adds separate
+Gaussian GAM curves against log10 drainage area (REML, basis dimension four).
+They are descriptive, with no independent-sample confidence bands or tests.
+
+`analysis/microbes/15_first_detection_flowpaths.R` adapts Ruiz-Gonzalez et al.
+(2015; doi:10.1111/ele.12499). Soil detections have precedence; remaining
+ASVs use their earliest observed headwater/intermediate/mainstem stage,
+then the compartment(s) detecting them in that stage. The three aquatic
+habitats are parallel, with ties retained. Never impose an unverified
+sediment-to-hyporheic-to-planktonic flow order. All 15 soils enter this regional
+inventory; GPS exclusions apply only to spatial routing. Means of within-sample
+richness/read percentages avoid unequal pooled group denominators, but inventory
+coverage still differs. A 1,000-draw sensitivity selects three profiles in each
+of ten cells (nine aquatic habitat-stage cells plus soils) and reconstructs
+each inventory. These are sampling sensitivities, not confidence intervals.
+
+Soil-detected richness percentages across headwater/intermediate/mainstem
+are 60.0/53.5/57.4% in sediment, 32.2/27.1/34.2% in hyporheic samples,
+and 19.2/21.8/13.9% in planktonic samples. There is no universal monotonic
+decline. Three-soil inventories substantially lower absolute percentages.
+New tables/assignments/selections are in
+`results/diversity_2016/first_detection_flowpaths/`. The combined vector figure
+is `figures/2016_first_detection_flowpaths.pdf`; each row is also retained.
+Methods, captions, limitations, and checks are in the soil report. All four
+revised/new PDFs passed rendered inspection; all inputs remained unchanged.
+No remote action, commit, or push was performed; these changes are uncommitted.
+
+Nathan clarified the flowpath labels: use "Sediment first", "Hyporheic first",
+and "Planktonic first" rather than "only". These indicate earliest observed
+aquatic detection, not habitat specificity. The classification itself is unchanged.
+
+
+### Pooled-water detection labels: 2026-10-05
+
+The current flowpath legend uses Soil, Sediment, Aquatic, and Sediment + Aquatic.
+Nathan requested dropping "first" from habitat labels and combining hyporheic
+and planktonic detections into Aquatic, then explicitly chose to retain
+sediment-water ties as a fourth category. This supersedes the labels above.
+The earliest-stage rule and soil precedence remain unchanged; the three
+receiving habitats remain separate panels. Do not interpret Aquatic as
+including sediment in this operational legend. Water-only ties now enter
+Aquatic; original separate-water tables are archived in the results directory.
+Sampling sensitivities continue to balance original habitat-stage cells,
+not merged source pools (six water profiles versus three sediment per stage).
+
+
+### Soil result commit and manuscript candidate: 2026-10-05
+
+Nathan authorized committing the completed soil analysis and identified the
+pooled-water flowpath figure as a growing result. Both richness and read
+rows are retained; the paper will likely use one row, with the choice deferred.
+Key finding 7 records the descriptive habitat contrast and links both panels.
+The soil commit excludes the unrelated local iCAMP, UniFrac, and phylogeny
+changes, including their portions of shared documentation. No push is authorized.

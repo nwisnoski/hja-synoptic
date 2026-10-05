@@ -1,0 +1,2 @@
+y_metric,x_transform,aquatic_samples,soil_samples,soil_detected_asvs,fit_method,smooth_basis_dimension
+soil_pool_read_percent,log10,85,15,13969,Gaussian GAM; REML,4

@@ -1,0 +1,49 @@
+habitat,source_branch,pool,branch_context,samples,segments,source_pool_asvs,median_read_percent,median_detected_asvs
+hyporheic,47,branch_concentrated,Branch 47,3,3,225,0.3,8
+hyporheic,47,branch_concentrated,Branch 66,2,2,225,0.88,10.5
+hyporheic,47,branch_concentrated,Downstream of both,2,2,225,1.1199999999999999,8
+hyporheic,47,branch_concentrated,Other,17,13,225,1.33,9
+hyporheic,47,branch_detected,Branch 47,3,3,3298,3.54,84
+hyporheic,47,branch_detected,Branch 66,2,2,3298,8.455,85
+hyporheic,47,branch_detected,Downstream of both,2,2,3298,10.27,73.5
+hyporheic,47,branch_detected,Other,17,13,3298,11.95,91
+hyporheic,66,branch_concentrated,Branch 47,3,3,291,0.11,3
+hyporheic,66,branch_concentrated,Branch 66,2,2,291,0.3,4
+hyporheic,66,branch_concentrated,Downstream of both,2,2,291,0.265,3
+hyporheic,66,branch_concentrated,Other,17,13,291,0.36,3
+hyporheic,66,branch_detected,Branch 47,3,3,2621,2.24,73
+hyporheic,66,branch_detected,Branch 66,2,2,2621,6.465,63
+hyporheic,66,branch_detected,Downstream of both,2,2,2621,9.629999999999999,63.5
+hyporheic,66,branch_detected,Other,17,13,2621,8.03,73
+planktonic,47,branch_concentrated,Branch 47,2,2,225,0.385,12
+planktonic,47,branch_concentrated,Branch 66,1,1,225,0.38,13
+planktonic,47,branch_concentrated,Downstream of both,2,2,225,1.4100000000000001,9.5
+planktonic,47,branch_concentrated,Other,11,8,225,0.78,11
+planktonic,47,branch_detected,Branch 47,2,2,3298,3.52,83
+planktonic,47,branch_detected,Branch 66,1,1,3298,4.04,116
+planktonic,47,branch_detected,Downstream of both,2,2,3298,6.615,64
+planktonic,47,branch_detected,Other,11,8,3298,8.41,89
+planktonic,66,branch_concentrated,Branch 47,2,2,291,0.16,3.5
+planktonic,66,branch_concentrated,Branch 66,1,1,291,0.12,3
+planktonic,66,branch_concentrated,Downstream of both,2,2,291,0.215,2
+planktonic,66,branch_concentrated,Other,11,8,291,0.09,2
+planktonic,66,branch_detected,Branch 47,2,2,2621,2.45,60.5
+planktonic,66,branch_detected,Branch 66,1,1,2621,2.77,77
+planktonic,66,branch_detected,Downstream of both,2,2,2621,3.4299999999999997,40
+planktonic,66,branch_detected,Other,11,8,2621,5.28,70
+sediment,47,branch_concentrated,Branch 47,5,5,225,3.58,65
+sediment,47,branch_concentrated,Branch 66,4,2,225,3.16,56.5
+sediment,47,branch_concentrated,Downstream of both,3,3,225,4.98,93
+sediment,47,branch_concentrated,Other,14,9,225,2.915,56
+sediment,47,branch_detected,Branch 47,5,5,3298,28.51,579
+sediment,47,branch_detected,Branch 66,4,2,3298,25.77,494
+sediment,47,branch_detected,Downstream of both,3,3,3298,43.86,794
+sediment,47,branch_detected,Other,14,9,3298,26.295,493
+sediment,66,branch_concentrated,Branch 47,5,5,291,1.21,39
+sediment,66,branch_concentrated,Branch 66,4,2,291,1.48,42.5
+sediment,66,branch_concentrated,Downstream of both,3,3,291,5.62,115
+sediment,66,branch_concentrated,Other,14,9,291,1.68,37.5
+sediment,66,branch_detected,Branch 47,5,5,2621,25.71,488
+sediment,66,branch_detected,Branch 66,4,2,2621,23.585,463
+sediment,66,branch_detected,Downstream of both,3,3,2621,45.69,860
+sediment,66,branch_detected,Other,14,9,2621,23.445,413.5

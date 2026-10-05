@@ -170,6 +170,19 @@ source attribution. These analyses can compare ASV sharing or compositional
 similarity; they should not infer colonization direction from this cross-section
 alone.
 
+The descriptive soil-sharing maps and catchment-wide soil-ASV plot are now
+implemented. The catchment plot includes small habitat-specific smooths in
+log10 drainage area. `microbes/15_first_detection_flowpaths.R` also classifies
+ASVs by their earliest surveyed detection pool: soils first, then the earliest
+aquatic network stage, retaining ties among parallel habitats. Grouped
+within-sample richness and read percentages do not require paired sites.
+Equal-sample inventory draws diagnose sensitivity to unequal habitat coverage.
+See [the soil report](microbes/README_SOIL_STREAM_LOCALIZATION.md).
+The initial ASV-example, branch, and distance-correlation plots are archived;
+Python drainage preprocessing remains available for a revised upstream-soil
+comparison. Neither classification nor smooths establish movement or source
+percentages.
+
 ## Reproducibility rule
 
 Every analysis script should:

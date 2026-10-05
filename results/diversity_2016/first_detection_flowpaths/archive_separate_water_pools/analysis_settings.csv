@@ -1,0 +1,2 @@
+target_depth,detection_threshold,balanced_draws,balanced_samples_per_cell,base_seed,assignment,summary
+10000,1,1000,3,20261005,Soil first; earliest aquatic network group; retain habitat ties,Mean within-sample percentages

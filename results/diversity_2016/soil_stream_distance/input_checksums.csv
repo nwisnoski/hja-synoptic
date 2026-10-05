@@ -1,0 +1,5 @@
+path,initial_md5,final_md5,unchanged
+/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/asv_counts_10k.csv,d9121c9599889ba92cc330e258a4c569,d9121c9599889ba92cc330e258a4c569,TRUE
+/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/sample_metadata.csv,0aa9d2533bf5910bd965b64e4a11c928,0aa9d2533bf5910bd965b64e4a11c928,TRUE
+/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/asv_metadata_screened.csv,7fc8eb797b749ee90fd4bab5816f68f6,7fc8eb797b749ee90fd4bab5816f68f6,TRUE
+/Users/nawis/GitHub/hja-synoptic/data/StreamCenterline.csv,9a1de3d6e53c03f2366113d8ec370328,9a1de3d6e53c03f2366113d8ec370328,TRUE

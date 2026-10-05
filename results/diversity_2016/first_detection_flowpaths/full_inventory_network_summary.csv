@@ -1,0 +1,37 @@
+draw_id,habitat,network_group,category,samples,richness_percent,read_percent
+0,hyporheic,Headwater,Aquatic,15,50.60313748069571,47.99933333333333
+0,hyporheic,Headwater,Sediment,15,0,0
+0,hyporheic,Headwater,Sediment + Aquatic,15,17.230864957653612,17.311333333333334
+0,hyporheic,Headwater,Soil,15,32.16599756165068,34.68933333333333
+0,hyporheic,Intermediate,Aquatic,11,57.12473527975927,55.86909090909091
+0,hyporheic,Intermediate,Sediment,11,5.093155520326479,4.121818181818182
+0,hyporheic,Intermediate,Sediment + Aquatic,11,10.6678163547072,14.004545454545456
+0,hyporheic,Intermediate,Soil,11,27.114292845207046,26.004545454545454
+0,hyporheic,Mainstem,Aquatic,5,45.69757336440523,46.58
+0,hyporheic,Mainstem,Sediment,5,7.75511620670701,6.51
+0,hyporheic,Mainstem,Sediment + Aquatic,5,12.381232144382242,13.23
+0,hyporheic,Mainstem,Soil,5,34.16607828450552,33.68
+0,planktonic,Headwater,Aquatic,10,68.36639532590975,67.198
+0,planktonic,Headwater,Sediment,10,0,0
+0,planktonic,Headwater,Sediment + Aquatic,10,12.479853229303039,12.771
+0,planktonic,Headwater,Soil,10,19.15375144478721,20.031
+0,planktonic,Intermediate,Aquatic,7,66.943447047140765,67.20857142857143
+0,planktonic,Intermediate,Sediment,7,3.890060614329407,3.738571428571429
+0,planktonic,Intermediate,Sediment + Aquatic,7,7.3175820737331385,8.242857142857142
+0,planktonic,Intermediate,Soil,7,21.848910264796682,20.810000000000002
+0,planktonic,Mainstem,Aquatic,3,75.39927798665047,75.38333333333333
+0,planktonic,Mainstem,Sediment,3,3.1079973456687364,2.2666666666666666
+0,planktonic,Mainstem,Sediment + Aquatic,3,7.607757675389032,8.843333333333334
+0,planktonic,Mainstem,Soil,3,13.884966992291766,13.506666666666668
+0,sediment,Headwater,Aquatic,19,0,0
+0,sediment,Headwater,Sediment,19,24.907414892145617,14.844736842105263
+0,sediment,Headwater,Sediment + Aquatic,19,15.07264800843824,12.892631578947368
+0,sediment,Headwater,Soil,19,60.01993709941614,72.26263157894736
+0,sediment,Intermediate,Aquatic,10,1.178291124903978,0.547
+0,sediment,Intermediate,Sediment,10,31.11222328396987,19.436
+0,sediment,Intermediate,Sediment + Aquatic,10,14.24085504589108,12.279
+0,sediment,Intermediate,Soil,10,53.46863054523507,67.738
+0,sediment,Mainstem,Aquatic,5,1.2343533877053867,0.492
+0,sediment,Mainstem,Sediment,5,26.86701371862429,16.2
+0,sediment,Mainstem,Sediment + Aquatic,5,14.521512273560282,13.408
+0,sediment,Mainstem,Soil,5,57.37712062011004,69.9

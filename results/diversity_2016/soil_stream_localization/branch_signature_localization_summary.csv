@@ -1,0 +1,7 @@
+habitat,source_branch,asvs,detected_either_branch,more_detection_own_branch,more_detection_other_branch,equal_detection,more_abundance_own_branch
+hyporheic,47,225,31,16,15,194,13
+hyporheic,66,291,15,7,8,276,8
+planktonic,47,225,20,7,6,212,12
+planktonic,66,291,6,2,3,286,1
+sediment,47,225,127,63,43,119,70
+sediment,66,291,109,54,50,187,59

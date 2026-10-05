@@ -1,0 +1,25 @@
+habitat,pool,detection_threshold,response,model_id,pairs,soils,aquatic_samples,effect_per_distance_doubling,full_rank,diagnostic
+planktonic,soil_detected,1,soil_asv_detection_fraction,1,260,13,20,-3.827318448493977e-4,TRUE,Descriptive; no calibrated P value
+planktonic,soil_detected,1,aquatic_read_percent,2,260,13,20,-0.40810289376168046,TRUE,Descriptive; no calibrated P value
+planktonic,soil_detected,3,soil_asv_detection_fraction,3,260,13,20,-8.42868884868629e-4,TRUE,Descriptive; no calibrated P value
+planktonic,soil_detected,3,aquatic_read_percent,4,260,13,20,-0.17565762218921194,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,1,soil_asv_detection_fraction,5,260,13,20,2.33238770577891e-5,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,1,aquatic_read_percent,6,260,13,20,-0.005949878415398807,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,3,soil_asv_detection_fraction,7,260,13,20,-1.0222786896130743e-4,TRUE,Descriptive; no calibrated P value
+planktonic,soil_enriched,3,aquatic_read_percent,8,260,13,20,-0.003879103952459741,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,1,soil_asv_detection_fraction,9,403,13,31,-5.37138950554824e-4,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,1,aquatic_read_percent,10,403,13,31,-0.1044425011653717,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,3,soil_asv_detection_fraction,11,403,13,31,-8.347577977177563e-4,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_detected,3,aquatic_read_percent,12,403,13,31,-0.08938443224727761,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,1,soil_asv_detection_fraction,13,403,13,31,-1.8383068069902187e-4,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,1,aquatic_read_percent,14,403,13,31,-0.010595379812206441,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,3,soil_asv_detection_fraction,15,403,13,31,-2.0461184084123374e-4,TRUE,Descriptive; no calibrated P value
+hyporheic,soil_enriched,3,aquatic_read_percent,16,403,13,31,-0.00903664225514976,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,1,soil_asv_detection_fraction,17,442,13,34,4.1483602288343866e-4,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,1,aquatic_read_percent,18,442,13,34,0.024630673335045074,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,3,soil_asv_detection_fraction,19,442,13,34,2.824469087106315e-4,TRUE,Descriptive; no calibrated P value
+sediment,soil_detected,3,aquatic_read_percent,20,442,13,34,0.027806062092155057,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,1,soil_asv_detection_fraction,21,442,13,34,4.983695751875423e-4,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,1,aquatic_read_percent,22,442,13,34,0.014617891474117054,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,3,soil_asv_detection_fraction,23,442,13,34,9.478566602666125e-5,TRUE,Descriptive; no calibrated P value
+sediment,soil_enriched,3,aquatic_read_percent,24,442,13,34,0.025075703676414644,TRUE,Descriptive; no calibrated P value

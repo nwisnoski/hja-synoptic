@@ -1,0 +1,22 @@
+habitat,branch_context,included,samples
+hyporheic,Branch 47,FALSE,2
+hyporheic,Branch 47,TRUE,3
+hyporheic,Branch 66,FALSE,1
+hyporheic,Branch 66,TRUE,2
+hyporheic,Downstream of both,TRUE,2
+hyporheic,Other,FALSE,4
+hyporheic,Other,TRUE,17
+planktonic,Branch 47,FALSE,1
+planktonic,Branch 47,TRUE,2
+planktonic,Branch 66,FALSE,2
+planktonic,Branch 66,TRUE,1
+planktonic,Downstream of both,TRUE,2
+planktonic,Other,FALSE,1
+planktonic,Other,TRUE,11
+sediment,Branch 47,FALSE,1
+sediment,Branch 47,TRUE,5
+sediment,Branch 66,FALSE,2
+sediment,Branch 66,TRUE,4
+sediment,Downstream of both,TRUE,3
+sediment,Other,FALSE,5
+sediment,Other,TRUE,14

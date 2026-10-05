@@ -1,0 +1,13 @@
+asv_id,habitat,pool,detection_threshold,mapped_soil_sources,contributing_samples,noncontributing_samples,contributing_detection_fraction,noncontributing_detection_fraction,detection_difference,contributing_mean_read_percent,noncontributing_mean_read_percent,read_percent_difference,Phylum,Genus,soil_samples_detected,soil_mean_read_percent
+ASV_000143,hyporheic,soil_enriched,1,8,9,13,0.2222222222222222,0.15384615384615385,0.06837606837606836,0.09111111111111111,0.006153846153846154,0.08495726495726495,Actinomycetota,NA,9,0.08333333333333334
+ASV_000005,hyporheic,soil_enriched,1,13,4,12,0.75,0.6666666666666666,0.08333333333333337,0.0775,0.1575,-0.08,Pseudomonadota,Bradyrhizobium,15,1.026
+ASV_000001,hyporheic,soil_enriched,1,13,4,12,0.75,0.5,0.25,0.115,0.04083333333333333,0.07416666666666667,Pseudomonadota,Bradyrhizobium,15,3.4873333333333334
+ASV_000527,hyporheic,soil_enriched,1,11,4,13,0.5,0,0.5,0.045,0,0.045,Verrucomicrobiota,Candidatus Udaeobacter,13,0.20866666666666664
+ASV_000005,planktonic,soil_enriched,1,13,3,8,1,0.75,0.25,0.08333333333333334,0.1825,-0.09916666666666667,Pseudomonadota,Bradyrhizobium,15,1.026
+ASV_000017,planktonic,soil_enriched,1,10,5,9,0.2,0.1111111111111111,0.0888888888888889,0.09800000000000002,0.006666666666666667,0.09133333333333335,Verrucomicrobiota,Candidatus Udaeobacter,12,0.35733333333333334
+ASV_000210,planktonic,soil_enriched,1,13,3,8,0,0.125,-0.125,0,0.04,-0.04,Actinomycetota,Mycobacterium,15,0.11933333333333332
+ASV_000359,planktonic,soil_enriched,1,11,3,8,0,0.125,-0.125,0,0.0375,-0.0375,Pseudomonadota,NA,13,0.10133333333333333
+ASV_000001,sediment,soil_enriched,1,13,5,13,1,1,0,0.346,0.5884615384615385,-0.24246153846153848,Pseudomonadota,Bradyrhizobium,15,3.4873333333333334
+ASV_000017,sediment,soil_enriched,1,10,9,15,1,1,0,0.06555555555555555,0.178,-0.11244444444444446,Verrucomicrobiota,Candidatus Udaeobacter,12,0.35733333333333334
+ASV_000005,sediment,soil_enriched,1,13,5,13,1,1,0,0.124,0.2053846153846154,-0.08138461538461539,Pseudomonadota,Bradyrhizobium,15,1.026
+ASV_000045,sediment,soil_enriched,1,13,5,13,0.6,1,-0.4,0.01,0.06538461538461537,-0.05538461538461538,Pseudomonadota,NA,15,0.3413333333333333

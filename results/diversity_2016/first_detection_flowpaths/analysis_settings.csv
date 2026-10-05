@@ -1,0 +1,2 @@
+target_depth,detection_threshold,balanced_draws,balanced_samples_per_cell,base_seed,aquatic_pool,assignment,summary
+10000,1,1000,3,20261005,Hyporheic + planktonic,Soil first; earliest network group; retain sediment-water ties,Mean within-sample percentages
