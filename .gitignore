@@ -70,3 +70,11 @@ reference/*
 /figures/2016_integrated_chemistry_pca.pdf
 /figures/2016_microbial_pca_integrated_chemistry.pdf
 /figures/2016_paired_molecular_microbes_procrustes.pdf
+
+# Full-size nine-draw bipartite benchmark outputs; retain the main analysis.
+/results/fticr_2016/bipartite_network_pilot/
+/figures/pilot_2016_sediment_bipartite_association_nulls.pdf
+/figures/pilot_2016_sediment_bipartite_module_null.pdf
+/figures/pilot_2016_sediment_bipartite_groups.pdf
+/figures/pilot_2016_sediment_bipartite_association_matrix.png
+/figures/pilot_2016_sediment_bipartite_stable_group.pdf

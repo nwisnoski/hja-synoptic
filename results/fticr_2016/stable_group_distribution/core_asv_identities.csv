@@ -1,0 +1,39 @@
+node_type,feature_id,pattern_id,representative_id,module,degree,total_abundance,sequence_length,Kingdom,Phylum,Class,Order,Family,Genus,Species,core,detected_sediment_sites_34,reads_sediment_sites_34,fraction_core_reads_34
+ASV,ASV_000400,ASVP_0058,ASV_000400,3,5,5094,253,Bacteria,Nitrospirota,Nitrospiria,Nitrospirales,Nitrospiraceae,Nitrospira,NA,2,19,124,0.05918854415274463
+ASV,ASV_000618,ASVP_0131,ASV_000618,3,3,3749,253,Bacteria,Acidobacteriota,Subgroup 5,NA,NA,NA,NA,2,20,127,0.06062052505966587
+ASV,ASV_000621,ASVP_0133,ASV_000621,3,1,3721,253,Bacteria,Gemmatimonadota,Gemmatimonadia,Gemmatimonadales,Gemmatimonadaceae,NA,NA,2,22,129,0.06157517899761337
+ASV,ASV_000779,ASVP_0201,ASV_000779,3,2,3124,253,Bacteria,Pseudomonadota,Gammaproteobacteria,PLTA13,NA,NA,NA,2,15,78,0.037231503579952266
+ASV,ASV_000815,ASVP_0217,ASV_000815,3,3,2996,253,Bacteria,Gemmatimonadota,Gemmatimonadia,Gemmatimonadales,Gemmatimonadaceae,NA,NA,2,17,113,0.05393794749403341
+ASV,ASV_000996,ASVP_0288,ASV_000996,3,9,2565,253,Bacteria,Acidobacteriota,Acidobacteriae,Bryobacterales,Bryobacteraceae,Bryobacter,NA,2,15,88,0.04200477326968974
+ASV,ASV_001019,ASVP_0301,ASV_001019,3,14,2523,253,Bacteria,Acidobacteriota,Acidobacteriae,Bryobacterales,Bryobacteraceae,Bryobacter,NA,2,16,114,0.05441527446300716
+ASV,ASV_001113,ASVP_0346,ASV_001113,3,7,2339,253,Bacteria,Pseudomonadota,Gammaproteobacteria,HOC36,NA,NA,NA,2,17,116,0.05536992840095466
+ASV,ASV_001128,ASVP_0354,ASV_001128,3,4,2314,253,Bacteria,Entotheonellaeota,Entotheonellia,Entotheonellales,Entotheonellaceae,NA,NA,2,20,74,0.03532219570405728
+ASV,ASV_001207,ASVP_0391,ASV_001207,3,8,2191,253,Bacteria,Pseudomonadota,Alphaproteobacteria,Hyphomicrobiales,KF-JG30-B3,NA,NA,2,18,84,0.04009546539379475
+ASV,ASV_001215,ASVP_0393,ASV_001215,3,2,2177,253,Bacteria,NB1-j,NA,NA,NA,NA,NA,2,14,74,0.03532219570405728
+ASV,ASV_001295,ASVP_0436,ASV_001295,3,4,2089,253,Bacteria,Acidobacteriota,Blastocatellia,11-24,NA,NA,NA,2,15,81,0.03866348448687351
+ASV,ASV_001535,ASVP_0580,ASV_001535,3,8,1788,253,Bacteria,Gemmatimonadota,Gemmatimonadia,Gemmatimonadales,Gemmatimonadaceae,NA,NA,2,14,59,0.028162291169451074
+ASV,ASV_001620,ASVP_0626,ASV_001620,3,3,1705,253,Bacteria,Pseudomonadota,Gammaproteobacteria,Burkholderiales,TRA3-20,NA,NA,2,15,52,0.024821002386634844
+ASV,ASV_002142,ASVP_0928,ASV_002142,3,3,1344,253,Bacteria,Bacteroidota,Bacteroidia,Chitinophagales,Saprospiraceae,Phaeodactylibacter,NA,2,15,52,0.024821002386634844
+ASV,ASV_002354,ASVP_1041,ASV_002354,3,3,1229,253,Bacteria,Acidobacteriota,Acidobacteriae,Terriglobales,NA,NA,NA,2,13,26,0.012410501193317422
+ASV,ASV_002410,ASVP_1068,ASV_002410,3,9,1207,254,Bacteria,Pseudomonadota,Alphaproteobacteria,Hyphomicrobiales,Xanthobacteraceae,NA,NA,2,15,44,0.02100238663484487
+ASV,ASV_002540,ASVP_1129,ASV_002540,3,6,1149,253,Bacteria,Acidobacteriota,Acidobacteriae,Solibacterales,Solibacteraceae,Candidatus Solibacter,NA,2,14,49,0.023389021479713605
+ASV,ASV_002577,ASVP_1148,ASV_002577,3,3,1133,253,Bacteria,Bacteroidota,Bacteroidia,Chitinophagales,Chitinophagaceae,Terrimonas,NA,2,15,30,0.014319809069212411
+ASV,ASV_002641,ASVP_1184,ASV_002641,3,3,1104,253,Bacteria,Verrucomicrobiota,Verrucomicrobiia,Pedosphaerales,Pedosphaeraceae,NA,NA,2,20,37,0.01766109785202864
+ASV,ASV_002801,ASVP_1257,ASV_002801,3,3,1049,253,Bacteria,Gemmatimonadota,Gemmatimonadia,Gemmatimonadales,Gemmatimonadaceae,NA,NA,2,15,36,0.017183770883054894
+ASV,ASV_002863,ASVP_1294,ASV_002863,3,3,1026,253,Bacteria,Latescibacterota,Latescibacteria,Latescibacterales,Latescibacteraceae,NA,NA,2,13,48,0.022911694510739856
+ASV,ASV_002875,ASVP_1297,ASV_002875,3,1,1019,253,Bacteria,Chloroflexota,Anaerolineae,RBG-13-54-9,NA,NA,NA,2,12,28,0.013365155131264916
+ASV,ASV_002938,ASVP_1328,ASV_002938,1,2,997,253,Bacteria,Planctomycetota,Planctomycetes,Gemmatales,Gemmataceae,NA,NA,2,14,31,0.014797136038186158
+ASV,ASV_003045,ASVP_1384,ASV_003045,3,2,958,253,Bacteria,Pseudomonadota,Gammaproteobacteria,Steroidobacterales,Woeseiaceae,JTB255 marine benthic group,NA,2,12,26,0.012410501193317422
+ASV,ASV_003150,ASVP_1419,ASV_003150,3,4,931,254,Bacteria,Acidobacteriota,Vicinamibacteria,Vicinamibacterales,NA,NA,NA,2,15,32,0.015274463007159905
+ASV,ASV_003202,ASVP_1450,ASV_003202,3,1,918,253,Bacteria,Acidobacteriota,Vicinamibacteria,Vicinamibacterales,NA,NA,NA,2,11,27,0.012887828162291169
+ASV,ASV_003359,ASVP_1513,ASV_003359,3,3,870,253,Bacteria,Pseudomonadota,Alphaproteobacteria,Caulobacterales,Hyphomonadaceae,Hirschia,NA,2,17,42,0.020047732696897375
+ASV,ASV_003430,ASVP_1535,ASV_003430,3,2,855,253,Bacteria,Acidobacteriota,Subgroup 22,NA,NA,NA,NA,2,13,36,0.017183770883054894
+ASV,ASV_003455,ASVP_1546,ASV_003455,3,2,849,253,Bacteria,Gemmatimonadota,Gemmatimonadia,Gemmatimonadales,Gemmatimonadaceae,NA,NA,2,10,28,0.013365155131264916
+ASV,ASV_003859,ASVP_1704,ASV_003859,3,1,764,253,Bacteria,Pseudomonadota,Gammaproteobacteria,Burkholderiales,TRA3-20,NA,NA,2,12,37,0.01766109785202864
+ASV,ASV_004117,ASVP_1799,ASV_004117,3,1,711,253,Bacteria,Acidobacteriota,Vicinamibacteria,Subgroup 17,NA,NA,NA,2,14,35,0.016706443914081145
+ASV,ASV_004446,ASVP_1902,ASV_004446,3,2,656,253,Bacteria,Planctomycetota,Planctomycetes,Planctomycetales,NA,NA,NA,2,11,29,0.013842482100238664
+ASV,ASV_004620,ASVP_1934,ASV_004620,3,8,631,253,Bacteria,Bacteroidota,Bacteroidia,Chitinophagales,Saprospiraceae,NA,NA,2,13,30,0.014319809069212411
+ASV,ASV_005041,ASVP_2027,ASV_005041,3,2,578,253,Bacteria,Pseudomonadota,Alphaproteobacteria,Sphingomonadales,Sphingomonadaceae,Sphingorhabdus,NA,2,11,20,0.00954653937947494
+ASV,ASV_005813,ASVP_1297,ASV_002875,3,1,497,253,Bacteria,Candidatus Kryptonia,Kryptonia,Kryptoniales,BSV26,NA,NA,2,12,23,0.010978520286396181
+ASV,ASV_006444,ASVP_2238,ASV_006444,3,3,441,253,Bacteria,Pseudomonadota,Alphaproteobacteria,Hyphomicrobiales,Hyphomicrobiales Incertae Sedis,Nordella,NA,2,12,21,0.010023866348448688
+ASV,ASV_007270,ASVP_2305,ASV_007270,3,1,386,253,Bacteria,Acidobacteriota,Acidobacteriae,Bryobacterales,Bryobacteraceae,Bryobacter,NA,2,11,15,0.007159904534606206

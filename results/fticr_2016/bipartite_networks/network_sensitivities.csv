@@ -1,0 +1,5 @@
+positive_edges,negative_edges,active_asv_patterns,active_molecular_patterns,modularity,modules,converged,view,threshold
+554,293,242,245,0.7534211315148251,74,TRUE,Raw incidence,0.6
+4842,2784,1123,782,0.5651211919118039,22,TRUE,Raw incidence,0.5
+52,23,37,35,0.8306213017751477,26,TRUE,Raw incidence,0.7
+1019,588,532,349,0.7331506094701126,190,TRUE,Detection and drainage adjusted,0.6

@@ -1,0 +1,46 @@
+site_code,sample_id,sediment_10k,molecular_profile,included,reason
+60,hja2016_127,TRUE,TRUE,TRUE,paired sediment observations
+72,hja2016_129,TRUE,TRUE,TRUE,paired sediment observations
+74,hja2016_131,TRUE,TRUE,TRUE,paired sediment observations
+84,hja2016_132,TRUE,TRUE,TRUE,paired sediment observations
+161,hja2016_133,TRUE,TRUE,TRUE,paired sediment observations
+169,hja2016_135,TRUE,TRUE,TRUE,paired sediment observations
+190,hja2016_136,TRUE,TRUE,TRUE,paired sediment observations
+CC-2,hja2016_139,TRUE,TRUE,TRUE,paired sediment observations
+CC-3,hja2016_140,TRUE,TRUE,TRUE,paired sediment observations
+CC-4,hja2016_141,TRUE,TRUE,TRUE,paired sediment observations
+KC-1,hja2016_142,TRUE,TRUE,TRUE,paired sediment observations
+KC-3,hja2016_144,TRUE,TRUE,TRUE,paired sediment observations
+155,hja2016_145,TRUE,TRUE,TRUE,paired sediment observations
+156,hja2016_146,TRUE,TRUE,TRUE,paired sediment observations
+163,hja2016_147,TRUE,TRUE,TRUE,paired sediment observations
+165,hja2016_148,TRUE,TRUE,TRUE,paired sediment observations
+53,hja2016_150,TRUE,TRUE,TRUE,paired sediment observations
+64,hja2016_151,TRUE,TRUE,TRUE,paired sediment observations
+66,hja2016_152,TRUE,TRUE,TRUE,paired sediment observations
+82,hja2016_155,TRUE,TRUE,TRUE,paired sediment observations
+43,hja2016_157,TRUE,FALSE,FALSE,no molecular profile
+49,hja2016_159,TRUE,TRUE,TRUE,paired sediment observations
+50,hja2016_160,TRUE,TRUE,TRUE,paired sediment observations
+45,hja2016_122,TRUE,TRUE,TRUE,paired sediment observations
+56,hja2016_125,TRUE,TRUE,TRUE,paired sediment observations
+260,hja2016_164,TRUE,TRUE,TRUE,paired sediment observations
+57,hja2016_166,TRUE,TRUE,TRUE,paired sediment observations
+WS3-1,hja2016_167,TRUE,TRUE,TRUE,paired sediment observations
+WS3-2,hja2016_169,TRUE,TRUE,TRUE,paired sediment observations
+WS3-3,hja2016_170,TRUE,TRUE,TRUE,paired sediment observations
+WS1-3,hja2016_177,TRUE,TRUE,TRUE,paired sediment observations
+WS1-5,hja2016_179,TRUE,TRUE,TRUE,paired sediment observations
+WS1-6,hja2016_180,TRUE,TRUE,TRUE,paired sediment observations
+177,hja2016_181,TRUE,TRUE,TRUE,paired sediment observations
+WS1-2,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+WS1-8,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+WS3-4,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+WS3-5,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+47,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+54,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+58,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+65,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+68,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+170,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K
+360,NA,FALSE,TRUE,FALSE,no sediment sample retained at 10K

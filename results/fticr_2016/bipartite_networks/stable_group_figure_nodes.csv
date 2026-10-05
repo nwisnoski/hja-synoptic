@@ -1,0 +1,46 @@
+pattern_id,core,node_type,representative_id,original_features,Phylum,color_group,x,y,label,mean_asv_position
+ASVP_0131,2,ASV,ASV_000618,1,Acidobacteriota,Acidobacteriota,0,1,ASV_000618,NA
+ASVP_0288,2,ASV,ASV_000996,1,Acidobacteriota,Acidobacteriota,0,2,ASV_000996,NA
+ASVP_0301,2,ASV,ASV_001019,1,Acidobacteriota,Acidobacteriota,0,3,ASV_001019,NA
+ASVP_0436,2,ASV,ASV_001295,1,Acidobacteriota,Acidobacteriota,0,4,ASV_001295,NA
+ASVP_1041,2,ASV,ASV_002354,1,Acidobacteriota,Acidobacteriota,0,5,ASV_002354,NA
+ASVP_1129,2,ASV,ASV_002540,1,Acidobacteriota,Acidobacteriota,0,6,ASV_002540,NA
+ASVP_1419,2,ASV,ASV_003150,1,Acidobacteriota,Acidobacteriota,0,7,ASV_003150,NA
+ASVP_1450,2,ASV,ASV_003202,1,Acidobacteriota,Acidobacteriota,0,8,ASV_003202,NA
+ASVP_1535,2,ASV,ASV_003430,1,Acidobacteriota,Acidobacteriota,0,9,ASV_003430,NA
+ASVP_1799,2,ASV,ASV_004117,1,Acidobacteriota,Acidobacteriota,0,10,ASV_004117,NA
+ASVP_2305,2,ASV,ASV_007270,1,Acidobacteriota,Acidobacteriota,0,11,ASV_007270,NA
+ASVP_0133,2,ASV,ASV_000621,1,Gemmatimonadota,Gemmatimonadota,0,12,ASV_000621,NA
+ASVP_0217,2,ASV,ASV_000815,1,Gemmatimonadota,Gemmatimonadota,0,13,ASV_000815,NA
+ASVP_0580,2,ASV,ASV_001535,1,Gemmatimonadota,Gemmatimonadota,0,14,ASV_001535,NA
+ASVP_1257,2,ASV,ASV_002801,1,Gemmatimonadota,Gemmatimonadota,0,15,ASV_002801,NA
+ASVP_1546,2,ASV,ASV_003455,1,Gemmatimonadota,Gemmatimonadota,0,16,ASV_003455,NA
+ASVP_0058,2,ASV,ASV_000400,1,Nitrospirota,Other phyla,0,17,ASV_000400,NA
+ASVP_0354,2,ASV,ASV_001128,1,Entotheonellaeota,Other phyla,0,18,ASV_001128,NA
+ASVP_0393,2,ASV,ASV_001215,1,NB1-j,Other phyla,0,19,ASV_001215,NA
+ASVP_0928,2,ASV,ASV_002142,1,Bacteroidota,Other phyla,0,20,ASV_002142,NA
+ASVP_1148,2,ASV,ASV_002577,1,Bacteroidota,Other phyla,0,21,ASV_002577,NA
+ASVP_1184,2,ASV,ASV_002641,1,Verrucomicrobiota,Other phyla,0,22,ASV_002641,NA
+ASVP_1294,2,ASV,ASV_002863,1,Latescibacterota,Other phyla,0,23,ASV_002863,NA
+ASVP_1297,2,ASV,ASV_002875,2,Chloroflexota,Other phyla,0,24,ASV_002875 (+1),NA
+ASVP_1328,2,ASV,ASV_002938,1,Planctomycetota,Other phyla,0,25,ASV_002938,NA
+ASVP_1902,2,ASV,ASV_004446,1,Planctomycetota,Other phyla,0,26,ASV_004446,NA
+ASVP_1934,2,ASV,ASV_004620,1,Bacteroidota,Other phyla,0,27,ASV_004620,NA
+ASVP_0201,2,ASV,ASV_000779,1,Pseudomonadota,Pseudomonadota,0,28,ASV_000779,NA
+ASVP_0346,2,ASV,ASV_001113,1,Pseudomonadota,Pseudomonadota,0,29,ASV_001113,NA
+ASVP_0391,2,ASV,ASV_001207,1,Pseudomonadota,Pseudomonadota,0,30,ASV_001207,NA
+ASVP_0626,2,ASV,ASV_001620,1,Pseudomonadota,Pseudomonadota,0,31,ASV_001620,NA
+ASVP_1068,2,ASV,ASV_002410,1,Pseudomonadota,Pseudomonadota,0,32,ASV_002410,NA
+ASVP_1384,2,ASV,ASV_003045,1,Pseudomonadota,Pseudomonadota,0,33,ASV_003045,NA
+ASVP_1513,2,ASV,ASV_003359,1,Pseudomonadota,Pseudomonadota,0,34,ASV_003359,NA
+ASVP_1704,2,ASV,ASV_003859,1,Pseudomonadota,Pseudomonadota,0,35,ASV_003859,NA
+ASVP_2027,2,ASV,ASV_005041,1,Pseudomonadota,Pseudomonadota,0,36,ASV_005041,NA
+ASVP_2238,2,ASV,ASV_006444,1,Pseudomonadota,Pseudomonadota,0,37,ASV_006444,NA
+MOLP_0124,2,Molecular,FTICR_14319,1,NA,Molecular feature,1,1,FTICR_14319,3
+MOLP_0155,2,Molecular,FTICR_14857,1,NA,Molecular feature,1,6.142857142857143,FTICR_14857,3
+MOLP_0208,2,Molecular,FTICR_15869,1,NA,Molecular feature,1,11.285714285714286,FTICR_15869,12.25
+MOLP_0461,2,Molecular,FTICR_20959,1,NA,Molecular feature,1,16.42857142857143,FTICR_20959,16.7
+MOLP_0017,2,Molecular,FTICR_11736,1,NA,Molecular feature,1,21.571428571428573,FTICR_11736,17
+MOLP_0322,2,Molecular,FTICR_18143,1,NA,Molecular feature,1,26.714285714285715,FTICR_18143,19
+MOLP_0462,2,Molecular,FTICR_20963,1,NA,Molecular feature,1,31.85714285714286,FTICR_20963,19.291666666666668
+MOLP_0472,2,Molecular,FTICR_21109,1,NA,Molecular feature,1,37,FTICR_21109,22.22222222222222

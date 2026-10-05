@@ -1,0 +1,2 @@
+paired_sites,distinct_segments,detected_asvs,detected_molecular_features,all_detected_candidate_pairs,minimum_molecular_detections,maximum_molecular_detections,richness_spearman_rho
+33,26,17764,4496,79866944,391,2638,0.06434898970042664

@@ -340,6 +340,87 @@ visually inspected. No remote action, push, or beta-NTI calculation was
 performed. This matched analysis is committed together with the full-site
 microbial dispersion analysis, figures, results, and documentation.
 
+### Local bipartite network update: 2026-10-04
+
+`analysis/fticr/08_bipartite_feasibility.R`, `09_bipartite_networks.R`, and
+`10_bipartite_consensus.R` now implement the sediment ASV-molecular network
+workflow. Methods, captions, results, and limits are in
+`analysis/fticr/README_BIPARTITE_NETWORKS.md`. Tables are in
+`results/fticr_2016/bipartite_networks/`; four vector PDFs and a 600-dpi
+association-matrix PNG are in `figures/`. All use the fixed 10K ASV table
+and binary molecular data, with 33 paired sites and 26 stream segments.
+
+Requiring presence and absence in at least 10 sites retains 2,405 ASVs and
+902 molecular features, collapsed to 2,392/850 unique detection patterns with
+full identifier mappings. The primary threshold is phi >= 0.6 for positive
+links; negative links use phi <= -0.6 and do not define positive modules.
+There are 554 positive and 293 negative links. BRIM fits Barber bipartite
+modularity with eight starts; the observed heuristic modularity is 0.7534.
+Individual links have no calibrated P values or edge-level FDR claims.
+
+All 999 draws for each of four nulls succeeded (3,996 total). Positive and
+negative counts exceed molecular fixed-margin expectations of 367.3/181.0
+(both BH-adjusted P = 0.003). Modularity exceeds a fixed-degree bipartite
+graph null (mean 0.6350; BH-adjusted P = 0.004). Whole-profile shuffling,
+including shuffling within stream order, does not support excess positive
+links (P = 0.200/0.313) or modularity. The fixed-margin null disrupts
+molecular covariance; its rejection does not establish specific microbial
+chemistry coupling. Within-order shuffling does not fully control geography.
+
+Segment-removal refits show unstable broad module boundaries. The exploratory
+80% link/co-membership screen retains 261 positive links and one larger
+stable-link group containing 38 ASVs, eight molecular features, and 99 links.
+Mean all-cross-pair co-membership is 83.1%, but the minimum is 53.8%, so this
+is a connected stable-link set rather than a uniformly stable block. The
+group spans multiple phyla and is not an established metabolic guild.
+Detection-count/drainage partial correlations are descriptive; individual
+selected groups have no selection-adjusted significance tests. ASV-abundance
+and fully spatially conditional null sensitivities remain possible extensions.
+
+`check_bipartite_networks.R` passed analytical objective and phi checks;
+all 36 full-size pilot null draws reproduced in the final run at the same
+seeds. All inference and consensus inputs remained unchanged. All five
+figures were visually inspected after rendering. No remote action or push was
+performed. This network analysis is committed together with stable-group
+identities, catchment maps, and key findings. Pilot outputs are explicitly
+ignored, while main analysis tables and figures are retained.
+
+### Local stable-group identity and distribution update: 2026-10-04
+
+`analysis/fticr/11_stable_group_distribution.R` describes core 2 from the completed
+network analysis, without rerunning inference. Tables are in
+`results/fticr_2016/stable_group_distribution/`; three vector map PDFs are in
+`figures/`. Coverage is 34 microbial and 44 molecular sites, 45 unique sites and
+33 paired. Missing profiles remain distinct from nondetection; collapsed ASV
+pattern summaries are restricted to the original paired sites.
+
+Of 38 ASVs, 11 have genus assignments and none has a species assignment.
+Bryobacter has three ASVs; eight other named genera/groups have one each.
+Acidobacteriota/Pseudomonadota/Gemmatimonadota contain 11/10/5 ASVs. Eight assigned
+formulas include three protein-like, three lipid-like, and two
+condensed-hydrocarbon-like workbook signatures. Three peaks report 2/4/3 formula
+candidates, respectively; no structures or exact metabolites are identified.
+
+Paired-site median group read percentages are 0.08/1.075/0.06% in
+headwater/intermediate/mainstem reaches. Representation is patchy, with strong
+signals at 190, CC-4, KC-1/KC-3 and several intermediate sites, plus mainstem
+49/156. Site 50 has all eight formulas but only four group ASVs. Distribution
+summaries are descriptive for a selected group, without spatial significance
+tests. All 45 site coordinates and orders match their centerline segments; all
+seven input checksums are unchanged. All three maps were rendered and visually
+inspected. No remote action or push was performed. These outputs and the key
+findings are committed together with the bipartite network analysis.
+
+On October 4, Nathan interpreted the group as common in upper Lookout Creek and
+the Mack Creek branch draining Lookout Mountain, upstream of their confluence.
+`analysis/KEY_FINDINGS_2016.md` records this map-based interpretation as a priority
+follow-up and integrates core 2 as a candidate localized microbial–molecular
+result alongside weak whole-composition concordance and the modest property-PC
+association. Branch membership and above/below-confluence contrasts are not yet
+audited or tested. Follow-up should consider detection count, order/drainage,
+shared segments, sediment properties, and group/spatial-hypothesis selection.
+Do not describe this observation as a confirmed branch effect or metabolic guild.
+
 ### Historical cluster handoff: 2026-10-02
 
 Catchment job **431635** was submitted on 2026-09-30 and verified running on

@@ -1,0 +1,4 @@
+network_group,microbial_sites,molecular_sites,paired_sites,median_asvs_detected,median_asv_read_percent,median_molecules_detected,paired_median_asvs_detected,paired_median_asv_read_percent,paired_median_molecules_detected
+Headwater,19,24,18,4,0.08,3,3.5,0.08,3
+Intermediate,10,14,10,27.5,1.075,7.5,27.5,1.075,8
+Mainstem,5,6,5,4,0.06,5,4,0.06,7

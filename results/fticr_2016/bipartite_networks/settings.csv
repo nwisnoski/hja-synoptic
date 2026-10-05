@@ -1,0 +1,2 @@
+target_depth,minimum_present_and_absent,edge_threshold,n_null,observed_seed,null_seed,resampling_seed,max_sweeps,modularity_tolerance,quasiswap_thin,sites,segments,asv_patterns,molecular_patterns,candidate_pairs,optimizer_starts,test_run
+10000,10,0.6,999,20261041,20261040,20261042,100,1e-10,100,33,26,2392,850,2033200,"0,0,4,8,16,32,64,128",FALSE

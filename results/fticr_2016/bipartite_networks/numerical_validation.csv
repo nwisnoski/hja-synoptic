@@ -1,0 +1,2 @@
+toy_block_modularity,maximum_phi_error,objective_error,row_update_gain,column_update_gain,checked_null_runs,pilot_available,reproduced_pilot_runs,passed
+0.5,7.216449660063518e-16,1.2323475573339238e-14,-9.992007221626409e-16,-1.1102230246251565e-15,3996,TRUE,36,TRUE

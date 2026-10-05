@@ -1,0 +1,6 @@
+path,initial_md5,final_md5,unchanged
+/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/bipartite_networks/candidate_edges.csv,60213e4e0417ea5d12a5ab722ac213e5,60213e4e0417ea5d12a5ab722ac213e5,TRUE
+/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/bipartite_networks/feature_pattern_map.csv,5bbbf0f585206aa51b9e8146f9de1a63,5bbbf0f585206aa51b9e8146f9de1a63,TRUE
+/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/bipartite_networks/asv_module_taxonomy.csv,156e046560effcbf5bd1d76e19f71e83,156e046560effcbf5bd1d76e19f71e83,TRUE
+/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/bipartite_networks/molecular_module_properties.csv,d8105af1097c359affc2529b1454bae4,d8105af1097c359affc2529b1454bae4,TRUE
+/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/bipartite_networks/leave_segment_out_memberships.csv,5950aea935430ab5ae0a343342a288f9,5950aea935430ab5ae0a343342a288f9,TRUE

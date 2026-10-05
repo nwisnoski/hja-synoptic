@@ -19,6 +19,11 @@ source(here::here("analysis", "fticr", "04_integrated_chemistry_pca.R"))
 source(here::here("analysis", "fticr", "05_network_dispersion.R"))
 source(here::here("analysis", "fticr", "06_aquatic_microbe_chemistry.R"))
 source(here::here("analysis", "fticr", "07_matched_sediment_dispersion.R"))
+source(here::here("analysis", "fticr", "08_bipartite_feasibility.R"))
+source(here::here("analysis", "fticr", "09_bipartite_networks.R"))
+source(here::here("analysis", "fticr", "10_bipartite_consensus.R"))
+source(here::here("analysis", "fticr", "11_stable_group_distribution.R"))
+source(here::here("analysis", "fticr", "check_bipartite_networks.R"))
 source(here::here("analysis", "microbes", "08_sediment_figures.R"))
 ```
 
@@ -173,3 +178,29 @@ finite and nonnegative, and every profile had positive total signal. Microbial
 Hill summaries agreed with the baseline to tolerance 1e-8. The PDFs were
 rendered with Poppler through R's pdftools and visually inspected; the PNG was
 inspected separately. Outputs include inspectable tables and session records.
+
+## Bipartite ASV-molecular groups on 2026-10-04
+
+See [bipartite networks](README_BIPARTITE_NETWORKS.md) for completed inference,
+four null comparisons, segment-removal stability, the labeled stable-group
+figure, and interpretation limits. The 33-site analysis identifies one larger
+candidate stable-link group containing 38 ASVs and eight molecular features.
+Strong links exceed a fixed-incidence-margin null, and topology exceeds a
+fixed-degree graph null; whole-profile pairing nulls are nonsignificant.
+Individual edges and selected groups do not have calibrated significance tests.
+
+`11_stable_group_distribution.R` now exports full core-2 taxonomic identities,
+assigned molecular formulas and candidate counts, and site profiles for all
+34 microbial/44 molecular sediment sites. The three catchment-map PDFs show
+patchy representation, with the highest paired-site median microbial fraction
+in intermediate reaches. Formula assignments and workbook chemical classes do
+not resolve molecular structures. See the identities and distribution section
+of the bipartite-network report for the eight formulas, site examples, map
+captions, and the distinction between missing profiles and nondetections.
+
+The [2016 key findings and follow-up](../KEY_FINDINGS_2016.md) now integrate
+this candidate group with the weak whole-composition correspondence and modest
+molecular-property association. Nathan's October 4 map interpretation places
+much of the group in upper Lookout and Mack Creek, draining Lookout Mountain,
+commonly upstream of their confluence. Audited branch assignments and targeted
+comparisons remain follow-up work; this geographic hypothesis is post hoc.

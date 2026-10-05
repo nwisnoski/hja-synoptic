@@ -7,6 +7,9 @@ as a legacy analysis, not as inputs to the new ASV workflow.
 
 Start here:
 
+- [2016 key findings and follow-up](analysis/KEY_FINDINGS_2016.md) — current
+  microbial–molecular integration findings, interpretation limits, and the
+  proposed Lookout Mountain drainage/confluence comparison.
 - [DADA2 workflow](analysis/README_DADA2.md) — numbered commands, review
   checkpoints, outputs, and troubleshooting.
 - [Environmental and FT-ICR-MS preparation](analysis/data_prep/README.md) —
@@ -35,4 +38,3 @@ Start here:
 | `reference/` | Optional SILVA taxonomy training files | Large files; not committed |
 | `mothur/` | Legacy OTU-processing records | Reference only |
 | `archive/` | Reversibly archived provenance and old logs | Restore with the documented R housekeeping script |
-
