@@ -271,6 +271,36 @@ PDFs were rendered and visually inspected:
   side, ASVs in panel A and molecular features in B. Dark colors indicate more
   group members detected, not higher molecular concentration or microbial biomass.
 
+### Single-panel co-location map added on 2026-10-06
+
+Run `source(here::here("analysis", "fticr", "13_plot_stable_group_colocation.R"))`
+to create `figures/2016_sediment_stable_group_colocation_map.pdf` and the labeled
+version `figures/2016_sediment_stable_group_colocation_map_labeled.pdf` directly
+from the completed distribution tables. It verifies the original input hashes and
+site coordinates, and does not repeat network inference or change group
+membership. The labeled component maps and their multipanel combination above
+are retained unchanged for supplementary use. Map data and preservation hashes
+are in `results/fticr_2016/stable_group_distribution/colocation_figure/`.
+Both vector PDFs were rendered and visually inspected. The labeled version
+retains all 45 site identifiers, using the individual maps' label seed, text
+size, and leader-line styling with added space around the larger circles.
+
+Draft caption: Catchment co-location of the microbial and molecular components
+of selected stable-link group core 2. At each of 33 paired sediment sites,
+circle size encodes the fraction of the group's 38 ASVs detected and fill color
+encodes the fraction of its eight FT-ICR molecular features detected. Large,
+dark circles indicate high representation of both components. Circle size has
+a minimum visible value for zero ASV detections; small colored circles retain
+sites with molecular detections but no group ASVs. Crosses mark the 12 sites
+with one profile unavailable and do not indicate nondetection. Gray lines show
+the recorded stream centerlines, and point locations use the audited site
+coordinates without jitter. Single-panel versions are available with and
+without site labels; the supplementary maps retain their labels. Fractions describe detected group membership,
+not biomass or molecular concentration. This display retains the two components
+separately and introduces neither a joint score nor a whole-module presence
+threshold. Co-location is descriptive for a selected association group and
+does not establish production, consumption, or spatial significance.
+
 ## Spatial interpretation and priority follow-up
 
 On October 4, 2026, Nathan interpreted the catchment maps as placing much of
