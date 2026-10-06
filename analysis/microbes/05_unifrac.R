@@ -1,17 +1,43 @@
 # UniFrac analysis of the 2016 microbial communities.
-# Run from the repository root after the tree is built.
+# Use the completed master tree; this script does not rebuild the phylogeny.
 
 library(ape)
 library(phangorn)
 library(phyloseq)
+library(here)
 library(vegan)
 library(ggplot2)
+library(patchwork)
 
-data_dir <- "data/derived/microbial_diversity_2016"
-tree_file <- "results/phylogeny_2016/asv_tree_screened_fasttree.nwk"
-results_dir <- "results/diversity_2016/tables"
-figures_dir <- "figures"
+# 1. Settings and plotting theme.
+data_dir <- here("data", "derived", "microbial_diversity_2016")
+tree_file <- here("results", "phylogeny_2016", "asv_tree_screened_fasttree.nwk")
+results_dir <- here("results", "diversity_2016", "tables")
+figures_dir <- here("figures")
 
+habitat_order <- c("planktonic", "hyporheic", "sediment", "soil")
+habitat_labels <- c(
+  planktonic = "Planktonic streamwater",
+  hyporheic = "Hyporheic porewater",
+  sediment = "Stream sediment",
+  soil = "Terrestrial soil"
+)
+habitat_colors <- c(
+  planktonic = "#0072B2",
+  hyporheic = "#E69F00",
+  sediment = "#009E73",
+  soil = "#D55E00"
+)
+rarefaction_depth <- 10000L
+
+plot_theme <- theme_bw(base_size = 12) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.background = element_blank()
+  )
+
+# 2. Read and align the fixed-depth counts and sample metadata.
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -30,10 +56,11 @@ counts <- t(as.matrix(counts_table))
 storage.mode(counts) <- "integer"
 
 metadata <- metadata[match(rownames(counts), metadata$sample_id), ]
-if (anyNA(metadata$sample_id) || !all(rowSums(counts) == 10000)) {
+if (anyNA(metadata$sample_id) || !all(rowSums(counts) == rarefaction_depth)) {
   stop("The 10K count table and sample metadata are not aligned.")
 }
 
+# 3. Prune and midpoint-root the completed tree in memory.
 # FastTree estimates an unrooted tree, whereas UniFrac requires a root. Prune
 # to the ASVs in the 10K table and apply a midpoint root in memory. The full
 # tree on disk remains unchanged and is retained for later iCAMP analyses.
@@ -44,6 +71,7 @@ if (!all(colnames(counts) %in% tree$tip.label)) {
 tree <- keep.tip(tree, colnames(counts))
 tree <- midpoint(tree)
 
+# 4. Calculate weighted and unweighted UniFrac.
 physeq <- phyloseq(
   otu_table(counts, taxa_are_rows = FALSE),
   phy_tree(tree)
@@ -66,6 +94,7 @@ write.csv(
   row.names = FALSE
 )
 
+# 5. Ordinate distances with a Lingoes correction.
 # UniFrac is not necessarily Euclidean, so use a Lingoes correction for PCoA.
 unweighted_pcoa <- wcmdscale(
   unweighted_unifrac, k = 2, eig = TRUE, add = "lingoes"
@@ -107,7 +136,7 @@ write.csv(
   data.frame(
     samples = nrow(counts),
     asvs = ncol(counts),
-    reads_per_sample = 10000,
+    reads_per_sample = rarefaction_depth,
     rooting = "midpoint root applied after pruning to the 10K table",
     unweighted_pcoa1_percent = 100 * unweighted_variance[1],
     unweighted_pcoa2_percent = 100 * unweighted_variance[2],
@@ -118,48 +147,45 @@ write.csv(
   row.names = FALSE
 )
 
-habitat_order <- c("planktonic", "hyporheic", "sediment", "soil")
-habitat_labels <- c(
-  planktonic = "Planktonic streamwater",
-  hyporheic = "Hyporheic porewater",
-  sediment = "Stream sediment",
-  soil = "Terrestrial soil"
-)
-habitat_colors <- c(
-  planktonic = "#2C7FB8",
-  hyporheic = "#41B6C4",
-  sediment = "#8C6D31",
-  soil = "#4D9221"
-)
+# 6. Plot the two ordinations.
 unifrac_scores$habitat <- factor(
   unifrac_scores$habitat,
   levels = habitat_order
 )
-unifrac_scores$panel <- ifelse(
-  unifrac_scores$distance == "Unweighted UniFrac",
-  paste0(
-    "Unweighted UniFrac (PCoA1 ", round(100 * unweighted_variance[1], 1),
-    "%, PCoA2 ", round(100 * unweighted_variance[2], 1), "%)"
-  ),
-  paste0(
-    "Weighted UniFrac (PCoA1 ", round(100 * weighted_variance[1], 1),
-    "%, PCoA2 ", round(100 * weighted_variance[2], 1), "%)"
+unifrac_panels <- list()
+for (distance_name in c("Unweighted UniFrac", "Weighted UniFrac")) {
+  plot_data <- unifrac_scores[unifrac_scores$distance == distance_name, ]
+  axis_variance <- unweighted_variance
+  file_label <- "unweighted"
+  if (distance_name == "Weighted UniFrac") {
+    axis_variance <- weighted_variance
+    file_label <- "weighted"
+  }
+  unifrac_panels[[distance_name]] <- ggplot(plot_data, aes(pcoa1, pcoa2, color = habitat)) +
+    geom_point(size = 2.2, alpha = 0.8) +
+    coord_equal() +
+    scale_color_manual(values = habitat_colors, labels = habitat_labels) +
+    labs(
+      x = paste0("PCoA1 (", round(100 * axis_variance[1], 1), "%)"),
+      y = paste0("PCoA2 (", round(100 * axis_variance[2], 1), "%)"),
+      color = "Habitat"
+    ) +
+    plot_theme
+  ggsave(
+    file.path(figures_dir, paste0("2016_unifrac_", file_label, "_pcoa_by_habitat.pdf")),
+    unifrac_panels[[distance_name]],
+    width = 6,
+    height = 4.8,
+    bg = "white"
   )
-)
-unifrac_plot <- ggplot(
-  unifrac_scores,
-  aes(pcoa1, pcoa2, color = habitat)
-) +
-  geom_point(size = 2.2, alpha = 0.8) +
-  facet_wrap(~panel, scales = "free") +
-  scale_color_manual(values = habitat_colors, labels = habitat_labels) +
-  labs(x = "PCoA1", y = "PCoA2", color = "Habitat") +
-  theme_bw()
+}
+unifrac_plot <- wrap_plots(unifrac_panels, nrow = 1, guides = "collect")
 ggsave(
   file.path(figures_dir, "2016_unifrac_pcoa_by_habitat.pdf"),
   unifrac_plot,
-  width = 10,
-  height = 5
+  width = 11,
+  height = 4.8,
+  bg = "white"
 )
 
 message("UniFrac analysis complete.")

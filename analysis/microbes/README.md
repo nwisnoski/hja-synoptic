@@ -22,19 +22,21 @@ ASV example and distance-correlation plots are disabled and archived under
 `figures/archive/soil_first_pass/`. The initial branch plots are also archived
 pending refinement; the Python drainage backbone and analysis tables remain.
 
-Open the repository as the working folder in Positron. The scripts require no
-command-line arguments.
+Open the project in Positron. The early preparation and diversity scripts use
+`here` paths and can be sourced from any working directory inside the repository,
+without command-line arguments. Their readability rewrite is documented in
+[the validation report](../README_SCRIPT_CLARITY.md).
 
 Run the relevant files in order; the completed phylogeny need not be rebuilt.
 The revised iCAMP scripts are ready for a cluster pilot; obtain approval
 before transferring files or submitting jobs. See the rerun plan below.
 
 ```r
-source("analysis/microbes/01_prepare_diversity.R")
-source("analysis/microbes/02_basic_diversity.R")
-source("analysis/microbes/03_build_phylogeny.R")
-source("analysis/microbes/04_network_environment.R")
-source("analysis/microbes/05_unifrac.R")
+source(here::here("analysis", "microbes", "01_prepare_diversity.R"))
+source(here::here("analysis", "microbes", "02_basic_diversity.R"))
+# The completed master phylogeny is reused; do not rerun 03_build_phylogeny.R.
+source(here::here("analysis", "microbes", "04_network_environment.R"))
+source(here::here("analysis", "microbes", "05_unifrac.R"))
 # Submit analysis/cluster/run_icamp_sediment.sh for the long iCAMP run.
 # Submit analysis/cluster/run_icamp_catchment.sh for the catchment run.
 ```
@@ -80,12 +82,12 @@ The job loads `openmpi4` and R 4.4.0, uses the OpenMP FastTree installation at
 `~/scratch/shared/bioinformatics/FastTree/FastTree`, and requests 8 CPUs,
 128 GB RAM, and 96 hours.
 
-`04_network_environment.R` is deliberately exploratory. It joins Hill diversity
-to network position, makes separate Hellinger PCAs within each aquatic habitat,
-and plots alpha diversity and community scores along drainage area, distance to
-the outlet, planar coordinates, and sediment EEA. It fits no permutation tests
-or environmental models. Inspect these figures before choosing a small number
-of models in the next analysis step.
+`04_network_environment.R` joins Hill diversity to network position, makes
+separate Hellinger PCAs within each aquatic habitat, and plots drainage-area
+patterns, planar coordinates, and sediment EEA. Its current drainage figures
+use only log10 drainage area and show fitted lines only for slopes passing the
+stated adjusted significance threshold. The slope tests remain exploratory;
+see the methods and output notes below.
 
 `05_unifrac.R` prunes the completed master tree to the ASVs in the fixed 10K
 table, roots it at its midpoint in memory, and calculates unweighted and
@@ -155,3 +157,77 @@ Catchment iCAMP job 431635 timed out during distance construction. See
 [the rerun plan](../README_ICAMP_RERUN.md) before submitting another job;
 the existing distance matrix is incomplete and must not be reused. The revised
 scripts use fresh `_castor` output folders and leave the original intact.
+
+## Early diversity figure notes and method references
+
+The alpha figures report Hill orders q = 0, 1, and 2. The iNEXT figure shows
+expected diversity interpolated to exactly 10,000 reads per sample, without
+bootstrap intervals (`nboot = 0`). Its explanation belongs here rather than
+inside the figure. Figure jitter uses seed 2016; the fixed count-table
+rarefaction retains its original seed 2016. The early plots now match the later microbial plotting convention: 12-point
+text; planktonic blue (`#0072B2`), hyporheic orange (`#E69F00`), sediment green
+(`#009E73`), and soil vermilion (`#D55E00`); white backgrounds; no gray facet
+boxes; and explicit white PDF exports. Only response-versus-gradient plots
+retain light horizontal guides. Ordination axes use equal physical scales.
+Short alpha-panel habitat labels denote planktonic streamwater, hyporheic
+porewater, stream sediment, and terrestrial soil.
+
+All existing overview filenames remain. The alpha and iNEXT overviews combine
+q = 0, 1, and 2 panels from left to right with patchwork; UniFrac combines
+unweighted and weighted panels from left to right, with one collected legend.
+Their individual vector PDFs are also saved. Spatial PC1 panels share one
+color range. No overall titles, subtitles, or explanatory footnotes are embedded
+in figures.
+
+### Drainage-area figures and line selection
+
+The q = 1, q = 2, and community-PC1 network overviews now contain one drainage
+column with three habitat rows. Their existing filenames are retained, including
+`2016_alpha_q1_network_gradients.pdf` and
+`2016_alpha_q2_network_gradients.pdf`. The x axis is log10 drainage area in
+hectares. All observed points remain; lines are drawn only when the two-sided
+slope test has BH-adjusted P < 0.05. No confidence bands are drawn. Nine individual
+drainage panels use the identical rule. The script no longer generates
+outlet-distance panels; existing outlet-distance PDFs are historical descriptive
+outputs. Distance remains in the metadata exports.
+
+Each model is `response ~ log10(drainage area)`, fitted separately by habitat.
+Point estimates use ordinary least squares. Slope covariance is clustered by
+recorded stream segment using `sandwich::vcovCL(type = "HC1", cadjust = TRUE)`;
+tests and 95% slope intervals use a t distribution with G - 1 degrees of freedom,
+where G is the habitat's number of distinct segments. This allows residual
+correlation among sites sharing a segment. It is an approximate exploratory
+procedure with 17 planktonic and 27 hyporheic/sediment clusters; it does not
+control arbitrary spatial correlation between different segments.
+
+BH adjustment is applied to the three habitat tests separately for each response
+(q = 1, q = 2, and PC1). All nine estimates, R-squared values, ordinary and
+clustered raw P values, adjusted P values, intervals, cluster/sample counts,
+diagnostics, and line-display flags are saved in
+`results/diversity_2016/tables/network_drainage_regressions.csv`.
+`network_drainage_model_inclusion.csv` records every model input and exclusion
+flag. All nine fits succeeded, with no excluded observations. None of the nine
+slopes passes the display threshold: q = 1 adjusted P values are
+0.937/0.234/0.234, q = 2 values are 0.908/0.198/0.198, and PC1 values are
+0.791/0.473/0.473 for planktonic/hyporheic/sediment habitats, respectively.
+Thus the current drainage figures show points without regression lines.
+
+The full estimates remain available even when a line is hidden. This plotting
+rule is not evidence that a nonsignificant effect is zero, and it does not turn
+these associations into confirmatory or causal results. Sediment EEA figures
+show observations only; their slopes have not been tested and are outside this
+drainage test family.
+The fixed-10K tables, alpha estimates, and PCA score exports are unchanged.
+
+Methods: [Cameron and Miller (2015), cluster-robust inference](https://doi.org/10.3368/jhr.50.2.317);
+[Zeileis, Köll, and Graham (2020), clustered covariance implementation](https://doi.org/10.18637/jss.v095.i01);
+[Benjamini and Hochberg (1995), multiple-testing adjustment](https://doi.org/10.1111/j.2517-6161.1995.tb02031.x);
+and [Wasserstein and Lazar (2016), interpretation of P values](https://doi.org/10.1080/00031305.2016.1154108).
+
+These methods are unchanged by the readability pass:
+
+- Chao et al. (2014), [Rarefaction and extrapolation with Hill numbers](https://doi.org/10.1890/13-0133.1).
+- Hsieh, Ma, and Chao (2016), [iNEXT: an R package for rarefaction and extrapolation of species diversity](https://doi.org/10.1111/2041-210X.12613).
+- Legendre and Gallagher (2001), [Ecologically meaningful transformations for ordination of species data](https://doi.org/10.1007/s004420100716).
+- Lozupone and Knight (2005), [UniFrac: a new phylogenetic method for comparing microbial communities](https://doi.org/10.1128/AEM.71.12.8228-8235.2005).
+- Lozupone et al. (2007), [Quantitative and qualitative beta diversity measures lead to different insights into factors that structure microbial communities](https://doi.org/10.1128/AEM.01996-06).

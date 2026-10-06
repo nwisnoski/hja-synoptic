@@ -65,6 +65,10 @@ Dropbox access. New explicit user instructions take precedence.
   colorblind-safe palettes, useful gridlines only, and no gray facet-label boxes.
 - Keep titles, subtitles, and explanatory footnotes in captions or associated
   notes rather than on the figure itself.
+- By default, show regression lines only when the corresponding slope passes
+  the stated significance threshold, using multiplicity adjustment when
+  appropriate. Retain all observations and report all tested slopes in tables,
+  including nonsignificant slopes. Do not add untested trend lines.
 - Save single panels; use patchwork for combinations when useful and retain
   the individual panels.
 - Default to vector PDF. Use raster for dense plots that would make PDF files

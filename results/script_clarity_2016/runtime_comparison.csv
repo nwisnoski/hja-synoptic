@@ -1,0 +1,7 @@
+script,original_seconds,revised_seconds,original_exit_code,revised_exit_code
+analysis/build_sample_manifest.R,0.2,0.2,0,0
+analysis/data_prep/run_data_preparation.R,100.11,99.89,0,0
+analysis/microbes/01_prepare_diversity.R,50.53,49.52,0,0
+analysis/microbes/02_basic_diversity.R,36.04,36.66,0,0
+analysis/microbes/04_network_environment.R,3.06,4.23,0,0
+analysis/microbes/05_unifrac.R,34.43,33.18,0,0

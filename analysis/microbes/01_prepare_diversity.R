@@ -1,16 +1,30 @@
 # Prepare the 2016 microbial data used by downstream analyses.
-# Run this file from the hja-synoptic repository root.
+# Run directly in Positron from any working directory inside this project.
 
+library(here)
 library(vegan)
 
+# 1. Settings.
 rarefaction_depth <- 10000L
 random_seed <- 2016L
-output_dir <- "data/derived/microbial_diversity_2016"
+target_kingdoms <- c("Bacteria", "Archaea")
+organelle_ranks <- c("Class", "Order", "Family", "Genus")
+organelle_pattern <- "mitochond|chloroplast"
+output_dir <- here("data", "derived", "microbial_diversity_2016")
+# Give the four sample types short habitat names.
+habitat_names <- c(
+  "planktonic streamwater" = "planktonic",
+  "hyporheic water" = "hyporheic",
+  "stream sediment" = "sediment",
+  "terrestrial soil" = "soil"
+)
+
+# 2. Read completed DADA2 tables and screen the ASV catalog.
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 # Read the DADA2 counts and sample information.
 count_table <- read.csv(
-  "results/dada2_2016/asv_count_table.csv",
+  here("results", "dada2_2016", "asv_count_table.csv"),
   check.names = FALSE
 )
 rownames(count_table) <- count_table$sample_id
@@ -21,25 +35,24 @@ storage.mode(raw_counts) <- "integer"
 # Keep bacterial and archaeal 16S sequences only. SILVA places chloroplast and
 # mitochondrial sequences within Bacteria, so remove those assignments too.
 taxonomy <- read.csv(
-  "results/dada2_2016/asv_taxonomy.csv",
+  here("results", "dada2_2016", "asv_taxonomy.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
 taxonomy <- taxonomy[match(colnames(raw_counts), taxonomy$asv_id), ]
 if (anyNA(taxonomy$asv_id)) stop("Some ASVs do not have taxonomy records.")
 
-organelle <- apply(
-  taxonomy[c("Class", "Order", "Family", "Genus")],
-  1,
-  function(x) any(grepl("mitochond|chloroplast", x, ignore.case = TRUE))
-)
-target_asvs <- taxonomy$Kingdom %in% c("Bacteria", "Archaea") & !organelle
+organelle <- rep(FALSE, nrow(taxonomy))
+for (rank in organelle_ranks) {
+  organelle <- organelle | grepl(organelle_pattern, taxonomy[[rank]], ignore.case = TRUE)
+}
+target_asvs <- taxonomy$Kingdom %in% target_kingdoms & !organelle
 target_counts <- raw_counts[, target_asvs, drop = FALSE]
 
 # Save the full screened ASV catalog for the master phylogeny. This catalog is
 # independent of sample-depth thresholds and rarefaction.
 sequences <- read.csv(
-  "results/dada2_2016/asv_sequences.csv",
+  here("results", "dada2_2016", "asv_sequences.csv"),
   stringsAsFactors = FALSE
 )
 sequences <- sequences[match(colnames(raw_counts), sequences$asv_id), ]
@@ -52,7 +65,7 @@ screened_asvs <- cbind(
 )
 
 metadata <- read.csv(
-  "results/dada2_2016/sample_metadata_and_read_tracking.csv",
+  here("results", "dada2_2016", "sample_metadata_and_read_tracking.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
@@ -63,7 +76,7 @@ metadata <- metadata[match(rownames(raw_counts), metadata$sample_id), ]
 
 # Add the DADA2 quality summaries.
 qc <- read.csv(
-  "results/dada2_2016/qc/sample_qc_flags.csv",
+  here("results", "dada2_2016", "qc", "sample_qc_flags.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
@@ -73,19 +86,12 @@ metadata <- cbind(
   qc[c("filter_retention", "merge_retention", "final_retention", "qc_flag")]
 )
 
-# Give the four sample types short habitat names.
-habitat_names <- c(
-  "planktonic streamwater" = "planktonic",
-  "hyporheic water" = "hyporheic",
-  "stream sediment" = "sediment",
-  "terrestrial soil" = "soil"
-)
 metadata$habitat <- unname(habitat_names[metadata$sample_type])
 if (anyNA(metadata$habitat)) stop("An unexpected sample type was found.")
 
-# Add site-level environmental data to aquatic samples.
+# 3. Join aquatic and soil metadata, preserving unresolved identities.
 environment <- read.csv(
-  "data/derived/analysis_inputs/environment/aquatic_59_site_environment.csv",
+  here("data", "derived", "analysis_inputs", "environment", "aquatic_59_site_environment.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
@@ -104,7 +110,7 @@ metadata <- cbind(metadata, environment_values)
 
 # Add the available soil coordinates and source-pool labels.
 soil <- read.csv(
-  "data/derived/analysis_inputs/source_pools/regional_soil_sample_metadata.csv",
+  here("data", "derived", "analysis_inputs", "source_pools", "regional_soil_sample_metadata.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
@@ -117,7 +123,7 @@ metadata <- cbind(metadata, soil_values)
 
 # Record whether an FT-ICR-MS profile is available at each aquatic site.
 fticr <- read.csv(
-  "data/derived/analysis_inputs/audit/fticr_site_summary.csv",
+  here("data", "derived", "analysis_inputs", "audit", "fticr_site_summary.csv"),
   stringsAsFactors = FALSE,
   na.strings = c("", "NA", "NaN")
 )
@@ -130,7 +136,7 @@ metadata <- cbind(metadata, fticr_values)
 metadata$fticr_profile_available <- aquatic &
   !is.na(metadata$detected_primary_features)
 
-# Summarize sequencing after target filtering and select the 10K analysis set.
+# 4. Summarize sequencing and select the fixed-depth analysis set.
 metadata$dada2_reads <- rowSums(raw_counts)
 metadata$target_reads <- rowSums(target_counts)
 metadata$non_target_reads_removed <- metadata$dada2_reads - metadata$target_reads
@@ -148,10 +154,12 @@ unrarefied_counts <- unrarefied_counts[
   , colSums(unrarefied_counts) > 0, drop = FALSE
 ]
 
+# 5. Rarefy once with the recorded seed; keep sample and ASV order unchanged.
 set.seed(random_seed)
 counts_10k <- rrarefy(unrarefied_counts, sample = rarefaction_depth)
 counts_10k <- counts_10k[, colSums(counts_10k) > 0, drop = FALSE]
 
+# 6. Save inspectable count and metadata tables.
 # ASVs are rows in the written count tables so the CSVs can be opened easily.
 unrarefied_table <- data.frame(
   asv_id = colnames(unrarefied_counts),
