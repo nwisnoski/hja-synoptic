@@ -1,26 +1,18 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs(trailingOnly = TRUE)
-script_file <- sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])
-script_dir <- dirname(normalizePath(script_file))
-source(file.path(script_dir, "helpers.R"))
-source(file.path(script_dir, "config.R"))
-options <- parse_named_args(
-  args,
-  list(project_root = normalizePath(file.path(script_dir, "..", "..")), output_root = NA_character_),
-  c("--project-root" = "project_root", "--output-root" = "output_root")
-)
-project_root <- normalizePath(options$project_root)
-output_root <- if (is.na(options$output_root)) {
-  under_project_root(prep_config$paths$output_root, project_root)
-} else {
-  under_project_root(options$output_root, project_root)
-}
+library(here)
+
+# 1. Settings and shared source-column definitions.
+source(here("analysis", "data_prep", "config.R"), local = TRUE)
+source(here("analysis", "data_prep", "helpers.R"), local = TRUE)
+output_root <- prep_config$paths$output_root
+
+# 2. Read inputs and check their identities.
 audit_dir <- file.path(output_root, "audit")
 multiblock_dir <- file.path(output_root, "sediment_multiblock")
 dir.create(multiblock_dir, recursive = TRUE, showWarnings = FALSE)
 
-dada2_dir <- under_project_root(prep_config$paths$dada2_output, project_root)
+dada2_dir <- prep_config$paths$dada2_output
 completion_marker <- file.path(dada2_dir, "session_info.txt")
 if (!file.exists(completion_marker)) {
   stop(
@@ -34,7 +26,7 @@ required <- c(
   environment = file.path(output_root, "environment", "sediment_44_environment.csv"),
   fticr = file.path(output_root, "fticr", "fticr_site_by_peak_primary.rds"),
   asv = file.path(dada2_dir, "asv_count_table.csv"),
-  manifest = under_project_root(prep_config$paths$sample_manifest, project_root)
+  manifest = prep_config$paths$sample_manifest
 )
 missing <- required[!file.exists(required)]
 if (length(missing)) stop("Missing prerequisite file(s): ", paste(missing, collapse = ", "))
@@ -48,6 +40,7 @@ manifest <- read_source_csv(required[["manifest"]])
 assert_columns(asv_data, "sample_id", "DADA2 ASV table")
 assert_unique_key(asv_data$sample_id, "DADA2 ASV table")
 
+# 3. Align all blocks to the verified sediment-site order.
 site_order <- crosswalk$site_code
 sample_order <- crosswalk$sediment_sample_id
 environment <- environment[match(site_order, environment$site_code), , drop = FALSE]
@@ -78,6 +71,7 @@ enzyme_columns <- c(
 assert_columns(environment, enzyme_columns, "44-site environmental table")
 enzyme_table <- environment[enzyme_columns]
 
+# 4. Write aligned inputs and their sample-identity audit.
 write_audit_csv(
   sample_metadata,
   file.path(multiblock_dir, "sediment_44_sample_metadata.csv")
@@ -125,6 +119,7 @@ alignment <- data.frame(
   stringsAsFactors = FALSE
 )
 write_audit_csv(alignment, file.path(audit_dir, "sediment_multiblock_alignment.csv"))
+# 5. Verify alignment and record package versions.
 stopifnot(
   nrow(asv) == 44L,
   nrow(fticr) == 44L,

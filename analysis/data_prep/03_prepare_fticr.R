@@ -1,29 +1,19 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs(trailingOnly = TRUE)
-script_file <- sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])
-script_dir <- dirname(normalizePath(script_file))
-source(file.path(script_dir, "helpers.R"))
-source(file.path(script_dir, "config.R"))
-options <- parse_named_args(
-  args,
-  list(project_root = normalizePath(file.path(script_dir, "..", "..")), output_root = NA_character_),
-  c("--project-root" = "project_root", "--output-root" = "output_root")
-)
-project_root <- normalizePath(options$project_root)
-output_root <- if (is.na(options$output_root)) {
-  under_project_root(prep_config$paths$output_root, project_root)
-} else {
-  under_project_root(options$output_root, project_root)
-}
+library(here)
+library(readxl)
+
+# 1. Settings and shared source-column definitions.
+source(here("analysis", "data_prep", "config.R"), local = TRUE)
+source(here("analysis", "data_prep", "helpers.R"), local = TRUE)
+output_root <- prep_config$paths$output_root
+
+# 2. Read inputs and check their identities.
 audit_dir <- file.path(output_root, "audit")
 fticr_dir <- file.path(output_root, "fticr")
 dir.create(fticr_dir, recursive = TRUE, showWarnings = FALSE)
-if (!requireNamespace("readxl", quietly = TRUE)) {
-  stop("Install the R package 'readxl' to read the FT-ICR-MS workbook.", call. = FALSE)
-}
 
-ft_path <- under_project_root(prep_config$paths$fticr_workbook, project_root)
+ft_path <- prep_config$paths$fticr_workbook
 column_types <- c(
   rep("numeric", 9L), "text", "text", rep("numeric", 3L),
   rep("numeric", 62L)
@@ -39,6 +29,7 @@ if (!identical(
   prep_config$fticr$expected_metadata_headers
 )) stop("FT-ICR-MS metadata columns do not match config.R.", call. = FALSE)
 
+# 3. Preserve source-row identities and separate site profiles from lab standards.
 peak_id <- sprintf("FTICR_%05d", seq_len(nrow(raw)))
 metadata <- as.data.frame(
   raw[prep_config$fticr$metadata_columns],
@@ -63,6 +54,7 @@ storage.mode(qc_by_peak) <- "numeric"
 rownames(qc_by_peak) <- c("LAB_QC_1", "LAB_QC_2")
 colnames(qc_by_peak) <- peak_id
 
+# 4. Apply the declared feature filters and retain every exclusion reason.
 filter_values <- prep_config$fticr$primary_filter
 detected_site_count <- colSums(site_by_peak > 0, na.rm = TRUE)
 within_mass_range <- metadata$measured_mz >= filter_values$minimum_mass &
@@ -74,15 +66,23 @@ detected_in_minimum_sites <-
 formula_assigned <- !is.na(metadata$carbon_count) & metadata$carbon_count > 0
 included_primary <- within_mass_range & c13_allowed &
   detected_in_minimum_sites & formula_assigned
-exclusion_reason <- vapply(seq_along(peak_id), function(i) {
-  reasons <- c(
-    if (!within_mass_range[i]) "outside_mass_200_900" else NULL,
-    if (!c13_allowed[i]) "c13_indicator_above_zero_or_missing" else NULL,
-    if (!detected_in_minimum_sites[i]) "detected_in_fewer_than_2_sites" else NULL,
-    if (!formula_assigned[i]) "no_formula_assignment_carbon_count_zero_or_missing" else NULL
-  )
-  if (!length(reasons)) "" else paste(reasons, collapse = ";")
-}, FUN.VALUE = character(1))
+exclusion_reason <- character(length(peak_id))
+for (i in seq_along(peak_id)) {
+  reasons <- character()
+  if (!within_mass_range[i]) {
+    reasons <- c(reasons, "outside_mass_200_900")
+  }
+  if (!c13_allowed[i]) {
+    reasons <- c(reasons, "c13_indicator_above_zero_or_missing")
+  }
+  if (!detected_in_minimum_sites[i]) {
+    reasons <- c(reasons, "detected_in_fewer_than_2_sites")
+  }
+  if (!formula_assigned[i]) {
+    reasons <- c(reasons, "no_formula_assignment_carbon_count_zero_or_missing")
+  }
+  exclusion_reason[i] <- paste(reasons, collapse = ";")
+}
 filter_status <- data.frame(
   peak_id = peak_id,
   source_workbook_row = metadata$source_workbook_row,
@@ -96,6 +96,7 @@ filter_status <- data.frame(
   stringsAsFactors = FALSE
 )
 
+# 5. Write matrices, feature metadata, and detection/QC summaries.
 write_matrix_csv_gz(
   site_by_peak[, included_primary, drop = FALSE],
   "site_code",
@@ -154,6 +155,7 @@ site_summary <- data.frame(
 )
 write_audit_csv(filter_log, file.path(audit_dir, "fticr_filter_log.csv"))
 write_audit_csv(site_summary, file.path(audit_dir, "fticr_site_summary.csv"))
+# 6. Check feature counts against the audited workbook.
 stopifnot(
   nrow(metadata) == 33741L,
   nrow(site_by_peak) == 60L,

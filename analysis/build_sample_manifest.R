@@ -2,17 +2,34 @@
 
 # Reconcile the 2016 HJA FASTQ files with the local sample list and
 # environmental metadata. Source files are read only; all outputs are written
-# to data/derived (or the directory supplied with --out-dir).
+# to data/derived. Run directly in Positron; no arguments are required.
 
-parse_args <- function(args) {
-  values <- list(
-    project_root = ".",
-    sequence_dir = "sequences",
-    sample_list = "data/hja-synoptic_sequence-sample-list.csv",
-    aquatic_metadata = "data/hja-env_data_clean.csv",
-    soil_metadata = "data/hja-synoptic_env-data-soils.csv",
-    out_dir = "data/derived"
-  )
+library(here)
+
+# 1. Settings.
+# Relative read paths are retained in the exported manifest for portability.
+manifest_paths <- list(
+  project_root = here(),
+  sequence_dir = "sequences",
+  sample_list = "data/hja-synoptic_sequence-sample-list.csv",
+  aquatic_metadata = "data/hja-env_data_clean.csv",
+  soil_metadata = "data/hja-synoptic_env-data-soils.csv",
+  out_dir = "data/derived"
+)
+sample_type_map <- c(
+  "Stream" = "planktonic streamwater",
+  "Hyporheic" = "hyporheic water",
+  "Sediment" = "stream sediment",
+  "Terrestrial soil" = "terrestrial soil"
+)
+presence_columns <- c("planktonic_streamwater", "hyporheic_water", "stream_sediment")
+aquatic_labels <- c("planktonic streamwater", "hyporheic water", "stream sediment")
+
+# 2. Shared text and CSV operations, plus legacy launcher path overrides.
+# The DADA2 cluster launcher uses --project-root. These flags change locations,
+# while the sample translation and inclusion rules stay explicit in this file.
+parse_args <- function(args, defaults) {
+  values <- defaults
   flags <- c(
     "--project-root" = "project_root",
     "--sequence-dir" = "sequence_dir",
@@ -61,13 +78,13 @@ write_csv <- function(x, path) {
   write.csv(x, path, row.names = FALSE, na = "")
 }
 
-args <- parse_args(commandArgs(trailingOnly = TRUE))
-root <- normalizePath(args$project_root, mustWork = TRUE)
-sequence_dir <- under_root(args$sequence_dir, root)
-sample_list_path <- under_root(args$sample_list, root)
-aquatic_path <- under_root(args$aquatic_metadata, root)
-soil_path <- under_root(args$soil_metadata, root)
-out_dir <- under_root(args$out_dir, root)
+paths <- parse_args(commandArgs(trailingOnly = TRUE), manifest_paths)
+root <- normalizePath(paths$project_root, mustWork = TRUE)
+sequence_dir <- under_root(paths$sequence_dir, root)
+sample_list_path <- under_root(paths$sample_list, root)
+aquatic_path <- under_root(paths$aquatic_metadata, root)
+soil_path <- under_root(paths$soil_metadata, root)
+out_dir <- under_root(paths$out_dir, root)
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 required_files <- c(sample_list_path, aquatic_path, soil_path)
@@ -79,6 +96,7 @@ if (!dir.exists(sequence_dir)) {
   stop("Missing sequence directory: ", sequence_dir, call. = FALSE)
 }
 
+# 3. Inventory paired FASTQs and validate library/read keys.
 fastq_paths <- sort(list.files(
   sequence_dir,
   pattern = "_R[12]_001[.]fastq[.]gz$",
@@ -154,9 +172,10 @@ if (anyNA(pairs$forward_filename) || anyNA(pairs$reverse_filename)) {
   stop("At least one library is missing its R1 or R2 file.", call. = FALSE)
 }
 pairs$run_id <- paste0("HJA2016_", pairs$plate)
-pairs$forward_path <- file.path(args$sequence_dir, pairs$forward_filename)
-pairs$reverse_path <- file.path(args$sequence_dir, pairs$reverse_filename)
+pairs$forward_path <- file.path(paths$sequence_dir, pairs$forward_filename)
+pairs$reverse_path <- file.path(paths$sequence_dir, pairs$reverse_filename)
 
+# 4. Translate sample-list identities with an explicit normalization audit.
 sample_list <- read_csv_preserve(sample_list_path)
 required_sample_columns <- c("Sample Name", "Site Code", "Sample Type")
 if (!all(required_sample_columns %in% names(sample_list))) {
@@ -189,12 +208,6 @@ crosswalk$normalization_note[unresolved_200] <-
     "a soil metagenome, but the soil site is unresolved."
   )
 
-sample_type_map <- c(
-  "Stream" = "planktonic streamwater",
-  "Hyporheic" = "hyporheic water",
-  "Sediment" = "stream sediment",
-  "Terrestrial soil" = "terrestrial soil"
-)
 crosswalk$sample_type <- unname(sample_type_map[crosswalk$sample_type_original])
 crosswalk$sample_year <- 2016L
 crosswalk$include <- TRUE
@@ -205,6 +218,7 @@ crosswalk$sra_run_accession <- NA_character_
 crosswalk$biosample_accession[crosswalk$sample_id == "hja2016_200"] <- "SAMN12129905"
 crosswalk$sra_run_accession[crosswalk$sample_id == "hja2016_200"] <- "SRR9592656"
 
+# 5. Match aquatic and soil metadata without assigning an unresolved soil site.
 aquatic <- read_csv_preserve(aquatic_path)
 if (!all(c("Site Code", "Sample Type") %in% names(aquatic))) {
   stop("Aquatic metadata is missing Site Code or Sample Type.", call. = FALSE)
@@ -280,6 +294,7 @@ soil_rows <- crosswalk$sample_type_original == "Terrestrial soil"
 normalized_match <- crosswalk$mapping_status == "MATCHED_NORMALIZED_SITE_CODE"
 unresolved_200 <- crosswalk$sample_id == "hja2016_200"
 
+# 6. Export habitat-specific metadata and audit missing aquatic triplets.
 aquatic_crosswalk <- crosswalk[aquatic_rows, , drop = FALSE]
 aq_idx <- match(
   paste(
@@ -316,20 +331,15 @@ for (i in seq_len(nrow(site_completeness))) {
   site_completeness$hyporheic_water[[i]] <- "Hyporheic" %in% types
   site_completeness$stream_sediment[[i]] <- "Sediment" %in% types
 }
-presence_columns <- c(
-  "planktonic_streamwater", "hyporheic_water", "stream_sediment"
-)
 site_completeness$sample_type_count <- rowSums(site_completeness[presence_columns])
 site_completeness$complete_triplet <- site_completeness$sample_type_count == 3L
-site_completeness$missing_sample_types <- apply(
-  site_completeness[presence_columns],
-  1,
-  function(present) {
-    labels <- c("planktonic streamwater", "hyporheic water", "stream sediment")
-    paste(labels[!present], collapse = "; ")
-  }
-)
+site_completeness$missing_sample_types <- character(nrow(site_completeness))
+for (i in seq_len(nrow(site_completeness))) {
+  present <- as.logical(site_completeness[i, presence_columns])
+  site_completeness$missing_sample_types[i] <- paste(aquatic_labels[!present], collapse = "; ")
+}
 
+# 7. Record mapping issues and verify the original inventory totals.
 issues <- data.frame(
   issue_type = character(),
   sample_id = character(),

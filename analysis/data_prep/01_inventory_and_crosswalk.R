@@ -1,36 +1,24 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs(trailingOnly = TRUE)
-script_file <- sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])
-script_dir <- dirname(normalizePath(script_file))
-source(file.path(script_dir, "helpers.R"))
-source(file.path(script_dir, "config.R"))
+library(here)
+library(readxl)
 
-options <- parse_named_args(
-  args,
-  list(project_root = normalizePath(file.path(script_dir, "..", "..")), output_root = NA_character_),
-  c("--project-root" = "project_root", "--output-root" = "output_root")
-)
-project_root <- normalizePath(options$project_root)
-output_root <- if (is.na(options$output_root)) {
-  under_project_root(prep_config$paths$output_root, project_root)
-} else {
-  under_project_root(options$output_root, project_root)
-}
+# 1. Settings and shared source-column definitions.
+source(here("analysis", "data_prep", "config.R"), local = TRUE)
+source(here("analysis", "data_prep", "helpers.R"), local = TRUE)
+output_root <- prep_config$paths$output_root
+
+# 2. Read inputs and check their identities.
 audit_dir <- file.path(output_root, "audit")
 dir.create(audit_dir, recursive = TRUE, showWarnings = FALSE)
-
-if (!requireNamespace("readxl", quietly = TRUE)) {
-  stop("Install the R package 'readxl' to read the FT-ICR-MS workbook.", call. = FALSE)
-}
 
 source_paths <- unlist(prep_config$paths[c(
   "master_environment", "fticr_workbook", "sample_manifest", "soil_metadata"
 )])
-inventory <- file_inventory(source_paths, project_root)
+inventory <- file_inventory(source_paths)
 write_audit_csv(inventory, file.path(audit_dir, "source_file_inventory.csv"))
 
-ft_path <- under_project_root(prep_config$paths$fticr_workbook, project_root)
+ft_path <- prep_config$paths$fticr_workbook
 ft_header <- suppressMessages(readxl::read_xlsx(
   ft_path, n_max = 0, .name_repair = "minimal"
 ))
@@ -75,9 +63,7 @@ write_audit_csv(
   file.path(audit_dir, "environment_variable_dictionary.csv")
 )
 
-master <- read_source_csv(under_project_root(
-  prep_config$paths$master_environment, project_root
-))
+master <- read_source_csv(prep_config$paths$master_environment)
 assert_columns(master, c("Site Code", "Sample Type"), "master environmental CSV")
 master$.source_workbook_row <- seq_len(nrow(master)) + 1L
 master_records <- master[
@@ -89,9 +75,7 @@ master_records <- master[
 master_key <- paste(master_records[["Site Code"]], master_records[["Sample Type"]], sep = "::")
 assert_unique_key(master_key, "master environmental site/sample-type rows")
 
-manifest <- read_source_csv(under_project_root(
-  prep_config$paths$sample_manifest, project_root
-))
+manifest <- read_source_csv(prep_config$paths$sample_manifest)
 assert_columns(
   manifest,
   c("sample_id", "site_code", "sample_type", "include", "is_control"),
@@ -101,52 +85,33 @@ manifest <- manifest[manifest$include & !manifest$is_control, , drop = FALSE]
 manifest_key <- paste(manifest$site_code, manifest$sample_type, sep = "::")
 assert_unique_key(manifest_key, "included non-control sample manifest")
 
-sample_id_for <- function(site_code, sample_type) {
-  one_value_or_na(manifest$sample_id[
-    manifest$site_code == site_code & manifest$sample_type == sample_type
-  ])
-}
-master_row_for <- function(site_code, sample_type) {
-  value <- master_records$.source_workbook_row[
-    master_records[["Site Code"]] == site_code &
-      master_records[["Sample Type"]] == sample_type
-  ]
-  if (!length(value)) return(NA_integer_)
-  if (length(value) > 1L) stop("Duplicate master match for ", site_code, " / ", sample_type)
-  value
-}
-
+# 3. Match each molecular site to sequenced habitats and master-table rows.
+# Keys were checked for duplicates above; unmatched habitats stay missing.
 ft_site_codes <- ft_names[prep_config$fticr$site_intensity_columns]
 assert_unique_key(ft_site_codes, "FT-ICR-MS site headers")
 crosswalk <- data.frame(
   fticr_source_column = prep_config$fticr$site_intensity_columns,
   site_code = ft_site_codes,
-  sediment_sample_id = vapply(
-    ft_site_codes, sample_id_for, sample_type = "stream sediment",
-    FUN.VALUE = character(1)
-  ),
-  planktonic_sample_id = vapply(
-    ft_site_codes, sample_id_for, sample_type = "planktonic streamwater",
-    FUN.VALUE = character(1)
-  ),
-  hyporheic_sample_id = vapply(
-    ft_site_codes, sample_id_for, sample_type = "hyporheic water",
-    FUN.VALUE = character(1)
-  ),
-  stream_master_row = vapply(
-    ft_site_codes, master_row_for, sample_type = "Stream",
-    FUN.VALUE = integer(1)
-  ),
-  hyporheic_master_row = vapply(
-    ft_site_codes, master_row_for, sample_type = "Hyporheic",
-    FUN.VALUE = integer(1)
-  ),
-  sediment_master_row = vapply(
-    ft_site_codes, master_row_for, sample_type = "Sediment",
-    FUN.VALUE = integer(1)
-  ),
   stringsAsFactors = FALSE
 )
+sequence_matches <- data.frame(
+  sample_type = c("stream sediment", "planktonic streamwater", "hyporheic water"),
+  output_column = c("sediment_sample_id", "planktonic_sample_id", "hyporheic_sample_id")
+)
+for (i in seq_len(nrow(sequence_matches))) {
+  target_key <- paste(ft_site_codes, sequence_matches$sample_type[i], sep = "::")
+  matched <- match(target_key, manifest_key)
+  crosswalk[[sequence_matches$output_column[i]]] <- manifest$sample_id[matched]
+}
+master_matches <- data.frame(
+  sample_type = c("Stream", "Hyporheic", "Sediment"),
+  output_column = c("stream_master_row", "hyporheic_master_row", "sediment_master_row")
+)
+for (i in seq_len(nrow(master_matches))) {
+  target_key <- paste(ft_site_codes, master_matches$sample_type[i], sep = "::")
+  matched <- match(target_key, master_key)
+  crosswalk[[master_matches$output_column[i]]] <- master_records$.source_workbook_row[matched]
+}
 crosswalk$has_sediment_sequence <- !is.na(crosswalk$sediment_sample_id)
 crosswalk$has_planktonic_sequence <- !is.na(crosswalk$planktonic_sample_id)
 crosswalk$has_hyporheic_sequence <- !is.na(crosswalk$hyporheic_sample_id)
@@ -167,6 +132,7 @@ crosswalk$mapping_status <- ifelse(
 )
 write_audit_csv(crosswalk, file.path(audit_dir, "sediment_site_crosswalk.csv"))
 
+# 4. Record exclusions and verify the audited sample counts.
 sediment_sites <- manifest$site_code[manifest$sample_type == "stream sediment"]
 issues <- rbind(
   data.frame(

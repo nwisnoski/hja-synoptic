@@ -1,23 +1,5 @@
 # Shared base-R helpers for the HJA analysis-input preparation scripts.
 
-parse_named_args <- function(args, defaults, flags) {
-  values <- defaults
-  i <- 1L
-  while (i <= length(args)) {
-    flag <- args[[i]]
-    if (!flag %in% names(flags) || i == length(args)) {
-      stop("Unknown or incomplete argument: ", flag, call. = FALSE)
-    }
-    values[[flags[[flag]]]] <- args[[i + 1L]]
-    i <- i + 2L
-  }
-  values
-}
-
-is_absolute_path <- function(path) grepl("^(/|[A-Za-z]:[/\\\\])", path)
-under_project_root <- function(path, project_root) {
-  if (is_absolute_path(path)) path else file.path(project_root, path)
-}
 read_source_csv <- function(path) {
   read.csv(
     path, stringsAsFactors = FALSE, check.names = FALSE,
@@ -56,30 +38,20 @@ assert_unique_key <- function(key, source_label) {
     )
   }
 }
-one_value_or_na <- function(x) {
-  x <- unique(x[!is.na(x) & x != ""])
-  if (!length(x)) return(NA_character_)
-  if (length(x) > 1L) {
-    stop("Expected at most one value, found: ", paste(x, collapse = ", "), call. = FALSE)
-  }
-  x
-}
-file_inventory <- function(paths, project_root) {
-  resolved <- vapply(
-    paths, under_project_root, project_root = project_root,
-    FUN.VALUE = character(1)
-  )
-  missing <- resolved[!file.exists(resolved)]
+# Keep relative source names in the audit, while resolving files through here.
+file_inventory <- function(paths) {
+  missing <- paths[!file.exists(paths)]
   if (length(missing)) {
     stop("Missing source file(s): ", paste(missing, collapse = ", "), call. = FALSE)
   }
-  info <- file.info(resolved)
+  source_paths <- substring(paths, nchar(here::here()) + 2L)
+  info <- file.info(paths)
   data.frame(
-    source_path = unname(paths),
-    absolute_path = normalizePath(resolved),
+    source_path = unname(source_paths),
+    absolute_path = normalizePath(paths),
     bytes = unname(info$size),
     modified_time = format(info$mtime, "%Y-%m-%d %H:%M:%S %Z"),
-    md5 = unname(tools::md5sum(resolved)),
+    md5 = unname(tools::md5sum(paths)),
     stringsAsFactors = FALSE
   )
 }

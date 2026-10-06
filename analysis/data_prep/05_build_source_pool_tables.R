@@ -1,26 +1,18 @@
 #!/usr/bin/env Rscript
 
-args <- commandArgs(trailingOnly = TRUE)
-script_file <- sub("^--file=", "", grep("^--file=", commandArgs(), value = TRUE)[1])
-script_dir <- dirname(normalizePath(script_file))
-source(file.path(script_dir, "helpers.R"))
-source(file.path(script_dir, "config.R"))
-options <- parse_named_args(
-  args,
-  list(project_root = normalizePath(file.path(script_dir, "..", "..")), output_root = NA_character_),
-  c("--project-root" = "project_root", "--output-root" = "output_root")
-)
-project_root <- normalizePath(options$project_root)
-output_root <- if (is.na(options$output_root)) {
-  under_project_root(prep_config$paths$output_root, project_root)
-} else {
-  under_project_root(options$output_root, project_root)
-}
+library(here)
+
+# 1. Settings and shared source-column definitions.
+source(here("analysis", "data_prep", "config.R"), local = TRUE)
+source(here("analysis", "data_prep", "helpers.R"), local = TRUE)
+output_root <- prep_config$paths$output_root
+
+# 2. Read inputs and check their identities.
 audit_dir <- file.path(output_root, "audit")
 source_dir <- file.path(output_root, "source_pools")
 dir.create(source_dir, recursive = TRUE, showWarnings = FALSE)
 
-dada2_dir <- under_project_root(prep_config$paths$dada2_output, project_root)
+dada2_dir <- prep_config$paths$dada2_output
 completion_marker <- file.path(dada2_dir, "session_info.txt")
 if (!file.exists(completion_marker)) {
   stop(
@@ -31,16 +23,13 @@ if (!file.exists(completion_marker)) {
 }
 crosswalk <- read_source_csv(file.path(audit_dir, "sediment_site_crosswalk.csv"))
 crosswalk <- crosswalk[crosswalk$include_sediment_multiblock, , drop = FALSE]
-manifest <- read_source_csv(under_project_root(
-  prep_config$paths$sample_manifest, project_root
-))
-soil_raw <- read_source_csv(under_project_root(
-  prep_config$paths$soil_metadata, project_root
-))
+manifest <- read_source_csv(prep_config$paths$sample_manifest)
+soil_raw <- read_source_csv(prep_config$paths$soil_metadata)
 asv_data <- read_source_csv(file.path(dada2_dir, "asv_count_table.csv"))
 assert_columns(asv_data, "sample_id", "DADA2 ASV table")
 assert_unique_key(asv_data$sample_id, "DADA2 ASV table")
 
+# 3. Index same-site aquatic comparisons and the regional soil pool.
 paired_source_map <- crosswalk[c(
   "site_code", "sediment_sample_id", "planktonic_sample_id",
   "hyporheic_sample_id", "has_planktonic_sequence", "has_hyporheic_sequence"
@@ -96,6 +85,7 @@ soil_asv <- as.matrix(
 storage.mode(soil_asv) <- "numeric"
 rownames(soil_asv) <- soil_manifest$sample_id
 
+# 4. Join soil metadata without assigning unresolved locations.
 soil_metadata <- soil_manifest
 soil_match <- match(soil_metadata$site_code, soil_raw[["Site.Code"]])
 for (column in names(soil_raw)) {
@@ -109,6 +99,7 @@ soil_metadata$source_pool_role <- ifelse(
 soil_metadata$comparison_warning <-
   "Regional soil context only; not spatially paired to aquatic site_code."
 
+# 5. Write source-pool inputs and verify sample coverage.
 write_audit_csv(
   aquatic_manifest,
   file.path(source_dir, "same_site_aquatic_sample_metadata.csv")

@@ -6,21 +6,26 @@ source CSV or workbook.
 
 ## Run
 
-From the repository root:
+Open the project in Positron and source the runner. Paths are resolved with
+`here`, so the working directory can be anywhere inside the repository.
 
 ```r
-system2(
-  file.path(R.home("bin"), "Rscript"),
-  "analysis/data_prep/run_data_preparation.R"
-)
+source(here::here("analysis", "data_prep", "run_data_preparation.R"))
 ```
 
-The runner executes inventory/crosswalk, environmental preparation, and
-FT-ICR-MS preparation. It executes the sediment multiblock and source-pool
-steps only after `results/dada2_2016/session_info.txt` confirms that DADA2
-finished. Rerun the same command then; partial DADA2 output is never consumed.
+Each numbered preparation script can also be sourced directly. Paths and
+molecular filters are declared in `config.R`; no command-line arguments are
+needed. The preparation scripts require `here` and `readxl`.
 
-The only preparation dependency beyond base R is `readxl`.
+The runner sources the five steps in order in separate environments. It stops
+on an error and runs the sediment multiblock and source-pool steps only after
+`results/dada2_2016/session_info.txt` confirms that DADA2 finished. This reads
+completed DADA2 tables without rerunning inference. If that marker is absent,
+the first three steps still run and the status table records the two waiting
+steps.
+
+See [the readability validation report](../README_SCRIPT_CLARITY.md) for the
+full-size comparison against the earlier scripts.
 
 ## Written record
 
