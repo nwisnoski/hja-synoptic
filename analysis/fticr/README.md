@@ -23,6 +23,7 @@ source(here::here("analysis", "fticr", "08_bipartite_feasibility.R"))
 source(here::here("analysis", "fticr", "09_bipartite_networks.R"))
 source(here::here("analysis", "fticr", "10_bipartite_consensus.R"))
 source(here::here("analysis", "fticr", "11_stable_group_distribution.R"))
+source(here::here("analysis", "fticr", "12_plot_matched_dispersion.R"))
 source(here::here("analysis", "fticr", "check_bipartite_networks.R"))
 source(here::here("analysis", "microbes", "08_sediment_figures.R"))
 ```
@@ -59,6 +60,11 @@ dispersion on those same 33 sites, using identical site selections in balanced
 draws. It preserves the full-site figures and results. See
 [matched sediment dispersion](README_MATCHED_SEDIMENT_DISPERSION.md) for the
 matched comparison, sensitivity design, outputs, and captions.
+
+`12_plot_matched_dispersion.R` draws a new two-panel comparison from those
+completed results, with sediment microbes on the left and FT-ICR molecular
+signatures on the right. It adds group means and panel letters, checks the
+recorded input hashes, and does not refit models or repeat randomizations.
 
 `results/fticr_2016/tables/site_overlap_audit.csv` records membership and analysis
 roles for all molecular profiles plus the unmatched sediment site. Raw-source

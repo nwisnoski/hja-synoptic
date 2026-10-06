@@ -1,0 +1,7 @@
+metric,network_group,n_sites,mean_distance
+microbial_bray,Headwater,18,0.4480962581021665
+microbial_bray,Intermediate,10,0.43675394238112053
+microbial_bray,Mainstem,5,0.4832270384901124
+molecular_equal_features,Headwater,18,0.6422117535664156
+molecular_equal_features,Intermediate,10,0.6216761416132506
+molecular_equal_features,Mainstem,5,0.5701487088216186

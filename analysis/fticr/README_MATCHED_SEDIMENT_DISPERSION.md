@@ -149,3 +149,39 @@ pattern does not establish transport or consolidation as its cause.
 For manuscript comparisons, use these matched panels together. The original
 44-site molecular and 34-sample sediment microbial panels remain useful as
 full-sampling summaries, with their respective original tests preserved.
+
+## Two-panel contrast figure added on 2026-10-06
+
+Run `source(here::here("analysis", "fticr", "12_plot_matched_dispersion.R"))`
+to draw the completed primary results without repeating inference. The script
+checks the original input/output hashes, shared site identities and group labels,
+and agreement of plotted means with the saved test table. It retains the older
+figures and creates:
+
+- `figures/2016_sediment_microbes_fticr_dispersion_comparison.pdf`
+- `figures/2016_sediment_microbes_fticr_dispersion_microbial.pdf`
+- `figures/2016_sediment_microbes_fticr_dispersion_molecular.pdf`
+
+Plot data, group means, and source hashes are in the `figure_comparison/`
+subdirectory of the matched results. The script runs from within the repository
+without arguments. All three new PDFs were rendered and visually inspected;
+the existing analysis tables and recorded inputs remained unchanged.
+
+Draft caption: Contrasting microbial and molecular compositional dispersion
+across network groups at the same 33 sediment sites. Panel A shows microbial
+Bray-Curtis dispersion from fixed-10,000-read communities; panel B shows FT-ICR
+molecular dispersion from mean Jaccard dissimilarity across 1,000 draws of 391
+detected features per site. Points are bias-adjusted distances to each group's
+spatial median, following [Anderson et al. (2006)](https://doi.org/10.1111/j.1461-0248.2006.00926.x)
+and the [vegan implementation](https://vegandevs.github.io/vegan/reference/betadisper.html).
+Boxes show the median and interquartile range, whiskers extend to the most
+extreme observation within 1.5 interquartile ranges, and black diamonds show
+group means. All sites are plotted, with horizontal jitter only. Headwaters,
+intermediate reaches, and mainstem reaches comprise stream orders 1-2, 3-4,
+and 5, respectively, with 18, 10, and five sites. The panels retain separate
+y-axis scales because the two distance metrics are not directly interchangeable.
+Mean molecular dispersion declines across groups (0.642, 0.622, 0.570;
+omnibus BH-adjusted P = 0.0008), whereas microbial means are 0.448, 0.437,
+and 0.483 (adjusted P = 0.5174). The contrast describes the observed patterns;
+it does not test a difference between microbial and molecular responses, nor
+does it establish a significant change at every successive network transition.
