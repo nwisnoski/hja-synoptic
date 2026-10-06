@@ -25,6 +25,7 @@ source(here::here("analysis", "fticr", "10_bipartite_consensus.R"))
 source(here::here("analysis", "fticr", "11_stable_group_distribution.R"))
 source(here::here("analysis", "fticr", "12_plot_matched_dispersion.R"))
 source(here::here("analysis", "fticr", "13_plot_stable_group_colocation.R"))
+source(here::here("analysis", "fticr", "14_plot_fticr_network_classes.R"))
 source(here::here("analysis", "fticr", "check_bipartite_networks.R"))
 source(here::here("analysis", "microbes", "08_sediment_figures.R"))
 ```

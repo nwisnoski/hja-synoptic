@@ -217,6 +217,46 @@ while adding surface/hyporheic optics does not strengthen the association.
 | `2016_fticr_replacement_pcoa.pdf` | Lingoes-corrected PCoA of the Jaccard replacement component at 44 molecular sites, colored by drainage area. The displayed axes retain 4.8% and 3.4% of corrected positive eigenvalues. |
 | `2016_fticr_equal_feature_pcoa.pdf` | PCoA of mean Jaccard dissimilarity across 1,000 uniform draws of 391 detected features per site. Color indicates drainage area; axes retain 5.2% and 3.3% of positive eigenvalues. This is a sensitivity analysis of observed features, not standardized analytical sampling depth. |
 
+## Network-group chemical-class figures added on 2026-10-06
+
+Run `source(here::here("analysis", "fticr", "14_plot_fticr_network_classes.R"))`
+to draw chemical-class comparisons using the established stream-order groups:
+headwater orders 1-2 (24 sites), intermediate orders 3-4 (14 sites), and mainstem
+order 5 (six sites). These figures use all 44 sediment FT-ICR profiles, rather
+than the 33-site microbial intersection. The original drainage-ordered figure
+is retained unchanged.
+
+- `2016_fticr_network_group_class_comparison.pdf` shows three stacked bars of
+  mean site-level fractions, with each site weighted equally within its group.
+- `2016_fticr_site_class_composition_by_network_group.pdf` retains all individual
+  site bars in three panels, ordered by increasing drainage area within each
+  group. Group labels appear below the x-axis site labels.
+- `2016_fticr_site_class_composition_headwater.pdf`,
+  `2016_fticr_site_class_composition_intermediate.pdf`, and
+  `2016_fticr_site_class_composition_mainstem.pdf` retain the individual panels.
+
+Site-level plot data, group means and descriptive standard deviations, and
+source hashes are in `results/fticr_2016/river_composition/network_class_figures/`.
+The script checks the audited group assignments, verifies the saved class
+fractions against current binary detections and source-workbook labels, and
+confirms that the original inputs and figure remain unchanged. All site and
+group fraction sums equal one within numerical tolerance. No new significance
+tests or regression lines are introduced. All five PDFs were rendered and
+visually inspected.
+
+Draft caption for the compact comparison: Mean chemical-class composition of
+detected FT-ICR molecular features across headwater, intermediate, and mainstem
+sediment sites (24, 14, and six sites). Each site's class counts are divided by
+its total detected primary features, then site-level fractions are averaged
+within network groups. This gives each site equal weight and avoids weighting
+feature-rich sites more heavily. Colors and class assignments follow the
+original workbook and earlier site-class figure. Fractions reflect detected
+feature counts, not intensity, concentration, or verified compounds. Bars are
+descriptive group means; they do not show sampling uncertainty or establish
+significant differences between groups. The individual-site counterpart shows
+within-group variation using the same fractions. Published methods and the
+limitations of the workbook's class assignments are discussed above.
+
 ## Verification and next work
 
 Binary entries, row/column alignment, class-fraction sums, matched microbial
