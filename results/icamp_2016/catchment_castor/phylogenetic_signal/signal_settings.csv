@@ -1,0 +1,2 @@
+min_occurrences,min_asvs,permutations,random_seed,correlation_method,r_cutoff,p_cutoff,elapsed_seconds
+3,6,999,20161009,pearson,0.1,0.05,178.3816430568695

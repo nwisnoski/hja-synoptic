@@ -175,9 +175,19 @@ manuscript results. Their tables remain available for refining comparisons.
   and other sediment conditions are candidate explanatory variables. The
   current exploratory EEA plots do not establish a functional bridge between
   microbial composition and molecular signatures.
-- No completed ecological iCAMP results are available in this checkout. The
-  [rerun notes](README_ICAMP_RERUN.md) record the pilot submission; current
-  remote status has not been checked for this synthesis.
+- The catchment iCAMP run completed on October 9. Mean abundance-weighted
+  fractions are 42.6% drift/other, 32.1% dispersal limitation, 18.5% homogeneous
+  selection, 5.0% heterogeneous selection, and 1.8% homogenizing dispersal.
+  Within sediment, homogeneous selection is 31.8%; between-habitat
+  heterogeneous selection averages only 5.9%. These are within-bin null-model
+  assignments, not direct process measurements or a test against habitat
+  filtering. Broad replacement among bins and within-bin phylogenetic signal
+  require attention before mechanistic interpretation. A habitat-affiliation
+  check finds BH-supported positive signal in 95 of 775 testable bins,
+  representing 14.5% of total abundance (13.8% without habitat balancing).
+  These observational profiles do not validate all environmental niches. See the
+  [results and diagnostics](microbes/README_ICAMP_RESULTS.md); the sediment-only
+  run remains pending.
 - Soil sharing does not establish movement direction or viable colonization;
   core-2 taxa and elemental formulas do not identify a metabolic guild.
   Prioritize measured sediment context and audited spatial contrasts before

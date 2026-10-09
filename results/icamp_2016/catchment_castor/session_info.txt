@@ -1,0 +1,37 @@
+R version 4.4.0 (2024-04-24)
+Platform: x86_64-pc-linux-gnu
+Running under: Linux (unknown distro)
+
+Matrix products: default
+BLAS:   /mnt/home/software/sources/R/install-4.4.0/lib64/R/lib/libRblas.so 
+LAPACK: /mnt/home/software/sources/R/install-4.4.0/lib64/R/lib/libRlapack.so;  LAPACK version 3.12.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/Chicago
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] bigmemory_4.6.6 castor_1.8.7    Rcpp_1.1.1-1.1  here_1.0.2     
+[5] iCAMP_1.9.1     phangorn_2.12.1 ape_5.8-1      
+
+loaded via a namespace (and not attached):
+ [1] permute_0.9-10      nlme_3.1-169        cli_3.6.6          
+ [4] rlang_1.2.0         generics_0.1.4      jsonlite_2.0.0     
+ [7] rprojroot_2.1.1     quadprog_1.5-8      grid_4.4.0         
+[10] MASS_7.3-65         naturalsort_0.1.3   lifecycle_1.0.5    
+[13] bigmemory.sri_0.1.8 cluster_2.1.8.2     compiler_4.4.0     
+[16] RSpectra_0.16-2     codetools_0.2-20    igraph_2.3.0       
+[19] pkgconfig_2.0.3     fastmatch_1.1-8     vegan_2.7-3        
+[22] mgcv_1.9-4          lattice_0.22-9      digest_0.6.39      
+[25] parallel_4.4.0      splines_4.4.0       magrittr_2.0.5     
+[28] Matrix_1.7-5        uuid_1.2-2          tools_4.4.0        

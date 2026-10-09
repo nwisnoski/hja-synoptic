@@ -10,6 +10,9 @@ library(bigmemory)
 
 # 1. Settings. A pilot keeps the full community but uses only 100 null draws.
 test_run <- FALSE
+# Leave NULL for the fresh final run. After interruption, use its last readable
+# checkpoint with unchanged inputs/settings, never the 100-draw pilot checkpoint.
+temp_saved_file <- NULL
 data_dir <- here("data", "derived", "microbial_diversity_2016")
 tree_file <- here("results", "phylogeny_2016", "asv_tree_screened_fasttree.nwk")
 output_dir <- here("results", "icamp_2016", "catchment_castor")
@@ -196,6 +199,7 @@ icamp_result <- icamp.big(
   ignore.zero = TRUE,
   output.wd = output_dir,
   unit.sum = rowSums(community),
+  temp.saved.file = temp_saved_file,
   temp.save = TRUE
 )
 saveRDS(icamp_result, file.path(output_dir, "icamp_result.rds"))

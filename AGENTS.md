@@ -194,7 +194,7 @@ and [FEAST, Shenhav et al. 2019](https://doi.org/10.1038/s41592-019-0431-x).
 - FastTree: `~/scratch/shared/bioinformatics/FastTree/FastTree`, version 2.2.0,
   OpenMP build; the tree job also loads `openmpi4`.
 - Catchment job: `analysis/cluster/run_icamp_catchment.sh`, one node, 32 CPUs,
-  256 GB, 96 hours. Sediment job: `run_icamp_sediment.sh`, one node, 16 CPUs,
+  256 GB, 14 days. Sediment job: `run_icamp_sediment.sh`, one node, 16 CPUs,
   192 GB, 96 hours. Create `logs/` before submitting because Slurm opens logs
   before the script runs.
 
@@ -622,3 +622,35 @@ rows are retained; the paper will likely use one row, with the choice deferred.
 Key finding 7 records the descriptive habitat contrast and links both panels.
 The soil commit excludes the unrelated local iCAMP, UniFrac, and phylogeny
 changes, including their portions of shared documentation. No push is authorized.
+
+### Completed catchment iCAMP update: 2026-10-09
+
+Job 432103 completed successfully after 2 days, 18 hours, and 9 minutes.
+The final 1,000-draw result is retained locally in
+`results/icamp_2016/catchment_castor/icamp_result.rds`, along with CSV exports
+and cluster provenance. Its 100 samples, 49,260 ASVs, 893 united bins, all
+4,950 pairs, and abundance-weighted classifications passed numerical checks.
+This supersedes the incomplete/pilot statuses in older dated notes.
+The sediment-only run remains unsubmitted here.
+
+`analysis/microbes/16_icamp_figures.R` reads the completed result and generates
+four diagnostic PDFs without repeating inference. Read `README_ICAMP_RESULTS.md`
+in that directory for settings, score interpretation, captions, and limitations.
+`17_icamp_phylogenetic_signal.R` checks within-bin habitat-affiliation signal
+using the saved bins and small pruned trees. It balances habitat sample counts
+and retains unbalanced profiles as a sensitivity, rather than assigning
+aquatic chemistry to soils. This is not a full environmental-niche validation.
+Keep its outputs separate under `catchment_castor/phylogenetic_signal/`.
+The local check completed: 775/893 bins were testable after requiring ASV
+occurrence in at least three samples and six retained ASVs per bin. Tested
+ASVs represent 80.9% of community abundance; 95 bins meet r >= 0.1 and
+BH-adjusted P <= 0.05, representing 14.5% of total abundance (unbalanced
+sensitivity: 13.8%). Habitat affiliation is not an independent niche measure,
+and continuous environmental-gradient signal remains unchecked.
+
+The canonical RDS and compact CSV results should be tracked. Explicit ignores
+retain, but exclude from Git, duplicate package exports, the recovery checkpoint,
+the pilot, and distance caches. A commit of the results, diagnostics, code,
+figures, and documentation is being proposed; do not commit or push without
+Nathan's approval of the file list and message. Unrelated outlet-distance
+figures remain outside this scope.

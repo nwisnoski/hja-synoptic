@@ -4,7 +4,7 @@
 # Submit from the repository root with:
 #   sbatch analysis/cluster/run_icamp_catchment.sh
 
-#SBATCH --time=96:00:00
+#SBATCH --time=14-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=32

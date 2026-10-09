@@ -82,3 +82,12 @@ reference/*
 # Regenerable phylogeny alignment and verbose log; retain the tree and provenance.
 /results/phylogeny_2016/asv_alignment_screened.fasta
 /results/phylogeny_2016/fasttree_screened.log
+
+# iCAMP distance caches, pilot, checkpoint, and duplicate package exports.
+# Keep the canonical detailed RDS, analysis CSVs, diagnostics, and figures.
+/results/icamp_2016/catchment_castor/phylogenetic_distance/
+/results/icamp_2016/sediment_castor/phylogenetic_distance/
+/results/icamp_2016/catchment_castor/pilot/
+/results/icamp_2016/catchment_castor/*.iCAMP.TempSave.*.rda
+/results/icamp_2016/catchment_castor/hja2016_catchment.iCAMP.Confidence.detail.rda
+/results/icamp_2016/catchment_castor/hja2016_catchment.process.CbMPDiCBraya.csv

@@ -28,8 +28,16 @@ without command-line arguments. Their readability rewrite is documented in
 [the validation report](../README_SCRIPT_CLARITY.md).
 
 Run the relevant files in order; the completed phylogeny need not be rebuilt.
-The revised iCAMP scripts are ready for a cluster pilot; obtain approval
-before transferring files or submitting jobs. See the rerun plan below.
+The catchment iCAMP run completed on October 9, 2026. Read
+[the results and diagnostic captions](README_ICAMP_RESULTS.md), then run
+`16_icamp_figures.R` locally to visualize the saved outputs without rerunning
+inference. The sediment-only run remains pending; obtain approval before any
+remote action or submission.
+`17_icamp_phylogenetic_signal.R` tests within-bin signal in observed habitat
+affiliation, with equal habitat sampling weights and an unbalanced sensitivity.
+It reuses the saved bins and does not repeat assembly inference. See the
+results report for the distinction between this diagnostic and validation
+against measured environmental niches.
 
 ```r
 source(here::here("analysis", "microbes", "01_prepare_diversity.R"))
@@ -39,6 +47,9 @@ source(here::here("analysis", "microbes", "04_network_environment.R"))
 source(here::here("analysis", "microbes", "05_unifrac.R"))
 # Submit analysis/cluster/run_icamp_sediment.sh for the long iCAMP run.
 # Submit analysis/cluster/run_icamp_catchment.sh for the catchment run.
+# With completed catchment outputs, generate figures without rerunning iCAMP:
+source(here::here("analysis", "microbes", "16_icamp_figures.R"))
+source(here::here("analysis", "microbes", "17_icamp_phylogenetic_signal.R"))
 ```
 
 `01_prepare_diversity.R` joins the DADA2 samples to the environmental metadata,
@@ -126,8 +137,8 @@ mkdir -p logs
 sbatch analysis/cluster/run_icamp_catchment.sh
 ```
 
-The existing catchment job requests 32 CPUs, 256 GB RAM, and 96 hours; the
-replacement walltime will be selected after the distance/pilot benchmarks.
+The completed catchment job requested 32 CPUs, 256 GB RAM, and 14 days;
+it finished in approximately 66 hours. The sediment job still requests 96 hours.
 Both analyses
 retain a detailed RDS checkpoint alongside inspectable CSV results. The
 phylogenetic distance matrices are large computational intermediates. Both
