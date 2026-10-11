@@ -1,0 +1,316 @@
+site_code,microbial_available,molecular_available,variable,value,block,transformation,label,available
+155,TRUE,TRUE,sediment_organic_content_percent,5.517,organic,log10,Organic content,TRUE
+155,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.88e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+155,TRUE,TRUE,sediment_nag_umol_g_hr,0.00289,enzyme,asinh_scaled,NAG activity,TRUE
+155,TRUE,TRUE,sediment_lap_umol_g_hr,0.08866,enzyme,asinh_scaled,LAP activity,TRUE
+155,TRUE,TRUE,sediment_glu_umol_g_hr,0.01446,enzyme,asinh_scaled,GLU activity,TRUE
+155,TRUE,TRUE,sediment_ap_umol_g_hr,0.03602,enzyme,asinh_scaled,AP activity,TRUE
+155,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+156,TRUE,TRUE,sediment_organic_content_percent,2.811,organic,log10,Organic content,TRUE
+156,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.95e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+156,TRUE,TRUE,sediment_nag_umol_g_hr,0.01021,enzyme,asinh_scaled,NAG activity,TRUE
+156,TRUE,TRUE,sediment_lap_umol_g_hr,0.48684,enzyme,asinh_scaled,LAP activity,TRUE
+156,TRUE,TRUE,sediment_glu_umol_g_hr,0.03326,enzyme,asinh_scaled,GLU activity,TRUE
+156,TRUE,TRUE,sediment_ap_umol_g_hr,0.06315,enzyme,asinh_scaled,AP activity,TRUE
+156,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+161,TRUE,TRUE,sediment_organic_content_percent,3.589,organic,log10,Organic content,TRUE
+161,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,4.21e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+161,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+161,TRUE,TRUE,sediment_lap_umol_g_hr,0.03524,enzyme,asinh_scaled,LAP activity,TRUE
+161,TRUE,TRUE,sediment_glu_umol_g_hr,0.006,enzyme,asinh_scaled,GLU activity,TRUE
+161,TRUE,TRUE,sediment_ap_umol_g_hr,0.01129,enzyme,asinh_scaled,AP activity,TRUE
+161,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+163,TRUE,TRUE,sediment_organic_content_percent,2.577,organic,log10,Organic content,TRUE
+163,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.06e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+163,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+163,TRUE,TRUE,sediment_lap_umol_g_hr,0.04476,enzyme,asinh_scaled,LAP activity,TRUE
+163,TRUE,TRUE,sediment_glu_umol_g_hr,0.0061,enzyme,asinh_scaled,GLU activity,TRUE
+163,TRUE,TRUE,sediment_ap_umol_g_hr,0.00927,enzyme,asinh_scaled,AP activity,TRUE
+163,TRUE,TRUE,sediment_d50_um,74649.54647,texture,log10,Median grain size,TRUE
+165,TRUE,TRUE,sediment_organic_content_percent,3.196,organic,log10,Organic content,TRUE
+165,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.04e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+165,TRUE,TRUE,sediment_nag_umol_g_hr,0.0052,enzyme,asinh_scaled,NAG activity,TRUE
+165,TRUE,TRUE,sediment_lap_umol_g_hr,0.03371,enzyme,asinh_scaled,LAP activity,TRUE
+165,TRUE,TRUE,sediment_glu_umol_g_hr,0.01426,enzyme,asinh_scaled,GLU activity,TRUE
+165,TRUE,TRUE,sediment_ap_umol_g_hr,0.01492,enzyme,asinh_scaled,AP activity,TRUE
+165,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+169,TRUE,TRUE,sediment_organic_content_percent,14.571,organic,log10,Organic content,TRUE
+169,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.76e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+169,TRUE,TRUE,sediment_nag_umol_g_hr,0.00235,enzyme,asinh_scaled,NAG activity,TRUE
+169,TRUE,TRUE,sediment_lap_umol_g_hr,0.14953,enzyme,asinh_scaled,LAP activity,TRUE
+169,TRUE,TRUE,sediment_glu_umol_g_hr,0.02886,enzyme,asinh_scaled,GLU activity,TRUE
+169,TRUE,TRUE,sediment_ap_umol_g_hr,0.07776,enzyme,asinh_scaled,AP activity,TRUE
+169,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+170,FALSE,TRUE,sediment_organic_content_percent,13.048,organic,log10,Organic content,TRUE
+170,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.68e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+170,FALSE,TRUE,sediment_nag_umol_g_hr,0.01203,enzyme,asinh_scaled,NAG activity,TRUE
+170,FALSE,TRUE,sediment_lap_umol_g_hr,0.27082,enzyme,asinh_scaled,LAP activity,TRUE
+170,FALSE,TRUE,sediment_glu_umol_g_hr,0.05985,enzyme,asinh_scaled,GLU activity,TRUE
+170,FALSE,TRUE,sediment_ap_umol_g_hr,0.07207,enzyme,asinh_scaled,AP activity,TRUE
+170,FALSE,TRUE,sediment_d50_um,69424.68887,texture,log10,Median grain size,TRUE
+177,TRUE,TRUE,sediment_organic_content_percent,7.339,organic,log10,Organic content,TRUE
+177,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,8.94e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+177,TRUE,TRUE,sediment_nag_umol_g_hr,0.00545,enzyme,asinh_scaled,NAG activity,TRUE
+177,TRUE,TRUE,sediment_lap_umol_g_hr,0.24444,enzyme,asinh_scaled,LAP activity,TRUE
+177,TRUE,TRUE,sediment_glu_umol_g_hr,0.02273,enzyme,asinh_scaled,GLU activity,TRUE
+177,TRUE,TRUE,sediment_ap_umol_g_hr,0.10112,enzyme,asinh_scaled,AP activity,TRUE
+177,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+190,TRUE,TRUE,sediment_organic_content_percent,7.594,organic,log10,Organic content,TRUE
+190,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,4.16e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+190,TRUE,TRUE,sediment_nag_umol_g_hr,0.00405,enzyme,asinh_scaled,NAG activity,TRUE
+190,TRUE,TRUE,sediment_lap_umol_g_hr,0.08534,enzyme,asinh_scaled,LAP activity,TRUE
+190,TRUE,TRUE,sediment_glu_umol_g_hr,0.02131,enzyme,asinh_scaled,GLU activity,TRUE
+190,TRUE,TRUE,sediment_ap_umol_g_hr,0.04811,enzyme,asinh_scaled,AP activity,TRUE
+190,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+260,TRUE,TRUE,sediment_organic_content_percent,2.855,organic,log10,Organic content,TRUE
+260,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.62e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+260,TRUE,TRUE,sediment_nag_umol_g_hr,0.00632,enzyme,asinh_scaled,NAG activity,TRUE
+260,TRUE,TRUE,sediment_lap_umol_g_hr,0.34967,enzyme,asinh_scaled,LAP activity,TRUE
+260,TRUE,TRUE,sediment_glu_umol_g_hr,0.07267,enzyme,asinh_scaled,GLU activity,TRUE
+260,TRUE,TRUE,sediment_ap_umol_g_hr,0.07026,enzyme,asinh_scaled,AP activity,TRUE
+260,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+360,FALSE,TRUE,sediment_organic_content_percent,2.954,organic,log10,Organic content,TRUE
+360,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.39e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+360,FALSE,TRUE,sediment_nag_umol_g_hr,0.00353,enzyme,asinh_scaled,NAG activity,TRUE
+360,FALSE,TRUE,sediment_lap_umol_g_hr,0.17373,enzyme,asinh_scaled,LAP activity,TRUE
+360,FALSE,TRUE,sediment_glu_umol_g_hr,0.06281,enzyme,asinh_scaled,GLU activity,TRUE
+360,FALSE,TRUE,sediment_ap_umol_g_hr,0.03708,enzyme,asinh_scaled,AP activity,TRUE
+360,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+43,TRUE,FALSE,sediment_organic_content_percent,6.785,organic,log10,Organic content,TRUE
+43,TRUE,FALSE,sediment_hydraulic_conductivity_geomean_m_s,6.75e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+43,TRUE,FALSE,sediment_nag_umol_g_hr,0.00338,enzyme,asinh_scaled,NAG activity,TRUE
+43,TRUE,FALSE,sediment_lap_umol_g_hr,0.1619,enzyme,asinh_scaled,LAP activity,TRUE
+43,TRUE,FALSE,sediment_glu_umol_g_hr,0.02975,enzyme,asinh_scaled,GLU activity,TRUE
+43,TRUE,FALSE,sediment_ap_umol_g_hr,0.04306,enzyme,asinh_scaled,AP activity,TRUE
+43,TRUE,FALSE,sediment_d50_um,73601.26718,texture,log10,Median grain size,TRUE
+45,TRUE,TRUE,sediment_organic_content_percent,2.556,organic,log10,Organic content,TRUE
+45,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.33e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+45,TRUE,TRUE,sediment_nag_umol_g_hr,0.00423,enzyme,asinh_scaled,NAG activity,TRUE
+45,TRUE,TRUE,sediment_lap_umol_g_hr,0.13821,enzyme,asinh_scaled,LAP activity,TRUE
+45,TRUE,TRUE,sediment_glu_umol_g_hr,0.02972,enzyme,asinh_scaled,GLU activity,TRUE
+45,TRUE,TRUE,sediment_ap_umol_g_hr,0.05748,enzyme,asinh_scaled,AP activity,TRUE
+45,TRUE,TRUE,sediment_d50_um,67248.6283,texture,log10,Median grain size,TRUE
+47,FALSE,TRUE,sediment_organic_content_percent,3.827,organic,log10,Organic content,TRUE
+47,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,5.76e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+47,FALSE,TRUE,sediment_nag_umol_g_hr,0.00138,enzyme,asinh_scaled,NAG activity,TRUE
+47,FALSE,TRUE,sediment_lap_umol_g_hr,0.02979,enzyme,asinh_scaled,LAP activity,TRUE
+47,FALSE,TRUE,sediment_glu_umol_g_hr,0.00742,enzyme,asinh_scaled,GLU activity,TRUE
+47,FALSE,TRUE,sediment_ap_umol_g_hr,0.01284,enzyme,asinh_scaled,AP activity,TRUE
+47,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+49,TRUE,TRUE,sediment_organic_content_percent,2.521,organic,log10,Organic content,TRUE
+49,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.77e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+49,TRUE,TRUE,sediment_nag_umol_g_hr,0.00814,enzyme,asinh_scaled,NAG activity,TRUE
+49,TRUE,TRUE,sediment_lap_umol_g_hr,0.40652,enzyme,asinh_scaled,LAP activity,TRUE
+49,TRUE,TRUE,sediment_glu_umol_g_hr,0.06951,enzyme,asinh_scaled,GLU activity,TRUE
+49,TRUE,TRUE,sediment_ap_umol_g_hr,0.07679,enzyme,asinh_scaled,AP activity,TRUE
+49,TRUE,TRUE,sediment_d50_um,74321.63621,texture,log10,Median grain size,TRUE
+50,TRUE,TRUE,sediment_organic_content_percent,3.231,organic,log10,Organic content,TRUE
+50,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,0.0013,hydraulic,log10,Hydraulic conductivity,TRUE
+50,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+50,TRUE,TRUE,sediment_lap_umol_g_hr,0.13684,enzyme,asinh_scaled,LAP activity,TRUE
+50,TRUE,TRUE,sediment_glu_umol_g_hr,0.02084,enzyme,asinh_scaled,GLU activity,TRUE
+50,TRUE,TRUE,sediment_ap_umol_g_hr,0.03153,enzyme,asinh_scaled,AP activity,TRUE
+50,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+53,TRUE,TRUE,sediment_organic_content_percent,7.695,organic,log10,Organic content,TRUE
+53,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.43e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+53,TRUE,TRUE,sediment_nag_umol_g_hr,0.00446,enzyme,asinh_scaled,NAG activity,TRUE
+53,TRUE,TRUE,sediment_lap_umol_g_hr,0.13116,enzyme,asinh_scaled,LAP activity,TRUE
+53,TRUE,TRUE,sediment_glu_umol_g_hr,0.04423,enzyme,asinh_scaled,GLU activity,TRUE
+53,TRUE,TRUE,sediment_ap_umol_g_hr,0.06532,enzyme,asinh_scaled,AP activity,TRUE
+53,TRUE,TRUE,sediment_d50_um,69701.25053,texture,log10,Median grain size,TRUE
+54,FALSE,TRUE,sediment_organic_content_percent,5.287,organic,log10,Organic content,TRUE
+54,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.5e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+54,FALSE,TRUE,sediment_nag_umol_g_hr,0.01503,enzyme,asinh_scaled,NAG activity,TRUE
+54,FALSE,TRUE,sediment_lap_umol_g_hr,0.07826,enzyme,asinh_scaled,LAP activity,TRUE
+54,FALSE,TRUE,sediment_glu_umol_g_hr,0.01311,enzyme,asinh_scaled,GLU activity,TRUE
+54,FALSE,TRUE,sediment_ap_umol_g_hr,0.02667,enzyme,asinh_scaled,AP activity,TRUE
+54,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+56,TRUE,TRUE,sediment_organic_content_percent,5.151,organic,log10,Organic content,TRUE
+56,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,NA,hydraulic,log10,Hydraulic conductivity,FALSE
+56,TRUE,TRUE,sediment_nag_umol_g_hr,0.00405,enzyme,asinh_scaled,NAG activity,TRUE
+56,TRUE,TRUE,sediment_lap_umol_g_hr,0.50317,enzyme,asinh_scaled,LAP activity,TRUE
+56,TRUE,TRUE,sediment_glu_umol_g_hr,0.01213,enzyme,asinh_scaled,GLU activity,TRUE
+56,TRUE,TRUE,sediment_ap_umol_g_hr,0.06487,enzyme,asinh_scaled,AP activity,TRUE
+56,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+57,TRUE,TRUE,sediment_organic_content_percent,4.101,organic,log10,Organic content,TRUE
+57,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,6.45e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+57,TRUE,TRUE,sediment_nag_umol_g_hr,0.00311,enzyme,asinh_scaled,NAG activity,TRUE
+57,TRUE,TRUE,sediment_lap_umol_g_hr,0.01376,enzyme,asinh_scaled,LAP activity,TRUE
+57,TRUE,TRUE,sediment_glu_umol_g_hr,0.00358,enzyme,asinh_scaled,GLU activity,TRUE
+57,TRUE,TRUE,sediment_ap_umol_g_hr,0.00592,enzyme,asinh_scaled,AP activity,TRUE
+57,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+58,FALSE,TRUE,sediment_organic_content_percent,6.459,organic,log10,Organic content,TRUE
+58,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.95e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+58,FALSE,TRUE,sediment_nag_umol_g_hr,0.00184,enzyme,asinh_scaled,NAG activity,TRUE
+58,FALSE,TRUE,sediment_lap_umol_g_hr,0.1051,enzyme,asinh_scaled,LAP activity,TRUE
+58,FALSE,TRUE,sediment_glu_umol_g_hr,0.01802,enzyme,asinh_scaled,GLU activity,TRUE
+58,FALSE,TRUE,sediment_ap_umol_g_hr,0.02352,enzyme,asinh_scaled,AP activity,TRUE
+58,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+60,TRUE,TRUE,sediment_organic_content_percent,10.725,organic,log10,Organic content,TRUE
+60,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,5.06e-6,hydraulic,log10,Hydraulic conductivity,TRUE
+60,TRUE,TRUE,sediment_nag_umol_g_hr,0.00304,enzyme,asinh_scaled,NAG activity,TRUE
+60,TRUE,TRUE,sediment_lap_umol_g_hr,0.06883,enzyme,asinh_scaled,LAP activity,TRUE
+60,TRUE,TRUE,sediment_glu_umol_g_hr,0.01116,enzyme,asinh_scaled,GLU activity,TRUE
+60,TRUE,TRUE,sediment_ap_umol_g_hr,0.0266,enzyme,asinh_scaled,AP activity,TRUE
+60,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+64,TRUE,TRUE,sediment_organic_content_percent,16.259,organic,log10,Organic content,TRUE
+64,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.3e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+64,TRUE,TRUE,sediment_nag_umol_g_hr,0.02131,enzyme,asinh_scaled,NAG activity,TRUE
+64,TRUE,TRUE,sediment_lap_umol_g_hr,0.62957,enzyme,asinh_scaled,LAP activity,TRUE
+64,TRUE,TRUE,sediment_glu_umol_g_hr,0.11842,enzyme,asinh_scaled,GLU activity,TRUE
+64,TRUE,TRUE,sediment_ap_umol_g_hr,0.22912,enzyme,asinh_scaled,AP activity,TRUE
+64,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+65,FALSE,TRUE,sediment_organic_content_percent,3.868,organic,log10,Organic content,TRUE
+65,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,7.33e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+65,FALSE,TRUE,sediment_nag_umol_g_hr,0.00338,enzyme,asinh_scaled,NAG activity,TRUE
+65,FALSE,TRUE,sediment_lap_umol_g_hr,0.24831,enzyme,asinh_scaled,LAP activity,TRUE
+65,FALSE,TRUE,sediment_glu_umol_g_hr,0.02788,enzyme,asinh_scaled,GLU activity,TRUE
+65,FALSE,TRUE,sediment_ap_umol_g_hr,0.1344,enzyme,asinh_scaled,AP activity,TRUE
+65,FALSE,TRUE,sediment_d50_um,75222.31511,texture,log10,Median grain size,TRUE
+66,TRUE,TRUE,sediment_organic_content_percent,3.618,organic,log10,Organic content,TRUE
+66,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.92e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+66,TRUE,TRUE,sediment_nag_umol_g_hr,0.05511,enzyme,asinh_scaled,NAG activity,TRUE
+66,TRUE,TRUE,sediment_lap_umol_g_hr,0.79892,enzyme,asinh_scaled,LAP activity,TRUE
+66,TRUE,TRUE,sediment_glu_umol_g_hr,0.11724,enzyme,asinh_scaled,GLU activity,TRUE
+66,TRUE,TRUE,sediment_ap_umol_g_hr,0.23887,enzyme,asinh_scaled,AP activity,TRUE
+66,TRUE,TRUE,sediment_d50_um,70331.55992,texture,log10,Median grain size,TRUE
+68,FALSE,TRUE,sediment_organic_content_percent,3.888,organic,log10,Organic content,TRUE
+68,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,4.94e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+68,FALSE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+68,FALSE,TRUE,sediment_lap_umol_g_hr,0.10684,enzyme,asinh_scaled,LAP activity,TRUE
+68,FALSE,TRUE,sediment_glu_umol_g_hr,0.01565,enzyme,asinh_scaled,GLU activity,TRUE
+68,FALSE,TRUE,sediment_ap_umol_g_hr,0.0438,enzyme,asinh_scaled,AP activity,TRUE
+68,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+72,TRUE,TRUE,sediment_organic_content_percent,4.319,organic,log10,Organic content,TRUE
+72,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.24e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+72,TRUE,TRUE,sediment_nag_umol_g_hr,0.01645,enzyme,asinh_scaled,NAG activity,TRUE
+72,TRUE,TRUE,sediment_lap_umol_g_hr,0.48283,enzyme,asinh_scaled,LAP activity,TRUE
+72,TRUE,TRUE,sediment_glu_umol_g_hr,0.056710000000000003,enzyme,asinh_scaled,GLU activity,TRUE
+72,TRUE,TRUE,sediment_ap_umol_g_hr,0.1256,enzyme,asinh_scaled,AP activity,TRUE
+72,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+74,TRUE,TRUE,sediment_organic_content_percent,5.63,organic,log10,Organic content,TRUE
+74,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.62e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+74,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+74,TRUE,TRUE,sediment_lap_umol_g_hr,0.03317,enzyme,asinh_scaled,LAP activity,TRUE
+74,TRUE,TRUE,sediment_glu_umol_g_hr,0.00902,enzyme,asinh_scaled,GLU activity,TRUE
+74,TRUE,TRUE,sediment_ap_umol_g_hr,0.01625,enzyme,asinh_scaled,AP activity,TRUE
+74,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+82,TRUE,TRUE,sediment_organic_content_percent,3.498,organic,log10,Organic content,TRUE
+82,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,4.23e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+82,TRUE,TRUE,sediment_nag_umol_g_hr,0.00409,enzyme,asinh_scaled,NAG activity,TRUE
+82,TRUE,TRUE,sediment_lap_umol_g_hr,0.02718,enzyme,asinh_scaled,LAP activity,TRUE
+82,TRUE,TRUE,sediment_glu_umol_g_hr,0.01387,enzyme,asinh_scaled,GLU activity,TRUE
+82,TRUE,TRUE,sediment_ap_umol_g_hr,0.01556,enzyme,asinh_scaled,AP activity,TRUE
+82,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+84,TRUE,TRUE,sediment_organic_content_percent,4.95,organic,log10,Organic content,TRUE
+84,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,3.15e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+84,TRUE,TRUE,sediment_nag_umol_g_hr,0.01007,enzyme,asinh_scaled,NAG activity,TRUE
+84,TRUE,TRUE,sediment_lap_umol_g_hr,0.09716,enzyme,asinh_scaled,LAP activity,TRUE
+84,TRUE,TRUE,sediment_glu_umol_g_hr,0.01341,enzyme,asinh_scaled,GLU activity,TRUE
+84,TRUE,TRUE,sediment_ap_umol_g_hr,0.04529,enzyme,asinh_scaled,AP activity,TRUE
+84,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+CC-2,TRUE,TRUE,sediment_organic_content_percent,4.973,organic,log10,Organic content,TRUE
+CC-2,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.18e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+CC-2,TRUE,TRUE,sediment_nag_umol_g_hr,0.00576,enzyme,asinh_scaled,NAG activity,TRUE
+CC-2,TRUE,TRUE,sediment_lap_umol_g_hr,0.36724,enzyme,asinh_scaled,LAP activity,TRUE
+CC-2,TRUE,TRUE,sediment_glu_umol_g_hr,0.06108,enzyme,asinh_scaled,GLU activity,TRUE
+CC-2,TRUE,TRUE,sediment_ap_umol_g_hr,0.10198,enzyme,asinh_scaled,AP activity,TRUE
+CC-2,TRUE,TRUE,sediment_d50_um,74284.4683,texture,log10,Median grain size,TRUE
+CC-3,TRUE,TRUE,sediment_organic_content_percent,5.427,organic,log10,Organic content,TRUE
+CC-3,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,4.13e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+CC-3,TRUE,TRUE,sediment_nag_umol_g_hr,0.01186,enzyme,asinh_scaled,NAG activity,TRUE
+CC-3,TRUE,TRUE,sediment_lap_umol_g_hr,0.66891,enzyme,asinh_scaled,LAP activity,TRUE
+CC-3,TRUE,TRUE,sediment_glu_umol_g_hr,0.17607,enzyme,asinh_scaled,GLU activity,TRUE
+CC-3,TRUE,TRUE,sediment_ap_umol_g_hr,0.11498,enzyme,asinh_scaled,AP activity,TRUE
+CC-3,TRUE,TRUE,sediment_d50_um,74653.75443,texture,log10,Median grain size,TRUE
+CC-4,TRUE,TRUE,sediment_organic_content_percent,7.501,organic,log10,Organic content,TRUE
+CC-4,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,9.08e-6,hydraulic,log10,Hydraulic conductivity,TRUE
+CC-4,TRUE,TRUE,sediment_nag_umol_g_hr,0.00923,enzyme,asinh_scaled,NAG activity,TRUE
+CC-4,TRUE,TRUE,sediment_lap_umol_g_hr,0.44178,enzyme,asinh_scaled,LAP activity,TRUE
+CC-4,TRUE,TRUE,sediment_glu_umol_g_hr,0.09119,enzyme,asinh_scaled,GLU activity,TRUE
+CC-4,TRUE,TRUE,sediment_ap_umol_g_hr,0.10884,enzyme,asinh_scaled,AP activity,TRUE
+CC-4,TRUE,TRUE,sediment_d50_um,73727.97701,texture,log10,Median grain size,TRUE
+KC-1,TRUE,TRUE,sediment_organic_content_percent,6.189,organic,log10,Organic content,TRUE
+KC-1,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.18e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+KC-1,TRUE,TRUE,sediment_nag_umol_g_hr,0.00452,enzyme,asinh_scaled,NAG activity,TRUE
+KC-1,TRUE,TRUE,sediment_lap_umol_g_hr,0.13394,enzyme,asinh_scaled,LAP activity,TRUE
+KC-1,TRUE,TRUE,sediment_glu_umol_g_hr,0.03201,enzyme,asinh_scaled,GLU activity,TRUE
+KC-1,TRUE,TRUE,sediment_ap_umol_g_hr,0.04792,enzyme,asinh_scaled,AP activity,TRUE
+KC-1,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+KC-3,TRUE,TRUE,sediment_organic_content_percent,5.552,organic,log10,Organic content,TRUE
+KC-3,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.74e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+KC-3,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+KC-3,TRUE,TRUE,sediment_lap_umol_g_hr,0.05897,enzyme,asinh_scaled,LAP activity,TRUE
+KC-3,TRUE,TRUE,sediment_glu_umol_g_hr,0.00751,enzyme,asinh_scaled,GLU activity,TRUE
+KC-3,TRUE,TRUE,sediment_ap_umol_g_hr,0.0286,enzyme,asinh_scaled,AP activity,TRUE
+KC-3,TRUE,TRUE,sediment_d50_um,73453.8108,texture,log10,Median grain size,TRUE
+WS1-2,FALSE,TRUE,sediment_organic_content_percent,5.197,organic,log10,Organic content,TRUE
+WS1-2,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.94e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+WS1-2,FALSE,TRUE,sediment_nag_umol_g_hr,0.00154,enzyme,asinh_scaled,NAG activity,TRUE
+WS1-2,FALSE,TRUE,sediment_lap_umol_g_hr,0.05325,enzyme,asinh_scaled,LAP activity,TRUE
+WS1-2,FALSE,TRUE,sediment_glu_umol_g_hr,0.01346,enzyme,asinh_scaled,GLU activity,TRUE
+WS1-2,FALSE,TRUE,sediment_ap_umol_g_hr,0.01718,enzyme,asinh_scaled,AP activity,TRUE
+WS1-2,FALSE,TRUE,sediment_d50_um,72547.47221,texture,log10,Median grain size,TRUE
+WS1-3,TRUE,TRUE,sediment_organic_content_percent,7.813,organic,log10,Organic content,TRUE
+WS1-3,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.92e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+WS1-3,TRUE,TRUE,sediment_nag_umol_g_hr,0.0087,enzyme,asinh_scaled,NAG activity,TRUE
+WS1-3,TRUE,TRUE,sediment_lap_umol_g_hr,0.17671,enzyme,asinh_scaled,LAP activity,TRUE
+WS1-3,TRUE,TRUE,sediment_glu_umol_g_hr,0.02898,enzyme,asinh_scaled,GLU activity,TRUE
+WS1-3,TRUE,TRUE,sediment_ap_umol_g_hr,0.05733,enzyme,asinh_scaled,AP activity,TRUE
+WS1-3,TRUE,TRUE,sediment_d50_um,73154.87974,texture,log10,Median grain size,TRUE
+WS1-5,TRUE,TRUE,sediment_organic_content_percent,6.406,organic,log10,Organic content,TRUE
+WS1-5,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.64e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+WS1-5,TRUE,TRUE,sediment_nag_umol_g_hr,0.0098,enzyme,asinh_scaled,NAG activity,TRUE
+WS1-5,TRUE,TRUE,sediment_lap_umol_g_hr,0.12098,enzyme,asinh_scaled,LAP activity,TRUE
+WS1-5,TRUE,TRUE,sediment_glu_umol_g_hr,0.03513,enzyme,asinh_scaled,GLU activity,TRUE
+WS1-5,TRUE,TRUE,sediment_ap_umol_g_hr,0.03246,enzyme,asinh_scaled,AP activity,TRUE
+WS1-5,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+WS1-6,TRUE,TRUE,sediment_organic_content_percent,4.468,organic,log10,Organic content,TRUE
+WS1-6,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,1.86e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+WS1-6,TRUE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+WS1-6,TRUE,TRUE,sediment_lap_umol_g_hr,0.05436,enzyme,asinh_scaled,LAP activity,TRUE
+WS1-6,TRUE,TRUE,sediment_glu_umol_g_hr,0.01035,enzyme,asinh_scaled,GLU activity,TRUE
+WS1-6,TRUE,TRUE,sediment_ap_umol_g_hr,0.0203,enzyme,asinh_scaled,AP activity,TRUE
+WS1-6,TRUE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+WS1-8,FALSE,TRUE,sediment_organic_content_percent,4.918,organic,log10,Organic content,TRUE
+WS1-8,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.9e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+WS1-8,FALSE,TRUE,sediment_nag_umol_g_hr,0,enzyme,asinh_scaled,NAG activity,TRUE
+WS1-8,FALSE,TRUE,sediment_lap_umol_g_hr,0.09737,enzyme,asinh_scaled,LAP activity,TRUE
+WS1-8,FALSE,TRUE,sediment_glu_umol_g_hr,0.01517,enzyme,asinh_scaled,GLU activity,TRUE
+WS1-8,FALSE,TRUE,sediment_ap_umol_g_hr,0.0369,enzyme,asinh_scaled,AP activity,TRUE
+WS1-8,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE
+WS3-1,TRUE,TRUE,sediment_organic_content_percent,6.707,organic,log10,Organic content,TRUE
+WS3-1,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,9.21e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+WS3-1,TRUE,TRUE,sediment_nag_umol_g_hr,0.00263,enzyme,asinh_scaled,NAG activity,TRUE
+WS3-1,TRUE,TRUE,sediment_lap_umol_g_hr,0.06308,enzyme,asinh_scaled,LAP activity,TRUE
+WS3-1,TRUE,TRUE,sediment_glu_umol_g_hr,0.00534,enzyme,asinh_scaled,GLU activity,TRUE
+WS3-1,TRUE,TRUE,sediment_ap_umol_g_hr,0.0154,enzyme,asinh_scaled,AP activity,TRUE
+WS3-1,TRUE,TRUE,sediment_d50_um,74771.37964,texture,log10,Median grain size,TRUE
+WS3-2,TRUE,TRUE,sediment_organic_content_percent,9.152,organic,log10,Organic content,TRUE
+WS3-2,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,8.75e-5,hydraulic,log10,Hydraulic conductivity,TRUE
+WS3-2,TRUE,TRUE,sediment_nag_umol_g_hr,0.01607,enzyme,asinh_scaled,NAG activity,TRUE
+WS3-2,TRUE,TRUE,sediment_lap_umol_g_hr,0.22088,enzyme,asinh_scaled,LAP activity,TRUE
+WS3-2,TRUE,TRUE,sediment_glu_umol_g_hr,0.01745,enzyme,asinh_scaled,GLU activity,TRUE
+WS3-2,TRUE,TRUE,sediment_ap_umol_g_hr,0.04763,enzyme,asinh_scaled,AP activity,TRUE
+WS3-2,TRUE,TRUE,sediment_d50_um,72668.15164,texture,log10,Median grain size,TRUE
+WS3-3,TRUE,TRUE,sediment_organic_content_percent,7.118,organic,log10,Organic content,TRUE
+WS3-3,TRUE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,2.91e-4,hydraulic,log10,Hydraulic conductivity,TRUE
+WS3-3,TRUE,TRUE,sediment_nag_umol_g_hr,0.01413,enzyme,asinh_scaled,NAG activity,TRUE
+WS3-3,TRUE,TRUE,sediment_lap_umol_g_hr,0.27503,enzyme,asinh_scaled,LAP activity,TRUE
+WS3-3,TRUE,TRUE,sediment_glu_umol_g_hr,0.02585,enzyme,asinh_scaled,GLU activity,TRUE
+WS3-3,TRUE,TRUE,sediment_ap_umol_g_hr,0.06419,enzyme,asinh_scaled,AP activity,TRUE
+WS3-3,TRUE,TRUE,sediment_d50_um,74757.18541,texture,log10,Median grain size,TRUE
+WS3-4,FALSE,TRUE,sediment_organic_content_percent,11.17,organic,log10,Organic content,TRUE
+WS3-4,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,NA,hydraulic,log10,Hydraulic conductivity,FALSE
+WS3-4,FALSE,TRUE,sediment_nag_umol_g_hr,0.01879,enzyme,asinh_scaled,NAG activity,TRUE
+WS3-4,FALSE,TRUE,sediment_lap_umol_g_hr,0.49007,enzyme,asinh_scaled,LAP activity,TRUE
+WS3-4,FALSE,TRUE,sediment_glu_umol_g_hr,0.06367,enzyme,asinh_scaled,GLU activity,TRUE
+WS3-4,FALSE,TRUE,sediment_ap_umol_g_hr,0.13834,enzyme,asinh_scaled,AP activity,TRUE
+WS3-4,FALSE,TRUE,sediment_d50_um,74900.66175,texture,log10,Median grain size,TRUE
+WS3-5,FALSE,TRUE,sediment_organic_content_percent,6.535,organic,log10,Organic content,TRUE
+WS3-5,FALSE,TRUE,sediment_hydraulic_conductivity_geomean_m_s,NA,hydraulic,log10,Hydraulic conductivity,FALSE
+WS3-5,FALSE,TRUE,sediment_nag_umol_g_hr,0.00357,enzyme,asinh_scaled,NAG activity,TRUE
+WS3-5,FALSE,TRUE,sediment_lap_umol_g_hr,0.04906,enzyme,asinh_scaled,LAP activity,TRUE
+WS3-5,FALSE,TRUE,sediment_glu_umol_g_hr,0.00706,enzyme,asinh_scaled,GLU activity,TRUE
+WS3-5,FALSE,TRUE,sediment_ap_umol_g_hr,0.0188,enzyme,asinh_scaled,AP activity,TRUE
+WS3-5,FALSE,TRUE,sediment_d50_um,NA,texture,log10,Median grain size,FALSE

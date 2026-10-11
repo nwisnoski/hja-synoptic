@@ -1,0 +1,22 @@
+key,width,height,samples,role,file
+sampling_map,8,7,"45 unique: 34 microbial, 44 molecular, 33 paired",main,2016_sediment_ms_sampling_map.pdf
+microbial_pca,5.8,5,34 microbial,individual,2016_sediment_ms_microbial_pca.pdf
+molecular_pcoa,5.8,5,44 molecular,supporting,2016_sediment_ms_molecular_pcoa.pdf
+molecular_classes,6.6,5,44 molecular,individual,2016_sediment_ms_molecular_classes.pdf
+composition,12,5.4,34 microbial; 44 molecular,main,2016_sediment_ms_composition.pdf
+diversity,6,4.7,34 microbial,supporting,2016_sediment_ms_diversity.pdf
+dispersion_microbes_all,5.4,4.6,34 microbial,individual,2016_sediment_ms_dispersion_microbes_all.pdf
+dispersion_molecules_complete_all,5.4,4.6,44 molecular,individual,2016_sediment_ms_dispersion_molecules_complete_all.pdf
+dispersion_molecules_equal_all,5.4,4.6,44 molecular,individual,2016_sediment_ms_dispersion_molecules_equal_all.pdf
+dispersion_all_samples,14.5,4.6,34 microbial; 44 molecular,supporting,2016_sediment_ms_dispersion_all_samples.pdf
+dispersion_microbes_paired,5.4,4.6,33 paired,individual,2016_sediment_ms_dispersion_microbes_paired.pdf
+dispersion_molecules_paired,5.4,4.6,33 paired,individual,2016_sediment_ms_dispersion_molecules_paired.pdf
+dispersion_paired,10.8,4.6,33 identical sites,main,2016_sediment_ms_dispersion_paired.pdf
+characteristic_associations,8,4.3,Microbial 34/34/33; molecular 44/44/41,individual,2016_sediment_ms_characteristic_associations.pdf
+paired_property_adjustment,5.8,4.3,33 paired; 32 conductivity sensitivity,individual,2016_sediment_ms_paired_property_adjustment.pdf
+characteristics,14,4.5,All eligible samples per model,main,2016_sediment_ms_characteristics.pdf
+microbial_pca_organic,6,5,34 microbial,supporting,2016_sediment_ms_microbial_pca_organic.pdf
+unifrac_weighted,5.8,5,34 microbial,individual,2016_sediment_ms_unifrac_weighted.pdf
+unifrac_unweighted,5.8,5,34 microbial,individual,2016_sediment_ms_unifrac_unweighted.pdf
+unifrac,11.6,5,34 microbial in each panel,supporting,2016_sediment_ms_unifrac.pdf
+molecular_pcoa_equal,5.8,5,44 molecular,supporting,2016_sediment_ms_molecular_pcoa_equal.pdf

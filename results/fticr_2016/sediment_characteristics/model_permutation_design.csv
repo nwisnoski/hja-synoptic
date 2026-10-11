@@ -1,0 +1,19 @@
+response,comparison,formula,free_seed,within_order_seed,requested_permutations,free_permutations,order_permutations
+microbial_hellinger,organic,y ~ organic + Condition(log_area),20261020,20261021,9999,9999,9999
+microbial_hellinger,enzyme,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area),20261030,20261031,9999,9999,9999
+microbial_hellinger,hydraulic,y ~ hydraulic + Condition(log_area),20261040,20261041,9999,9999,9999
+microbial_hellinger,texture,y ~ texture + Condition(log_area),20261050,20261051,9999,9999,9999
+microbial_hellinger,organic_unique,y ~ organic + Condition(log_area + enzyme_pc1 + enzyme_pc2),20261060,20261061,9999,9999,9999
+microbial_hellinger,enzyme_unique,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area + organic),20261070,20261071,9999,9999,9999
+molecular_jaccard,organic,y ~ organic + Condition(log_area + detected_features),20261020,20261021,9999,9999,9999
+molecular_jaccard,enzyme,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area + detected_features),20261030,20261031,9999,9999,9999
+molecular_jaccard,hydraulic,y ~ hydraulic + Condition(log_area + detected_features),20261040,20261041,9999,9999,9999
+molecular_jaccard,texture,y ~ texture + Condition(log_area + detected_features),20261050,20261051,9999,9999,9999
+molecular_jaccard,organic_unique,y ~ organic + Condition(log_area + detected_features + enzyme_pc1 +      enzyme_pc2),20261060,20261061,9999,9999,9999
+molecular_jaccard,enzyme_unique,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area + detected_features +      organic),20261070,20261071,9999,9999,9999
+molecular_equal_features,organic,y ~ organic + Condition(log_area + detected_features),20261020,20261021,9999,9999,9999
+molecular_equal_features,enzyme,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area + detected_features),20261030,20261031,9999,9999,9999
+molecular_equal_features,hydraulic,y ~ hydraulic + Condition(log_area + detected_features),20261040,20261041,9999,9999,9999
+molecular_equal_features,texture,y ~ texture + Condition(log_area + detected_features),20261050,20261051,9999,9999,9999
+molecular_equal_features,organic_unique,y ~ organic + Condition(log_area + detected_features + enzyme_pc1 +      enzyme_pc2),20261060,20261061,9999,9999,9999
+molecular_equal_features,enzyme_unique,y ~ enzyme_pc1 + enzyme_pc2 + Condition(log_area + detected_features +      organic),20261070,20261071,9999,9999,9999

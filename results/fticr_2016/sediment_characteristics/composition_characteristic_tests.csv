@@ -1,0 +1,19 @@
+response,comparison,role,sites,segments,tested_df,residual_df,conditional_raw_fraction,conditional_adjusted_fraction,pseudo_f,p,within_order_p,status,pool,label,p_bh,within_order_p_bh
+microbial_hellinger,organic,primary,34,27,1,31,0.06765757586107743,0.03986078906801094,2.332642653509956,0.0017,0.0014,ok,microbial,Microbial composition,0.010199999999999999,0.0084
+microbial_hellinger,enzyme,primary,34,27,2,30,0.06419558014308667,0.004147435336914529,1.0668356299540378,0.3157,0.3239,ok,microbial,Microbial composition,0.38351999999999997,0.38868
+microbial_hellinger,hydraulic,primary,33,26,1,30,0.0336749635613971,0.0026704502123254814,1.0832154388361224,0.3196,0.3001,ok,microbial,Microbial composition,0.38351999999999997,0.38868
+microbial_hellinger,texture,grain_subset,14,10,1,11,0.07455798761730824,-0.003770078354337958,0.9554054479370585,0.4807,0.9296,ok,microbial,Microbial composition,0.4807,0.9296
+microbial_hellinger,organic_unique,secondary,34,27,1,29,0.06967273531523725,0.04504593649767352,2.425771771361235,0.0011,0.0011,ok,microbial,Microbial composition,0.0044,0.0044
+microbial_hellinger,enzyme_unique,secondary,34,27,2,29,0.06621073959724647,0.009332582766576891,1.1526183258720477,0.1971,0.1768,ok,microbial,Microbial composition,0.1971,0.1768
+molecular_jaccard,organic,primary,44,35,1,40,0.022364601151114202,0.005153028978570062,1.2815473844221488,0.1429,0.1511,ok,molecular,Molecular composition,0.2858,0.3022
+molecular_jaccard,enzyme,primary,44,35,2,39,0.044022553642195726,0.009791190407799744,1.2691454664691193,0.0968,0.0801,ok,molecular,Molecular composition,0.2858,0.2403
+molecular_jaccard,hydraulic,primary,41,32,1,37,0.013703387948858064,-0.006108417768742824,0.7025078234061275,0.8948,0.8998,ok,molecular,Molecular composition,0.8948,0.8998
+molecular_jaccard,texture,grain_subset,17,12,1,13,0.05024472986143716,0.005307992688450169,1.1018524021676062,0.3056,0.4747,ok,molecular,Molecular composition,0.4807,0.9296
+molecular_jaccard,organic_unique,secondary,44,35,1,38,0.02354487753681283,0.007017479845674579,1.3704669339670934,0.0955,0.092,ok,molecular,Molecular composition,0.12733333333333333,0.12266666666666666
+molecular_jaccard,enzyme_unique,secondary,44,35,2,38,0.04520283002789426,0.011655641274904593,1.315551201702061,0.0678,0.05,ok,molecular,Molecular composition,0.12733333333333333,0.1
+molecular_equal_features,organic,primary_sensitivity,44,35,1,40,0.024115836860174808,0.0015586453483250606,1.0656725936687799,0.0243,0.0886,ok,molecular,Equal-feature molecular composition,0.07289999999999999,0.2658
+molecular_equal_features,enzyme,primary_sensitivity,44,35,2,39,0.04575219538147761,4.634374178080769e-4,1.0097523534475785,0.3362,0.4656,ok,molecular,Equal-feature molecular composition,0.5043,0.6984
+molecular_equal_features,hydraulic,primary_sensitivity,41,32,1,37,0.024402714783423284,-6.34937527115298e-5,0.9975342770054807,0.553,0.7251,ok,molecular,Equal-feature molecular composition,0.553,0.7251
+molecular_equal_features,texture,grain_subset_sensitivity,17,12,1,13,0.061360073091708565,-8.43782457843334e-5,0.9987982048968768,0.5507,0.194,ok,molecular,Equal-feature molecular composition,0.5507,0.194
+molecular_equal_features,organic_unique,secondary_sensitivity,44,35,1,38,0.02404235712961083,0.0015697269193831742,1.0629438860223726,0.027,0.0852,ok,molecular,Equal-feature molecular composition,0.054,0.1704
+molecular_equal_features,enzyme_unique,secondary_sensitivity,44,35,2,38,0.04567871565091361,4.745189888661905e-4,1.009757721772911,0.3302,0.4714,ok,molecular,Equal-feature molecular composition,0.3302,0.4714

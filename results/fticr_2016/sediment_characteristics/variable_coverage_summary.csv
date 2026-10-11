@@ -1,0 +1,15 @@
+pool,variable,label,block,sites,missing,zeros
+microbial_available,sediment_ap_umol_g_hr,AP activity,enzyme,34,0,0
+microbial_available,sediment_d50_um,Median grain size,texture,14,20,0
+microbial_available,sediment_glu_umol_g_hr,GLU activity,enzyme,34,0,0
+microbial_available,sediment_hydraulic_conductivity_geomean_m_s,Hydraulic conductivity,hydraulic,33,1,0
+microbial_available,sediment_lap_umol_g_hr,LAP activity,enzyme,34,0,0
+microbial_available,sediment_nag_umol_g_hr,NAG activity,enzyme,34,0,6
+microbial_available,sediment_organic_content_percent,Organic content,organic,34,0,0
+molecular_available,sediment_ap_umol_g_hr,AP activity,enzyme,44,0,0
+molecular_available,sediment_d50_um,Median grain size,texture,17,27,0
+molecular_available,sediment_glu_umol_g_hr,GLU activity,enzyme,44,0,0
+molecular_available,sediment_hydraulic_conductivity_geomean_m_s,Hydraulic conductivity,hydraulic,41,3,0
+molecular_available,sediment_lap_umol_g_hr,LAP activity,enzyme,44,0,0
+molecular_available,sediment_nag_umol_g_hr,NAG activity,enzyme,44,0,8
+molecular_available,sediment_organic_content_percent,Organic content,organic,44,0,0

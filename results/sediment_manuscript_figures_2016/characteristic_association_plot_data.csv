@@ -1,0 +1,7 @@
+response,comparison,role,sites,segments,tested_df,residual_df,conditional_raw_fraction,conditional_adjusted_fraction,pseudo_f,p,within_order_p,status,pool,label,p_bh,within_order_p_bh,characteristic,response_label
+microbial_hellinger,organic,primary,34,27,1,31,0.06765757586107743,0.03986078906801094,2.332642653509956,0.0017,0.0014,ok,microbial,Microbial composition,0.01019999999999999,0.0084,Organic content,Microbial composition
+microbial_hellinger,enzyme,primary,34,27,2,30,0.06419558014308667,0.00414743533691452,1.0668356299540378,0.3157,0.3239,ok,microbial,Microbial composition,0.38352,0.38868,Enzyme profile,Microbial composition
+microbial_hellinger,hydraulic,primary,33,26,1,30,0.0336749635613971,0.00267045021232548,1.0832154388361224,0.3196,0.3001,ok,microbial,Microbial composition,0.38352,0.38868,Hydraulic conductivity,Microbial composition
+molecular_jaccard,organic,primary,44,35,1,40,0.0223646011511142,0.00515302897857006,1.2815473844221488,0.1429,0.1511,ok,molecular,Molecular composition,0.2858,0.3022,Organic content,Molecular composition
+molecular_jaccard,enzyme,primary,44,35,2,39,0.04402255364219572,0.00979119040779974,1.2691454664691193,0.0968,0.0801,ok,molecular,Molecular composition,0.2858,0.2403,Enzyme profile,Molecular composition
+molecular_jaccard,hydraulic,primary,41,32,1,37,0.01370338794885806,-0.00610841776874282,0.7025078234061275,0.8948,0.8998,ok,molecular,Molecular composition,0.8948,0.8998,Hydraulic conductivity,Molecular composition

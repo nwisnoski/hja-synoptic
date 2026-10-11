@@ -1,0 +1,4 @@
+model,sites,conditional_adjusted_fraction,pseudo_f,p,within_order_p,formula,seed,within_order_seed,p_bh,within_order_p_bh,model_label
+reference,33,0.040370749598992,1.6252961250653477,0.012,0.0344,y ~ fticr_only_pc1 + fticr_only_pc2 + Condition(log_area + detected_features),20261080,20261081,0.036,0.1032,Drainage + detection
+sediment_adjusted,33,0.02443713575342665,1.3558234480062843,0.0447,0.1,y ~ fticr_only_pc1 + fticr_only_pc2 + Condition(log_area + detected_features +      organic + enzyme_pc1 + enzyme_pc2),20261080,20261081,0.0622,0.1477,+ Organic content + enzymes
+hydraulic_subset,32,0.02335794473610453,1.3156711977268725,0.0622,0.1477,y ~ fticr_only_pc1 + fticr_only_pc2 + Condition(log_area + detected_features +      organic + enzyme_pc1 + enzyme_pc2 + hydraulic),20261080,20261081,0.0622,0.1477,+ Conductivity (subset)
