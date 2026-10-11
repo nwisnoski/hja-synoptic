@@ -6,7 +6,6 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
 target_depth <- 10000
@@ -16,13 +15,14 @@ balanced_samples_per_cell <- 3
 panel_aspect <- 0.8
 figure_width <- 9
 single_row_height <- 4.8
-combined_height <- 8.6
 base_seed <- 20261005
 habitats <- c("sediment", "hyporheic")
-habitat_labels <- c(sediment = "Sediment", hyporheic = "Hyporheic")
+habitat_labels <- c(sediment = "Sediment", hyporheic = "Porewater")
 source_pools <- c("Sediment", "Hyporheic")
 network_groups <- c("Headwater", "Intermediate", "Mainstem")
 category_labels <- c("Soil", "Sediment", "Hyporheic", "Sediment + Hyporheic")
+category_display_labels <- c("Soil" = "Soil", "Sediment" = "Sediment",
+  "Hyporheic" = "Porewater", "Sediment + Hyporheic" = "Sediment + Porewater")
 category_colors <- c("Soil" = "#D55E00", "Sediment" = "#009E73",
   "Hyporheic" = "#0072B2", "Sediment + Hyporheic" = "#CC79A7")
 results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
@@ -179,7 +179,8 @@ for (metric in c("richness_percent", "read_percent")) {
     geom_text(data = distinct(plot_data, habitat, network_group, samples),
       aes(network_group, 104, label = paste0("n = ", samples)), inherit.aes = FALSE, size = 3) +
     facet_wrap(~habitat, nrow = 1, labeller = as_labeller(habitat_labels)) +
-    scale_fill_manual(values = category_colors, drop = FALSE, name = "First detection pool",
+    scale_fill_manual(values = category_colors, labels = category_display_labels,
+      drop = FALSE, name = "First detection pool",
       guide = guide_legend(nrow = 1, byrow = TRUE)) +
     scale_y_continuous(breaks = seq(0, 100, 25), limits = c(0, 108), expand = expansion(mult = c(0, 0))) +
     scale_x_discrete(labels = c("Headwater\n(order 1-2)", "Intermediate\n(order 3-4)", "Mainstem\n(order 5)")) +
@@ -187,12 +188,10 @@ for (metric in c("richness_percent", "read_percent")) {
   ggsave(file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")),
     plots[[metric]], width = figure_width, height = single_row_height, bg = "white")
 }
-combined <- (plots$richness_percent / plots$read_percent) + plot_layout(guides = "collect") &
-  theme(legend.position = "bottom")
-ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), combined,
-  width = figure_width, height = combined_height, bg = "white")
+ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), plots$read_percent,
+  width = figure_width, height = single_row_height, bg = "white")
 if (interactive()) {
-  print(combined)
+  print(plots$read_percent)
 }
 
 # 5. Verify that the community inputs were not changed ---------------------------

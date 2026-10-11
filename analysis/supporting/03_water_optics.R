@@ -19,7 +19,7 @@ formula_traits <- c("mean_detected_h_c", "mean_detected_o_c", "protein_like_frac
   "tannin_like_fraction", "lignin_like_fraction")
 water_compartments <- c("surface", "hyporheic")
 compartment_colors <- c(surface = "#0072B2", hyporheic = "#D55E00")
-compartment_labels <- c(surface = "Surface water", hyporheic = "Hyporheic water")
+compartment_labels <- c(surface = "Surface water", hyporheic = "Porewater")
 variable_labels <- c(suva254 = "SUVA254", fluorescence_index = "Fluorescence index",
   log_t_c = "log10 peak T:C")
 plot_theme <- theme_bw(base_size = 12) +

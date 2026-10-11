@@ -25,9 +25,9 @@ variable_design <- tribble(
   "surface_suva254", "surface", "Surface SUVA254",
   "surface_fluorescence_index", "surface", "Surface fluorescence index",
   "surface_log_t_c", "surface", "Surface log10 peak T:C",
-  "hyporheic_suva254", "hyporheic", "Hyporheic SUVA254",
-  "hyporheic_fluorescence_index", "hyporheic", "Hyporheic fluorescence index",
-  "hyporheic_log_t_c", "hyporheic", "Hyporheic log10 peak T:C")
+  "hyporheic_suva254", "hyporheic", "Porewater SUVA254",
+  "hyporheic_fluorescence_index", "hyporheic", "Porewater fluorescence index",
+  "hyporheic_log_t_c", "hyporheic", "Porewater log10 peak T:C")
 plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     strip.background = element_blank())

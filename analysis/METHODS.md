@@ -5,6 +5,9 @@ in the scripts and result tables. This guide defines what the figures measure.
 
 ## Samples and preparation
 
+Figures distinguish soil, sediment, and hyporheic porewater (hereafter porewater).
+Source metadata retain the original habitat code `hyporheic` for porewater samples.
+
 `01_prepare_cohort.R` validates each suspect library against its site, habitat,
 lane ID, and technical plate metadata before excluding it. The 76 retained
 libraries preserve the existing 10,000-read draw; only ASVs absent from this
@@ -53,8 +56,9 @@ separate eight-test BH families for unrestricted and within-order permutations.
 
 A single read establishes detection. Soil detections have precedence; remaining
 ASVs are assigned at the first surveyed stream-order group containing them:
-orders 1–2, 3–4, then 5. Sediment and hyporheic pools are parallel; ties remain
-shared. Bars summarize percentages of detected ASVs and reads per library.
+orders 1–2, 3–4, then 5. Sediment and porewater pools are parallel; ties remain
+shared. Main-figure bars summarize percentages of ASV reads per library;
+percentages of detected ASVs remain supplementary.
 The 1,000 balanced draws select three libraries in each of six stream
 habitat–network cells and three soils, rebuilding the inventory each time.
 Draw quantiles describe sampling sensitivity, not confidence intervals.
