@@ -48,47 +48,22 @@ and in the sediment-porewater comparison. All 15 soils enter general sharing;
 only 13 have resolved mapped locations. Do not impose a single environmental
 complete-case filter across analyses.
 
-## Results sequence and candidate figures
+## Planned main figures
 
-1. **Sampling and habitat context.** The new sampling map shows separate soil,
-   porewater, sediment microbial, and sediment molecular panels, with the
-   33 paired microbial-molecular sites marked. The new Hellinger PCA and Hill
-   diversity panels use the reviewed 76-sample cohort. Bray-Curtis habitat
-   PERMANOVA R² is 0.202, but dispersion differs strongly; report habitat-
-   associated distributions without assigning a specific filtering mechanism.
-   Median richness is 2,846 ASVs in sediment, 1,835 in soil, and 726 in porewater.
-2. **Soil inventory sharing across the network.** Sediment and porewater have
-   median soil-detected read percentages of 70.26% and 34.38%. The paired-site
-   difference averages 36.15 percentage points. Neither habitat has a supported
-   drainage slope in the segment-mean analysis. Both absolute percentages
-   depend on inventory coverage: three-soil draws yield median habitat read
-   percentages of 41.58% and 19.43%. These are detection overlaps, not source
-   contributions. Retain both read and ASV fractions for figure review.
-3. **Same-site sediment-porewater resemblance.** Mean same-site Bray-Curtis
-   distance is 0.9190, compared with a mean randomized assignment of 0.9195
-   (one-sided P = 0.4131). Weighted and unweighted UniFrac and sediment-detected
-   porewater read share also show no supported same-site excess resemblance.
-   Within-order reassignments give the same qualitative conclusion. This is
-   a failure to detect preferential pairing, not an equivalence test or proof
-   that the compartments are disconnected.
-4. **Within-sediment network and chemical structure.** Retain the existing
-   matched 33-site dispersion figure, showing equal-feature molecular thinning
-   explicitly as a sensitivity analysis alongside complete profiles. Retain
-   the all-34 microbial/all-44 molecular supporting views. The organic-content
-   association and molecular-property adjustment use their own eligible samples.
-   The property fraction falls from 4.04% to 2.44% after organic-content/enzyme
-   adjustment (BH P = 0.0622); do not repeat the unadjusted association as an
-   independent chemical mechanism.
-5. **Localized microbial-molecular signatures.** Core 2 remains exploratory.
-   Place it after the aggregate sediment analyses, or in supporting material,
-   pending the branch-assignment audit. Its selected map pattern does not
-   establish a Lookout Mountain branch effect or metabolic guild.
+Follow [Nathan's six-figure sequence](MANUSCRIPT_FIGURES.md):
 
-The new [figure captions and result tables](microbes/README_SOIL_POREWATER_SEDIMENT.md)
-identify the individual panels and combinations. The existing
-[sediment figure report](figures/README_SEDIMENT_FIGURES.md) supplies the
-within-sediment panels. These are candidate figures for review, not a finalized
-publication layout.
+1. Alpha diversity across soil, hyporheic, and sediment habitats.
+2. Weighted UniFrac ordination refitted to the reviewed 76 libraries.
+3. First-detected inventory using soil, sediment, hyporheic, and shared ties.
+4. Matched microbial–molecular sediment dispersion across network classes.
+5. Formula-based molecular class proportions across network classes.
+6. Core-2 colocation map and the exploratory upper Lookout/Mack hypothesis.
+
+The figure plan links current PDFs and records captions, sample sets, scripts,
+and interpretation limits. Sampling maps, Hellinger PCA, soil inventory
+sensitivity, same-site comparisons, sediment properties, and complete-profile
+molecular dispersion remain supporting evidence. Main figures do not replace
+those diagnostics or establish movement, chemical structures, or a branch effect.
 
 ## Porewater interpretation and assembly analysis
 
@@ -116,4 +91,5 @@ Audit the selected core-2 branch hypothesis, review the new comparative figures,
 and reconcile the framing with the actual manuscript draft when that file is
 available. Verify extraction/sample handling records before assigning a cause
 to the excluded libraries. A three-habitat assembly analysis remains planned;
-no remote commands, job submissions, commits, or pushes were performed here.
+local work was committed in a meaningful series. No remote commands, new job
+submissions, or pushes were performed during this manuscript update.

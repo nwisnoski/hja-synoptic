@@ -14,13 +14,13 @@ detection_threshold <- 1
 balanced_draws <- 1000
 balanced_samples_per_cell <- 3
 base_seed <- 20261005
-habitats <- c("sediment", "hyporheic", "planktonic")
-habitat_labels <- c(sediment = "Sediment", hyporheic = "Hyporheic", planktonic = "Planktonic")
-source_pools <- c("Sediment", "Aquatic")
+habitats <- c("sediment", "hyporheic")
+habitat_labels <- c(sediment = "Sediment", hyporheic = "Hyporheic")
+source_pools <- c("Sediment", "Hyporheic")
 network_groups <- c("Headwater", "Intermediate", "Mainstem")
-category_labels <- c("Soil", "Sediment", "Aquatic", "Sediment + Aquatic")
+category_labels <- c("Soil", "Sediment", "Hyporheic", "Sediment + Hyporheic")
 category_colors <- c("Soil" = "#D55E00", "Sediment" = "#009E73",
-  "Aquatic" = "#0072B2", "Sediment + Aquatic" = "#CC79A7")
+  "Hyporheic" = "#0072B2", "Sediment + Hyporheic" = "#CC79A7")
 results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
 plot_theme <- theme_bw(base_size = 11) +
   theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),
@@ -30,8 +30,8 @@ theme_set(plot_theme)
 
 # 2. Align fixed-depth samples and retain every identity in an audit -------------
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
-input_paths <- c(here("data", "derived", "microbial_diversity_2016", "asv_counts_10k.csv"),
-  here("data", "derived", "microbial_diversity_2016", "sample_metadata.csv"))
+input_paths <- c(here("data", "derived", "soil_porewater_sediment_2016", "asv_counts_10k.csv"),
+  here("data", "derived", "soil_porewater_sediment_2016", "sample_metadata.csv"))
 checks <- tibble(path = input_paths, initial_md5 = unname(tools::md5sum(input_paths)))
 count_table <- read_csv(input_paths[1], show_col_types = FALSE)
 metadata <- read_csv(input_paths[2], col_types = cols(site_code = col_character()), show_col_types = FALSE)
@@ -39,35 +39,36 @@ counts <- as.matrix(count_table[, -1])
 rownames(counts) <- count_table$asv_id
 metadata <- metadata[match(colnames(counts), metadata$sample_id), ]
 stopifnot(identical(metadata$sample_id, colnames(counts)), !anyDuplicated(metadata$sample_id),
-  !anyDuplicated(rownames(counts)), all(metadata$included_10k),
+  !anyDuplicated(rownames(counts)), all(metadata$included_manuscript),
+  !any(metadata$excluded_suspect_library),
   all(colSums(counts) == target_depth), all(rowSums(counts) > 0),
   all(counts >= 0 & counts == floor(counts)), detection_threshold == 1)
 metadata <- metadata %>% mutate(network_group = case_when(
   habitat == "soil" ~ "Soil", site_stream_order %in% 1:2 ~ "Headwater",
   site_stream_order %in% 3:4 ~ "Intermediate", site_stream_order == 5 ~ "Mainstem"),
   source_pool = case_when(habitat == "soil" ~ "Soil", habitat == "sediment" ~ "Sediment",
-    habitat %in% c("hyporheic", "planktonic") ~ "Aquatic"),
+    habitat == "hyporheic" ~ "Hyporheic"),
   cell = paste(habitat, network_group, sep = "_"))
-stopifnot(nrow(metadata) == 100, sum(metadata$habitat == "soil") == 15,
+stopifnot(nrow(metadata) == 76, sum(metadata$habitat == "soil") == 15,
+  sum(metadata$habitat == "sediment") == 34, sum(metadata$habitat == "hyporheic") == 27,
   !anyNA(metadata$network_group), all(metadata$habitat %in% c("soil", habitats)))
 write_csv(metadata %>% select(sample_id, site_code, habitat, mapping_status,
   site_stream_order, site_segment_number, network_group, source_pool, cell),
   file.path(results_dir, "sample_network_audit.csv"))
 cell_design <- metadata %>% group_by(cell, habitat, source_pool, network_group) %>%
   summarize(samples = n(), segments = n_distinct(site_segment_number, na.rm = TRUE), .groups = "drop")
-stopifnot(nrow(cell_design) == 10, min(cell_design$samples) == balanced_samples_per_cell)
+stopifnot(nrow(cell_design) == 7, min(cell_design$samples) >= balanced_samples_per_cell)
 write_csv(cell_design, file.path(results_dir, "sampling_cells.csv"))
 presence <- counts >= detection_threshold
 cell_indices <- split(seq_len(nrow(metadata)), metadata$cell)
 
 # 3. Repeat the detection inventory with all samples and with balanced sampling --
 # Soils have precedence. For remaining taxa, use the earliest network group
-# containing a detection. Hyporheic and planktonic detections form one water
-# pool. Sediment and water have no assumed flow order; ties remain shared.
-# Equal-sample draws retain three profiles per original habitat-stage cell,
-# including soils. The merged water pool therefore contains six per stage;
-# this balances original habitat coverage, not the merged source pools.
-# Original receiving habitats remain separate in the plotted panels. Each draw
+# containing a detection. Sediment and hyporheic porewater are parallel pools,
+# with no assumed flow order between them; earliest-stage ties remain shared.
+# Equal-sample draws retain three profiles per habitat-stage cell and three
+# soils, giving 21 libraries per draw. Equal sample counts do not establish
+# equal detection completeness. Receiving habitats remain separate. Each draw
 # rebuilds the inventory and evaluates its selected communities; this is a
 # sampling sensitivity, not a confidence interval or independent replication.
 draw_summary_rows <- vector("list", balanced_draws + 1)
@@ -132,12 +133,13 @@ for (draw_id in 0:balanced_draws) {
     stopifnot(!anyNA(assignments$first_detection_pool))
     write_csv(assignments, file.path(results_dir, "asv_first_detection_assignments.csv"))
     # Track first-stage additions separately from the habitat-origin display.
-    stage_profiles <- lapply(0:3, function(stage_id) {
+    stage_profiles <- vector("list", 4)
+    for (stage_id in 0:3) {
       rows <- first_stage == stage_id
-      metadata[aquatic_columns, ] %>% select(sample_id, habitat, network_group) %>%
+      stage_profiles[[stage_id + 1]] <- metadata[aquatic_columns, ] %>% select(sample_id, habitat, network_group) %>%
         mutate(first_network_group = c("Soil", network_groups)[stage_id + 1L],
           richness_percent = 100 * colSums(presence[rows, aquatic_columns, drop = FALSE]) / observed_asvs)
-    })
+    }
     write_csv(bind_rows(stage_profiles), file.path(results_dir, "sample_first_stage_profiles.csv"))
   }
   draw_diagnostics[[draw_id + 1]] <- tibble(draw_id = draw_id,
@@ -179,12 +181,12 @@ for (metric in c("richness_percent", "read_percent")) {
     scale_x_discrete(labels = c("Headwater\n(order 1-2)", "Intermediate\n(order 3-4)", "Mainstem\n(order 5)")) +
     labs(x = NULL, y = y_label)
   ggsave(here("figures", paste0("2016_first_detection_", metric, ".pdf")),
-    plots[[metric]], width = 10.5, height = 4.3, bg = "white")
+    plots[[metric]], width = 8.5, height = 4.3, bg = "white")
 }
 combined <- (plots$richness_percent / plots$read_percent) + plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
 ggsave(here("figures", "2016_first_detection_flowpaths.pdf"), combined,
-  width = 10.5, height = 7.4, bg = "white")
+  width = 8.5, height = 7.4, bg = "white")
 if (interactive()) {
   print(combined)
 }
@@ -192,13 +194,13 @@ if (interactive()) {
 # 5. Retain settings and verify that the community inputs were not changed -------
 write_csv(tibble(target_depth = target_depth, detection_threshold = detection_threshold,
   balanced_draws = balanced_draws, balanced_samples_per_cell = balanced_samples_per_cell,
-  base_seed = base_seed, aquatic_pool = "Hyporheic + planktonic",
-  assignment = "Soil first; earliest network group; retain sediment-water ties",
+  base_seed = base_seed, aquatic_pool = "Hyporheic porewater only",
+  assignment = "Soil first; earliest network group; retain sediment-hyporheic ties",
   summary = "Mean within-sample percentages"), file.path(results_dir, "analysis_settings.csv"))
 checks$final_md5 <- unname(tools::md5sum(input_paths))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))
 write_csv(checks, file.path(results_dir, "input_checksums.csv"))
-writeLines(capture.output(sessionInfo()), file.path(results_dir, "session_info.txt"))
+writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(results_dir, "session_info.txt"))
 print(full_summary %>% filter(category == "Soil"))
 print(balanced_summary %>% filter(category == "Soil"))
