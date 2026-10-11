@@ -1,0 +1,5 @@
+habitat,metric,segments,sites,intercept,slope,p,r_squared,status,p_bh_family4
+sediment,soil_read_percent,27,34,73.92426446521638,-1.5375279187397235,0.29073113393212824,0.04452579350875216,Exploratory segment-mean regression; residual spatial dependence possible,0.8253704291689694
+sediment,soil_asv_percent,27,34,60.09295284556431,-1.2883886688341042,0.42788378160462437,0.025322937727065804,Exploratory segment-mean regression; residual spatial dependence possible,0.8253704291689694
+hyporheic,soil_read_percent,23,27,37.19063867723807,-0.8314196064291696,0.6447428607141743,0.010313522303715609,Exploratory segment-mean regression; residual spatial dependence possible,0.8253704291689694
+hyporheic,soil_asv_percent,23,27,33.64333370013674,0.28333843791318347,0.8253704291689694,0.002371263862087839,Exploratory segment-mean regression; residual spatial dependence possible,0.8253704291689694

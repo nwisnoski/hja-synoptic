@@ -1,0 +1,13 @@
+panel,width,height
+sampling_map,9,9
+hellinger_pca,7,5.5
+diversity_q0,5.5,4.6
+diversity_q1,5.5,4.6
+diversity_q2,5.5,4.6
+soil_read_percent,9,4.5
+soil_asv_percent,9,4.5
+same_site_distances,10,4.5
+same_site_read_sharing,5.5,4.5
+habitat_context,12,5.5
+soil_sharing,9,8
+same_site_comparison,10,8
