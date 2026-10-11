@@ -5,6 +5,7 @@
 #   sbatch analysis/cluster/run_icamp_sediment.sh
 
 #SBATCH --time=96:00:00
+#SBATCH --partition=normal
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
