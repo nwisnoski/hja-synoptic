@@ -31,3 +31,12 @@ the original manifest/checksum are preserved. The other four archive entries
 pass their recorded checksums. Local Markdown links resolved, and
 `git diff --check` passed. Existing uncommitted analysis and deployment
 changes were preserved. No commit, push, or remote command was performed.
+
+## October 10 plankton-workflow removal
+
+`removed_plankton_workflows_20261010.csv` records the 13 obsolete scripts and
+47 figures removed at Nathan's request. Each row includes the pre-removal
+SHA-256 and recovery commit `908d201`. Use `git show 908d201:path/to/file` to
+inspect an original; do not restore obsolete workflows as current manuscript
+analyses. Current first-detection outputs have been regenerated on the reviewed
+three-habitat cohort. Raw inputs and completed inference were preserved.

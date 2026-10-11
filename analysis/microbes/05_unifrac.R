@@ -6,40 +6,15 @@ library(phangorn)
 library(phyloseq)
 library(here)
 library(vegan)
-library(ggplot2)
-library(patchwork)
 
-# 1. Settings and plotting theme.
+# 1. Settings for the preserved source distance matrices.
 data_dir <- here("data", "derived", "microbial_diversity_2016")
 tree_file <- here("results", "phylogeny_2016", "asv_tree_screened_fasttree.nwk")
 results_dir <- here("results", "diversity_2016", "tables")
-figures_dir <- here("figures")
-
-habitat_order <- c("planktonic", "hyporheic", "sediment", "soil")
-habitat_labels <- c(
-  planktonic = "Planktonic streamwater",
-  hyporheic = "Hyporheic porewater",
-  sediment = "Stream sediment",
-  soil = "Terrestrial soil"
-)
-habitat_colors <- c(
-  planktonic = "#0072B2",
-  hyporheic = "#E69F00",
-  sediment = "#009E73",
-  soil = "#D55E00"
-)
 rarefaction_depth <- 10000L
-
-plot_theme <- theme_bw(base_size = 12) +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    strip.background = element_blank()
-  )
 
 # 2. Read and align the fixed-depth counts and sample metadata.
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 
 metadata <- read.csv(
   file.path(data_dir, "sample_metadata.csv"),
@@ -147,45 +122,5 @@ write.csv(
   row.names = FALSE
 )
 
-# 6. Plot the two ordinations.
-unifrac_scores$habitat <- factor(
-  unifrac_scores$habitat,
-  levels = habitat_order
-)
-unifrac_panels <- list()
-for (distance_name in c("Unweighted UniFrac", "Weighted UniFrac")) {
-  plot_data <- unifrac_scores[unifrac_scores$distance == distance_name, ]
-  axis_variance <- unweighted_variance
-  file_label <- "unweighted"
-  if (distance_name == "Weighted UniFrac") {
-    axis_variance <- weighted_variance
-    file_label <- "weighted"
-  }
-  unifrac_panels[[distance_name]] <- ggplot(plot_data, aes(pcoa1, pcoa2, color = habitat)) +
-    geom_point(size = 2.2, alpha = 0.8) +
-    coord_equal() +
-    scale_color_manual(values = habitat_colors, labels = habitat_labels) +
-    labs(
-      x = paste0("PCoA1 (", round(100 * axis_variance[1], 1), "%)"),
-      y = paste0("PCoA2 (", round(100 * axis_variance[2], 1), "%)"),
-      color = "Habitat"
-    ) +
-    plot_theme
-  ggsave(
-    file.path(figures_dir, paste0("2016_unifrac_", file_label, "_pcoa_by_habitat.pdf")),
-    unifrac_panels[[distance_name]],
-    width = 6,
-    height = 4.8,
-    bg = "white"
-  )
-}
-unifrac_plot <- wrap_plots(unifrac_panels, nrow = 1, guides = "collect")
-ggsave(
-  file.path(figures_dir, "2016_unifrac_pcoa_by_habitat.pdf"),
-  unifrac_plot,
-  width = 11,
-  height = 4.8,
-  bg = "white"
-)
-
-message("UniFrac analysis complete.")
+# Reviewed manuscript ordinations are refit by analysis/figures/02_current_manuscript.R.
+message("UniFrac distance and source-ordination tables complete.")

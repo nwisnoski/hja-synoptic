@@ -6,3 +6,7 @@ The branch maps/signature plots are retained here as an initial attempt pending
 a revised ecological comparison. Their R scripts retain tables but disable
 these plots by default. The Python drainage backbone and all spatial inputs
 remain intact.
+
+October 10 cleanup: obsolete mixed/water plots were removed. Only the drainage
+map and sediment branch panel remain in this archive. Removed plots are
+recoverable from commit `908d201`; see the repository removal manifest.

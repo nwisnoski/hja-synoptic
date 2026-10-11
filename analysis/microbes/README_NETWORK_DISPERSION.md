@@ -1,5 +1,12 @@
 # Aquatic microbial beta diversity across the 2016 stream network
 
+Historical report: mixed-habitat scripts and obsolete water figures named below
+were removed on October 10, 2026. Recover them from Git commit `908d201` using
+[the removal manifest](../history/removed_plankton_workflows_20261010.csv).
+Retained tables describe their original cohorts. Current comparative work uses
+scripts 18/19 and the reviewed script 15; sediment-only results remain applicable.
+
+
 Run `source(here::here("analysis", "microbes", "09_network_dispersion.R"))`
 in R or Positron. The script uses the existing fixed 10K ASV table and sample
 metadata. It does not rerun DADA2, rarefaction, or phylogeny construction.

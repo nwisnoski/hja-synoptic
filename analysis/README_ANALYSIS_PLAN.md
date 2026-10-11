@@ -1,5 +1,7 @@
 # Analysis roadmap
 
+[Six planned manuscript figures](MANUSCRIPT_FIGURES.md) lists current PDFs, scripts, and caption notes.
+
 Updated October 10, 2026. The active manuscript compares soils, hyporheic
 porewater, and sediments and integrates microbial and molecular composition
 within sediment. Start with the [manuscript outline](SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md),
@@ -106,11 +108,14 @@ in general sharing; use only resolved coordinates and stable memberships for
 spatial claims. Cross-sectional similarity does not identify movement direction.
 
 Original four-habitat PCA/diversity, water-community chemistry, microbial
-water dispersion, merged-water detection inventories, and catchment iCAMP
-remain historical outputs. The [sediment-only outline](SEDIMENT_ONLY_MANUSCRIPT.md)
+water dispersion, and catchment iCAMP retain historical result tables.
+Their obsolete scripts and figures were removed; see the
+[removal manifest](history/removed_plankton_workflows_20261010.csv).
+Script 15 now regenerates reviewed soil–hyporheic–sediment detection inventories. The [sediment-only outline](SEDIMENT_ONLY_MANUSCRIPT.md)
 is an earlier alternative; its sediment results remain applicable.
 Dated decisions are preserved in [project history](history/PROJECT_HISTORY.md).
-The legacy mothur/R Markdown workflow remains connected at its original paths.
+Legacy mothur source files remain intact; the obsolete mixed-habitat R Markdown
+analysis is recorded in the removal manifest.
 
 ## 6. Reproducibility and housekeeping
 

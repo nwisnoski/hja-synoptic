@@ -11,6 +11,8 @@ and duplicate package exports; it does not exclude this directory wholesale.
 | `fticr_2016/sediment_characteristics/` | Eligible-sample sediment-condition models and paired property adjustment; [methods](../analysis/fticr/README_SEDIMENT_CHARACTERISTICS.md) |
 | `fticr_2016/bipartite_networks/`, `fticr_2016/stable_group_distribution/` | Exploratory associations, explicit nulls, selected-group identities, and maps; [methods](../analysis/fticr/README_BIPARTITE_NETWORKS.md) |
 | Other `fticr_2016/` subdirectories | Molecular and measured-chemistry analyses; [FT-ICR guide](../analysis/fticr/README.md). Water-community models predate the cohort exclusions. |
+| `diversity_2016/first_detection_flowpaths/` | Current reviewed first-detection inventory, 1,000 balanced draws, assignments, and selections; [methods](../analysis/microbes/README_FIRST_DETECTION.md) |
+| `manuscript_figures_2016/` | Reviewed 76-library weighted UniFrac ordination scores, corrected variance, and input hashes; [six figures](../analysis/MANUSCRIPT_FIGURES.md) |
 | `sediment_manuscript_figures_2016/` | Plot data and checksums for reformatted within-sediment figures; [figure report](../analysis/figures/README_SEDIMENT_FIGURES.md) |
 | Other `diversity_2016/` subdirectories | Baseline diversity, UniFrac, network, and soil-routing/sharing results. Four-habitat and water outputs are historical; sediment-only values retain their sample set. |
 | `dada2_2016/` | Completed inference, counts, taxonomy, QC, and provenance; preserve as source products |
@@ -26,5 +28,6 @@ existence of a directory or distance descriptor.
 The new comparative directory saves model designs, seeds, sample exclusions,
 null statistics, sensitivity selections, hashes, and session information.
 Use its tables with its own cohort, rather than combining them with unfiltered
-100-library summaries. No results were moved, deleted, or recalculated during
-the October 10 repository tidy-up.
+100-library summaries. Historical result tables remain intact. The current
+first-detection outputs were regenerated on the reviewed cohort; new habitat
+figure outputs have their own directory.

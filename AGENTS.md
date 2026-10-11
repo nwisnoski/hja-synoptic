@@ -35,6 +35,17 @@ cohort. A new three-habitat iCAMP run remains planned, with separate null pool,
 binning, outputs, and remote authorization. Sediment job 432228 and its deployed
 scripts/inputs are untouched; its current state has not been checked.
 
+The six planned manuscript figures and captions are in
+`analysis/MANUSCRIPT_FIGURES.md`. Script 15 now uses only reviewed soil,
+hyporheic, and sediment inputs; script `analysis/figures/02_current_manuscript.R`
+plots habitat Hill diversity and weighted UniFrac refitted on all 76 libraries.
+Obsolete plankton-inclusive scripts and 47 water/mixed figures were removed
+from the working tree at Nathan's request. Their checksums and Git recovery
+commit `908d201` are in `analysis/history/removed_plankton_workflows_20261010.csv`.
+Historical reports retain original results; do not run removed scripts from
+historical command examples. Common source preparation and saved distances,
+raw inputs, completed inference, and deployed sediment scripts remain intact.
+
 This repository analyzes the 2016 HJ Andrews LTER microbial and sediment
 biogeochemistry survey. Read this file when starting on a new computer, then
 inspect the actual checkout and inputs. Paths below are relative to the
@@ -145,9 +156,9 @@ Soils are a regional comparison pool, not paired aquatic-site observations.
    This fixed `asv_counts_10k.csv` table is the source draw. Current manuscript
    analyses use its reviewed subset in `soil_porewater_sediment_2016/`, built
    by script 18 above. Use unrarefied data only for declared diagnostics.
-4. **Diversity and environmental exploration:** `02_basic_diversity.R`
-   uses Hill numbers and Hellinger PCA; `04_network_environment.R` plots
-   within-habitat patterns. Use Hellinger data for Euclidean PCA/RDA. Start
+4. **Diversity and environmental exploration:** `19_soil_porewater_sediment.R`
+   uses the reviewed cohort for Hill numbers, Hellinger PCA, and environmental
+   checks. The original mixed-habitat scripts 02/04 were removed. Use Hellinger data for Euclidean PCA/RDA. Start
    descriptively and select a small set of ecological models afterward.
 5. **Phylogeny:** `03_build_phylogeny.R` aligns the full screened catalog
    with DECIPHER and builds a FastTree nucleotide tree. The completed master
@@ -155,9 +166,10 @@ Soils are a regional comparison pool, not paired aquatic-site observations.
    Prune it in memory for each analysis. Avoid repeatedly rebuilding the tree
    or running the prohibitively slow phylogenetic Hill workflow.
 6. **UniFrac:** `05_unifrac.R` computes weighted/unweighted UniFrac and PCoA.
-   Tables are in `results/diversity_2016/tables/`; figures are in `figures/`.
-7. **iCAMP:** `06_icamp_sediment.R` and `07_icamp_catchment.R` implement sediment
-   and original four-habitat pools. The latter completed as job 432103 on
+   Source tables are in `results/diversity_2016/tables/`; reviewed figures are
+   made by `analysis/figures/02_current_manuscript.R` in `figures/`.
+7. **iCAMP:** `06_icamp_sediment.R` implements the sediment pool. The original
+   four-habitat script 07 is historical (removed; Git `908d201`); it completed as job 432103 on
    October 9 and is historical for the reviewed manuscript. Sediment job
    432228 was submitted October 10; its state has not been checked. A reviewed
    three-habitat pool is planned but has not been run.
@@ -234,8 +246,8 @@ and [FEAST, Shenhav et al. 2019](https://doi.org/10.1038/s41592-019-0431-x).
   and Biostrings are installed through BiocManager rather than CRAN.
 - FastTree: `~/scratch/shared/bioinformatics/FastTree/FastTree`, version 2.2.0,
   OpenMP build; the tree job also loads `openmpi4`.
-- Catchment job: `analysis/cluster/run_icamp_catchment.sh`, one node, 32 CPUs,
-  256 GB, 14 days. Sediment job: `run_icamp_sediment.sh`, one node, 16 CPUs,
+- Historical catchment job: one node, 32 CPUs, 256 GB, 14 days; its launcher
+  was removed from the local checkout. Sediment job: `run_icamp_sediment.sh`, one node, 16 CPUs,
   192 GB, 96 hours. Create `logs/` before submitting because Slurm opens logs
   before the script runs.
 

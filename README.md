@@ -1,5 +1,7 @@
 # HJA synoptic microbial-diversity analysis
 
+[Six planned manuscript figures](analysis/MANUSCRIPT_FIGURES.md) lists current PDFs, scripts, and caption notes.
+
 This repository analyzes microbial communities and sediment molecular
 signatures from the 2016 H.J. Andrews LTER synoptic survey. The current
 manuscript compares soils, hyporheic porewater, and sediments, with additional
@@ -45,6 +47,8 @@ in Positron. No command-line arguments are needed.
 ```r
 source(here::here("analysis", "microbes", "18_prepare_manuscript_cohort.R"))
 source(here::here("analysis", "microbes", "19_soil_porewater_sediment.R"))
+source(here::here("analysis", "microbes", "15_first_detection_flowpaths.R"))
+source(here::here("analysis", "figures", "02_current_manuscript.R"))
 ```
 
 These scripts preserve the existing rarefaction, write an explicit inclusion
@@ -75,7 +79,7 @@ iCAMP run remains planned. Remote actions require separate authorization.
 | `archive/` | Reversibly archived provenance and old logs | Restore with the documented R housekeeping script |
 | `analysis/history/` | Dated continuity records and historical review guidance | Reference; current instructions remain in `AGENTS.md` |
 
-The older mothur OTU files and `hja-synoptic-analysis.Rmd` remain a connected
-legacy analysis. The [input guide](data/README.md) distinguishes raw sources,
+The older mothur OTU source files remain intact. The obsolete mixed-habitat
+`hja-synoptic-analysis.Rmd` is recoverable from Git commit `908d201`. The [input guide](data/README.md) distinguishes raw sources,
 constructed tables, and the reviewed cohort. Commits and pushes require
 approval of their exact scope; repository housekeeping does not imply either.

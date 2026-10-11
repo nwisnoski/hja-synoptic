@@ -1,5 +1,12 @@
 # Early script readability and plotting validation
 
+Historical report: mixed-habitat scripts and obsolete water figures named below
+were removed on October 10, 2026. Recover them from Git commit `908d201` using
+[the removal manifest](history/removed_plankton_workflows_20261010.csv).
+Retained tables describe their original cohorts. Current comparative work uses
+scripts 18/19 and the reviewed script 15; sediment-only results remain applicable.
+
+
 Validated locally on October 6, 2026, against the clean checkout at
 `cca972bb9f2fde7e32cadbb5deb2546c65ef8e2d`. This pass applies the current
 Dropbox programming guide and the repository rules to the rerunnable early

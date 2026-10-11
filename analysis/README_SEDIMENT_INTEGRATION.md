@@ -24,8 +24,9 @@ planktonic streamwater, hyporheic water, stream sediment, and terrestrial soil.
 All observed ASVs form one catchment-scale metacommunity pool. Summarize the
 pairwise process assignments within each habitat and across each habitat pair.
 
-Run `analysis/microbes/07_icamp_catchment.R` with
-`analysis/cluster/run_icamp_catchment.sh` (32 CPUs, 256 GB, 14 days). It uses
+The historical scripts `analysis/microbes/07_icamp_catchment.R` and
+`analysis/cluster/run_icamp_catchment.sh` (32 CPUs, 256 GB, 14 days) were removed
+from the working tree; recover them from Git `908d201`. That analysis used
 the same 1,000-randomization settings as the sediment run and writes CSV
 results to `results/icamp_2016/catchment_castor/`, including descriptive means and
 pair counts for each habitat comparison. The observed pool is weighted by

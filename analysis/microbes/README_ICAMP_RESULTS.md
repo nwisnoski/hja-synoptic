@@ -1,5 +1,12 @@
 # Catchment iCAMP results and diagnostics
 
+Historical report: mixed-habitat scripts and obsolete water figures named below
+were removed on October 10, 2026. Recover them from Git commit `908d201` using
+[the removal manifest](../history/removed_plankton_workflows_20261010.csv).
+Retained tables describe their original cohorts. Current comparative work uses
+scripts 18/19 and the reviewed script 15; sediment-only results remain applicable.
+
+
 **October 10 manuscript update:** this completed four-habitat run includes the
 15 suspect water libraries and planktonic communities excluded from the current
 [soil-porewater-sediment cohort](README_SOIL_POREWATER_SEDIMENT.md).

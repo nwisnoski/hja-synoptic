@@ -1,5 +1,7 @@
 # Figure guide
 
+[Six planned manuscript figures](../analysis/MANUSCRIPT_FIGURES.md) lists current PDFs, scripts, and caption notes.
+
 Current manuscript: [soil, porewater, and sediment](../analysis/SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md),
 updated October 10, 2026. All figure outputs remain in this directory, with
 individual panels retained beside combinations. Filenames are stable because
@@ -41,19 +43,18 @@ profiles and detection diagnostics should accompany interpretation. The core-2
 branch hypothesis remains unaudited. Different microbial and molecular
 significance levels are not a test that the responses differ.
 
-## Historical or supporting sets
+## Historical removals and supporting sets
 
-Original cross-habitat microbial diversity/PCA, planktonic/hyporheic dispersion,
-water-community chemistry, merged-water detection inventories, and catchment
-iCAMP figures predate the reviewed cohort. They include excluded libraries
-or planktonic communities and are not current comparative manuscript evidence.
-Their files remain available for provenance; a historical sediment-only panel
-can still retain the correct sediment set.
+The October 10 cleanup removed obsolete plankton-inclusive, mixed-habitat,
+unreviewed hyporheic, and catchment iCAMP figures from the working tree.
+The [removal manifest](../analysis/history/removed_plankton_workflows_20261010.csv)
+records all 47 PDFs and recovery commit `908d201`. Shared source data and
+historical result tables remain intact. Reviewed first-detection figures
+replace the former plankton-inclusive displays at their original filenames.
 
-`archive/soil_first_pass/` contains explicitly archived soil examples and
-distance/branch plots, with its own [archive note](archive/soil_first_pass/README.md).
-Pilot figures are explicitly excluded from Git in the root `.gitignore`.
-Legacy `sed_microbial_pcoa.png` and `sed_molecular_pcoa.png` belong to the
-older mothur/R Markdown workflow and remain in place with that analysis.
-
-No figure was moved or deleted during the October 10 repository tidy-up.
+Sediment-only supporting panels remain applicable. The remaining soil-first-pass
+archive contains the drainage map and sediment branch panel; its results remain
+exploratory. Legacy `sed_microbial_pcoa.png` and `sed_molecular_pcoa.png` remain
+as legacy sediment-only outputs; the old R Markdown analysis is recoverable
+from Git. Pilot figures remain explicitly
+excluded from Git. No new archival copies of removed PDFs were created.

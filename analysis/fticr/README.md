@@ -17,7 +17,6 @@ source(here::here("analysis", "fticr", "02_river_composition.R"))
 source(here::here("analysis", "fticr", "03_dom_optical_integration.R"))
 source(here::here("analysis", "fticr", "04_integrated_chemistry_pca.R"))
 source(here::here("analysis", "fticr", "05_network_dispersion.R"))
-source(here::here("analysis", "fticr", "06_aquatic_microbe_chemistry.R"))
 source(here::here("analysis", "fticr", "07_matched_sediment_dispersion.R"))
 source(here::here("analysis", "fticr", "08_bipartite_feasibility.R"))
 source(here::here("analysis", "fticr", "09_bipartite_networks.R"))
@@ -158,7 +157,7 @@ and RC do not show significant omnibus differences. RC is strongly saturated.
 See [network dispersion](README_NETWORK_DISPERSION.md) for all comparisons,
 spatial limitations, provenance, and six figure captions.
 
-`06_aquatic_microbe_chemistry.R` matches all 20 planktonic communities to
+The historical `06_aquatic_microbe_chemistry.R` (removed; Git `908d201`) matched all 20 planktonic communities to
 surface-water optics and all 31 hyporheic communities to hyporheic-water optics.
 It also compares 19/30 communities with contextual sediment FT-ICR signatures,
 extending the fixed property-PC projection to all 60 profiles. None of the four

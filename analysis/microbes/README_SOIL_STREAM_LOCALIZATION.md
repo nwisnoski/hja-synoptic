@@ -1,5 +1,12 @@
 # Soil ASVs and contributing drainage areas
 
+Historical report: mixed-habitat scripts and obsolete water figures named below
+were removed on October 10, 2026. Recover them from Git commit `908d201` using
+[the removal manifest](../history/removed_plankton_workflows_20261010.csv).
+Retained tables describe their original cohorts. Current comparative work uses
+scripts 18/19 and the reviewed script 15; sediment-only results remain applicable.
+
+
 Updated locally on October 5, 2026. The active figures are the ASV-sharing
 maps, the catchment plot with habitat-specific regression curves, and the
 first-detection flowpath figure. ASV examples and distance-correlation figures
