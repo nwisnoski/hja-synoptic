@@ -64,6 +64,12 @@ for (i in seq_len(nrow(plan))) {
   }
   existing <- if (source_exists) source_absolute[i] else archive_absolute[i]
   if (!file.exists(existing)) {
+    # A preview retains missing provenance as a flagged row. Apply/restore
+    # still require the original file and its recorded checksum.
+    if (mode == "dry_run") {
+      status[i] <- "missing"
+      next
+    }
     stop(
       "Neither source nor archive destination exists for: ",
       plan$source_path[i], call. = FALSE
@@ -110,6 +116,10 @@ report <- data.frame(
   stringsAsFactors = FALSE
 )
 print(report[c("source_path", "archive_path", "status")], row.names = FALSE)
+if (any(status == "missing")) {
+  warning("Missing source/archive files are flagged; apply/restore remains blocked for those entries.",
+    call. = FALSE)
+}
 if (mode != "dry_run") {
   manifest_path <- file.path(project_root, "archive", "repository_tidy_manifest.csv")
   dir.create(dirname(manifest_path), recursive = TRUE, showWarnings = FALSE)

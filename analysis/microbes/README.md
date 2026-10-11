@@ -1,5 +1,29 @@
 # 2016 microbial diversity
 
+## Current reviewed manuscript workflow: October 10
+
+Use [the soil-porewater-sediment workflow](README_SOIL_POREWATER_SEDIMENT.md):
+
+```r
+source(here::here("analysis", "microbes", "18_prepare_manuscript_cohort.R"))
+source(here::here("analysis", "microbes", "19_soil_porewater_sediment.R"))
+```
+
+This reuses the existing rarefaction, excludes 15 exact suspect water libraries,
+and omits all planktonic communities from the manuscript. Inputs in
+`data/derived/soil_porewater_sediment_2016/` contain 15 soil, 34 sediment,
+and 27 porewater communities, with 18 sediment-porewater pairs. Use this cohort
+for new manuscript analyses. The existing `microbial_diversity_2016` table
+remains the unfiltered source draw and preserves deployed iCAMP inputs.
+
+The older four-habitat workflow below describes historical outputs, including
+excluded libraries. Those habitat/water/pool-dependent results are not current
+manuscript evidence. The completed four-habitat catchment iCAMP requires a new
+null pool to represent the reviewed cohort. Sediment-only job 432228 was
+submitted October 10; its current state has not been checked.
+
+## Earlier four-habitat workflow
+
 Soil-to-stream sharing and drainage localization are implemented in
 `10_soil_drainage_routing.py`, `11_soil_stream_localization.R`, and
 `12_soil_branch_signatures.R`. See
@@ -31,8 +55,8 @@ Run the relevant files in order; the completed phylogeny need not be rebuilt.
 The catchment iCAMP run completed on October 9, 2026. Read
 [the results and diagnostic captions](README_ICAMP_RESULTS.md), then run
 `16_icamp_figures.R` locally to visualize the saved outputs without rerunning
-inference. The sediment-only run remains pending; obtain approval before any
-remote action or submission.
+inference. Sediment-only job 432228 was submitted October 10; its current
+state has not been checked. Obtain approval before any remote action.
 `17_icamp_phylogenetic_signal.R` tests within-bin signal in observed habitat
 affiliation, with equal habitat sampling weights and an unbalanced sensitivity.
 It reuses the saved bins and does not repeat assembly inference. See the
@@ -64,8 +88,8 @@ four ordinary CSV files to
   its sequences, abundances, lengths, and taxonomy;
 - `asv_counts_unrarefied.csv` contains the eligible libraries and is used
   only to calculate expected iNEXT diversity at 10,000 reads;
-- `asv_counts_10k.csv` is the primary community table for all ecological
-  analyses.
+- `asv_counts_10k.csv` is the original source draw. Current manuscript analyses
+  consume its reviewed subset in `soil_porewater_sediment_2016/`.
 
 The count tables place ASVs in rows and samples in columns so they can be
 opened in spreadsheet software. No RDS files are created.

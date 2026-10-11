@@ -1,5 +1,12 @@
 # Catchment iCAMP results and diagnostics
 
+**October 10 manuscript update:** this completed four-habitat run includes the
+15 suspect water libraries and planktonic communities excluded from the current
+[soil-porewater-sediment cohort](README_SOIL_POREWATER_SEDIMENT.md).
+Its results remain historical and do not represent the reviewed 76-sample
+null pool. A new three-habitat iCAMP run has not been performed. The separate
+34-sample sediment run retains its deployed inputs and settings.
+
 The full catchment job 432103 completed October 9, 2026, after 2 days,
 18 hours, and 9 minutes. It used iCAMP 1.9.1, 1,000 randomizations, the fixed
 10K community (100 samples, 49,260 ASVs), and 893 phylogenetic bins.

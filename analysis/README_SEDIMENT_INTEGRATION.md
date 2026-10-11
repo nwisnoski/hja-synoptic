@@ -1,5 +1,10 @@
 # Catchment-wide assembly and sediment microbial–FT-ICR-MS analysis
 
+**October 10 status:** the current [manuscript roadmap](README_ANALYSIS_PLAN.md)
+uses a reviewed soil-porewater-sediment cohort. The sediment integration below
+retains its 34/44/33-sample design. Four-habitat and water-community comparisons
+describe historical inputs and require refitting before current manuscript use.
+
 This analysis treats stream sediment as the focal metacommunity. The primary
 microbial dataset contains the 34 sediment libraries retained at 10,000 reads;
 the broader sediment biogeochemistry dataset contains 44 sites with FT-ICR-MS,
@@ -12,7 +17,7 @@ no molecular profile. The full 34-sample sediment set remains the iCAMP input.
 Use two complementary iCAMP analyses rather than adding an intermediate
 aquatic-only analysis.
 
-### 1.1 Catchment-wide habitat assembly
+### 1.1 Historical four-habitat assembly
 
 The catchment-wide analysis uses all 100 libraries retained at 10,000 reads:
 planktonic streamwater, hyporheic water, stream sediment, and terrestrial soil.
@@ -20,7 +25,7 @@ All observed ASVs form one catchment-scale metacommunity pool. Summarize the
 pairwise process assignments within each habitat and across each habitat pair.
 
 Run `analysis/microbes/07_icamp_catchment.R` with
-`analysis/cluster/run_icamp_catchment.sh` (32 CPUs, 256 GB, 96 hours). It uses
+`analysis/cluster/run_icamp_catchment.sh` (32 CPUs, 256 GB, 14 days). It uses
 the same 1,000-randomization settings as the sediment run and writes CSV
 results to `results/icamp_2016/catchment_castor/`, including descriptive means and
 pair counts for each habitat comparison. The observed pool is weighted by
@@ -28,9 +33,11 @@ the sampled communities; unequal habitat sample counts therefore influence
 its composition. Habitat summaries are reported separately rather than
 letting the most numerous comparison dominate the ecological interpretation.
 
-Job 431635 timed out during phylogenetic-distance construction; the null
-randomizations have not run. Follow [the rerun plan](README_ICAMP_RERUN.md)
-before resubmitting. The settings above describe the intended full analysis.
+Its predecessor, job 431635, timed out during phylogenetic-distance construction.
+The final castor-based job 432103 completed October 9; see
+[results and diagnostics](microbes/README_ICAMP_RESULTS.md) and the
+[historical rerun record](README_ICAMP_RERUN.md). It includes excluded and
+planktonic libraries and does not represent the reviewed manuscript pool.
 
 This analysis tests whether turnover across habitats is more often assigned to
 heterogeneous selection, while comparisons within a habitat are more often
@@ -51,6 +58,9 @@ abundance-weighted bMPD, Bray-Curtis turnover, a minimum bin size of 24, and the
 framework, which partitions turnover into heterogeneous selection, homogeneous
 selection, dispersal limitation, homogenizing dispersal, and drift/other
 processes ([Ning et al. 2020](https://doi.org/10.1038/s41467-020-18560-z)).
+
+Sediment-only job 432228 was submitted October 10; its current state has not
+been checked. Preserve its deployed scripts and inputs.
 
 Interpret the categories as null-model evidence, not direct observations of
 selection, dispersal, or demographic drift. A later sensitivity run should
@@ -134,19 +144,21 @@ with thousands of largely formula-level FT-ICR features. Global concordance,
 environmental partitioning, and class-level associations are better matched to
 the information content of this dataset.
 
-## 4. Potential colonization sources
+## 4. Comparative source context
 
-Use planktonic and hyporheic libraries as same-site source context where they
-exist (15 sediment–planktonic pairs, 26 sediment–hyporheic pairs, and 10 sites
-with both). Treat terrestrial soils as a regional comparison pool because they
-are not paired to the sediment sites.
+The reviewed manuscript uses 18 sediment-porewater pairs and treats soils as
+a regional comparison pool. The implemented sharing and same-site tests are
+documented in [the cohort report](microbes/README_SOIL_POREWATER_SEDIMENT.md).
+Planktonic communities are outside this manuscript. For historical reference,
+the original 10K draw has nine sediment-planktonic pairs, 20 sediment-porewater
+pairs, and six sites with both; older 15/26/10 counts are not supported by it.
 
-Start with ASV sharing and Bray-Curtis/UniFrac similarity between each sediment
-sample and its available water sources. FEAST can later provide a sensitivity
+ASV sharing and Bray-Curtis/UniFrac similarity describe overlap, not confirmed
+sources. FEAST could later provide a separately justified sensitivity
 analysis of source mixtures ([Shenhav et al. 2019](https://doi.org/10.1038/s41592-019-0431-x)),
 but incomplete source coverage and the cross-sectional design prevent strong
 claims about colonization direction. Source similarity should complement—not
 replace—the iCAMP and environmental evidence. In particular, the
-catchment-wide iCAMP analysis describes non-random turnover among habitats;
+historical catchment iCAMP describes turnover in its original four-habitat pool;
 FEAST addresses resemblance to candidate sources. These are distinct
 inferences and should be reported separately.

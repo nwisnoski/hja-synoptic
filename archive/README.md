@@ -14,6 +14,14 @@ remain in their original locations because they still form a connected
 historical analysis. Active DADA2 files and intermediates are never housekeeping
 targets.
 
+October 10, 2026 checkout audit: the manifest's historical download note
+`archive/provenance/download_notes/get_seqs_PRJNA534507.sh` is missing from
+both its source and archive paths and is not recoverable from available local
+Git history. The other four entries pass their recorded checksum checks.
+The manifest and expected checksum are retained; no replacement was invented.
+The dry run reports this as a `missing` row and a warning. Apply/restore still
+fails if a required file is missing or does not match its checksum.
+
 To preview or reverse the archive operation:
 
 ```sh

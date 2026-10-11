@@ -1,24 +1,30 @@
 # 2016 synoptic key findings and follow-up
 
-Updated October 5, 2026. This synthesis distinguishes completed analyses from
+Updated October 10, 2026. This synthesis distinguishes completed analyses from
 map-based interpretation and proposed follow-up. The sediment integration uses
 33 paired sites; descriptive microbial and molecular coverage is 34 and 44
 sites, respectively. Molecular ecological analyses use incidence, and microbial
 analyses use the fixed 10K ASV table.
-The catchment-wide microbial set contains 100 samples: 34 sediment, 31
-hyporheic, 20 planktonic, and 15 soil. This is a living synthesis; retain the
+The original catchment-wide table contains 100 samples. The current reviewed
+manuscript cohort contains 76: 34 sediment, 27 hyporheic porewater, and 15 soil.
+Fifteen suspect water libraries are excluded explicitly, and all planktonic
+communities are outside the manuscript scope. The
+[cohort report](microbes/README_SOIL_POREWATER_SEDIMENT.md) records exact IDs,
+methods, and the verified 18 sediment-porewater pairs. Historical four-habitat
+outputs below must not be used as reviewed manuscript results. Retain the
 evidence links and revise interpretations as new results become available.
 
 ## Working synthesis
 
-Habitat-specific community structure and soil-ASV sharing provide the
-catchment-wide context; geographically localized sediment microbial-molecular
-associations provide a focused integration result. Sediments are consistently
-diverse and share much more of the sampled soil inventory than water
-communities. Neither microbial dispersion nor soil-detected fractions show
-a universal downstream decline. Thus, the emerging story concerns habitat
-and spatially patchy sediment signatures rather than a uniform longitudinal
-transition. This framing extends the multilayer dendritic perspective of
+Soil, sediment, and porewater communities provide the comparative context;
+sediment microbial-molecular analyses provide the within-habitat integration.
+Sediment and porewater differ in community distributions and sharing with the
+regional soil inventory. At 18 paired sites, there is no supported preferential
+same-site sediment-porewater resemblance. Neither soil-sharing drainage slopes
+nor porewater network and chemistry checks support a consistent gradient.
+These observations motivate habitat retention and transient-porewater hypotheses,
+without measuring transport, residence time, or recruitment. This framing uses
+the multilayer dendritic perspective of
 [Wisnoski and Lennon (2021)](https://doi.org/10.1007/s00442-020-04767-w)
 without attributing these patterns to assembly processes that remain untested.
 
@@ -64,6 +70,12 @@ combined patterns, not measured transport or metabolic mechanisms.
    after conditioning on drainage and detection count (P = 0.0103,
    BH-adjusted P = 0.0309). These outcomes motivate feature- and property-level
    integration without implying strong whole-assemblage concordance.
+   The October 10 sediment-condition adjustment reduces the property fraction
+   to 2.44% after organic content and enzymes (BH P = 0.0622). Organic content
+   separately explains 3.99% adjusted microbial variation beyond drainage
+   (BH P = 0.0102). See the
+   [sediment-condition report](fticr/README_SEDIMENT_CHARACTERISTICS.md);
+   the original 4.04% fraction is not an independent causal chemical effect.
    [Composition report](fticr/README_RIVER_COMPOSITION.md#molecularmicrobial-composition)
    and [partial-RDA results](../results/fticr_2016/integrated_chemistry/microbial_chemistry_partial_rda.csv).
 
@@ -107,7 +119,9 @@ combined patterns, not measured transport or metabolic mechanisms.
    [Detection and composition report](fticr/README_RIVER_COMPOSITION.md)
    and [molecular identities](../results/fticr_2016/stable_group_distribution/core_molecular_identities.csv).
 
-6. **Water-compartment integration remains exploratory.** Matched surface and
+6. **Historical water-compartment integration requires cohort-specific refitting.**
+   These saved comparisons include excluded libraries and planktonic communities
+   and are outside the current manuscript evidence. Matched surface and
    hyporheic optics are available for all 20 planktonic and 31 hyporheic
    communities, respectively; contextual sediment FT-ICR matches are 19 and
    30. None of four partial-RDA comparisons survives BH correction. The sediment
@@ -115,8 +129,18 @@ combined patterns, not measured transport or metabolic mechanisms.
    comparisons, so compartment-specific molecular associations remain untested.
    [Aquatic integration report](fticr/README_AQUATIC_MICROBE_CHEMISTRY.md).
 
-7. **Soil-associated sharing distinguishes sediment from water across the
-   network.** In the grouped detection inventory, soil-detected ASVs comprise
+7. **Reviewed soil sharing distinguishes sediment from porewater.** Median
+   soil-detected read percentages are 70.26% in 34 sediments and 34.38% in
+   27 porewater communities. The within-site difference at 18 paired sites
+   averages 36.15 percentage points (two-sided sign-exchange P = 0.0001).
+   No segment-mean drainage slope survives the four-test BH correction.
+   Three-soil inventories lower median habitat read percentages to 41.58%
+   and 19.43%, demonstrating inventory dependence. These are detection
+   overlaps, not source contributions. Use the
+   [reviewed sharing figures and methods](microbes/README_SOIL_POREWATER_SEDIMENT.md).
+
+   **Historical inventory, retained for provenance:** the four-habitat grouped
+   detection inventory includes excluded libraries. Soil-detected ASVs comprise
    mean sediment read percentages of 72.3/67.7/69.9% across headwater,
    intermediate, and mainstem samples. Water communities contain a larger
    fraction of ASVs assigned to the combined hyporheic/planktonic detection
@@ -140,42 +164,55 @@ combined patterns, not measured transport or metabolic mechanisms.
    [read row](../figures/2016_first_detection_read_percent.pdf), and
    [plotted summaries](../results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv).
 
-8. **Habitat structures microbial composition; sediment richness is not
-   unequivocally highest.** Habitat accounts for 15.6% adjusted variation in
-   the Hellinger community table; the baseline RDA reports an effect size,
-   not a permutation-based significance test. Median observed richness at
-   10K is 2,906 ASVs in planktonic samples, 2,846 in sediment, 1,835 in soil,
-   and 759 in hyporheic samples. Sediment is consistently diverse, whereas
-   planktonic diversity spans a wider range. This replaces a blanket claim
-   that sediment is the richest habitat.
-   [Alpha diversity](../figures/2016_alpha_hill_by_habitat.pdf),
-   [Hellinger PCA](../figures/2016_hellinger_pca_by_habitat.pdf),
-   [Hill numbers](../results/diversity_2016/tables/alpha_hill_numbers.csv), and
-   [habitat effect](../results/diversity_2016/tables/hellinger_rda_habitat_summary.csv).
+8. **Reviewed habitats differ in community distributions and diversity.**
+   Across 76 communities, Bray-Curtis habitat R² is 0.202 (P = 0.0001).
+   Dispersion differs strongly (P = 0.0001), so this is not a pure centroid
+   contrast or a specific filtering mechanism. Median observed richness is
+   2,845.5 ASVs in sediment, 1,835 in soil, and 726 in porewater. The paired
+   sediment-porewater habitat contrast remains supported with site conditioned
+   and within-site habitat exchanges (P = 0.0003). The prior planktonic-richness
+   claim used the suspect block and is withdrawn from the manuscript framing.
+   [Reviewed methods, figures, and tables](microbes/README_SOIL_POREWATER_SEDIMENT.md).
+
+9. **Same-site sediment and porewater do not show supported excess resemblance.**
+   The identical 18 sites give mean Bray-Curtis 0.9190 at the same site versus
+   0.9195 under randomized assignment (raw P = 0.4131). Weighted/unweighted
+   UniFrac and sediment-detected porewater read share likewise show no
+   BH-supported same-site effect under unrestricted or within-order identity
+   exchanges. These are tests of preferential pairing, not equivalence or
+   proof of no physical exchange. Eight porewater environmental checks and
+   network-group composition/dispersion tests also lack support after the
+   declared corrections; environmental model sizes range from 16 to 27.
 
 ## Current figure narrative
 
-1. Habitat diversity and Hellinger composition establish the microbial context.
-2. [Soil-sharing versus drainage area](../figures/2016_soil_asv_catchment_pattern.pdf)
-   and the [grouped detection inventory](../figures/2016_first_detection_flowpaths.pdf)
-   show the persistent sediment-water contrast; retain both inventory rows
-   until the manuscript metric is selected.
-3. [Matched-site dispersion](../figures/2016_matched_sediment_dispersion_comparison.pdf)
+Use the [soil-porewater-sediment outline](SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md).
+
+1. Reviewed sampling map, habitat diversity, and Hellinger composition establish
+   the soil-sediment-porewater context.
+2. Reviewed soil-sharing versus drainage area shows the sediment-porewater
+   contrast, with soil-inventory coverage sensitivity in supporting material.
+3. Same-site comparisons test whether porewater preferentially resembles its
+   co-located sediment using 18 matched sites and explicit identity nulls.
+4. [Matched-site dispersion](../figures/2016_matched_sediment_dispersion_comparison.pdf)
    separates the molecular sensitivity result from microbial heterogeneity.
-4. The molecular-property association and
+5. Sediment organic content, the adjusted molecular-property association, and
    [core-2 maps](../figures/2016_sediment_stable_group_catchment_maps.pdf)
    connect modest aggregate chemistry information to a localized feature set.
 
-The initial soil branch/example/distance figures are archived, not active
+The original four-habitat PCA/diversity, merged-water detection inventory,
+water-community chemistry models, and catchment iCAMP include unreviewed or
+excluded libraries and are historical for this manuscript. The initial soil branch/example/distance figures are archived, not active
 manuscript results. Their tables remain available for refining comparisons.
 
 ## Interpretation still to resolve
 
-- Measured enzyme activities, grain size, hydraulic conductivity, nutrients,
-  and other sediment conditions are candidate explanatory variables. The
-  current exploratory EEA plots do not establish a functional bridge between
-  microbial composition and molecular signatures.
-- The catchment iCAMP run completed on October 9. Mean abundance-weighted
+- Sediment-condition models are now implemented. Organic content has a modest
+  association; the adjusted molecular-property test lacks BH support. Neither
+  result establishes a functional bridge or causal mediation.
+- The historical catchment iCAMP run completed on October 9, using flagged
+  and planktonic libraries. Its null pool does not represent the reviewed
+  three-habitat cohort. Mean abundance-weighted
   fractions are 42.6% drift/other, 32.1% dispersal limitation, 18.5% homogeneous
   selection, 5.0% heterogeneous selection, and 1.8% homogenizing dispersal.
   Within sediment, homogeneous selection is 31.8%; between-habitat
@@ -187,7 +224,8 @@ manuscript results. Their tables remain available for refining comparisons.
   representing 14.5% of total abundance (13.8% without habitat balancing).
   These observational profiles do not validate all environmental niches. See the
   [results and diagnostics](microbes/README_ICAMP_RESULTS.md); the sediment-only
-  run remains pending.
+  run was submitted October 10 as job 432228; its state has not been checked.
+  A reviewed three-habitat iCAMP run has not been performed.
 - Soil sharing does not establish movement direction or viable colonization;
   core-2 taxa and elemental formulas do not identify a metabolic guild.
   Prioritize measured sediment context and audited spatial contrasts before
@@ -228,6 +266,10 @@ catchment-associated environmental signature and whether cross-type associations
 persist after that spatial context is considered.
 
 ## Soil ASVs and contributing drainage areas: October 5, 2026
+
+Historical four-habitat results in the remainder of this document predate the
+October 10 sample exclusions. Sediment-only values retain their sample set;
+water and pooled-habitat results require refitting before manuscript use.
 
 The new soil analysis uses the fixed-10K communities and public-terrain drainage
 areas for individual aquatic sites. Thirteen of 15 soils have resolved identities

@@ -1,217 +1,126 @@
-# Analysis sequence
+# Analysis roadmap
 
-This roadmap separates reproducible data construction from ecological analysis.
-Scripts should consume derived tables; they should never edit the master CSV,
-the FT-ICR-MS workbook, FASTQ files, or DADA2 results in place.
+Updated October 10, 2026. The active manuscript compares soils, hyporheic
+porewater, and sediments and integrates microbial and molecular composition
+within sediment. Start with the [manuscript outline](SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md),
+[current findings](KEY_FINDINGS_2016.md), and [figure guide](../figures/README.md).
 
-## 0. Build ASVs
+## 1. Completed preparation and source products
 
-Run the [DADA2 workflow](README_DADA2.md). Its completion marker is
-`results/dada2_2016/session_info.txt`. Until that file exists, downstream
-microbial scripts must not consume the output directory.
+DADA2 inference, the screened ASV catalog, the master tree, and fixed 10K
+rarefaction are complete. Routine manuscript work consumes these products;
+rebuilding them requires a specific reason. Raw reads, environmental sources,
+the FT-ICR workbook, and completed inference remain intact.
 
-## 1. Construct analysis inputs
+| Dependency | Documentation | Use |
+| --- | --- | --- |
+| Library identity and mapping | `build_sample_manifest.R`; [preparation guide](data_prep/README.md) | Preserve unresolved soil identity and explicit site translations |
+| Completed DADA2 | [workflow](README_DADA2.md) | Counts, taxonomy, QC, and provenance |
+| Original microbial preparation | `microbes/01_prepare_diversity.R` | Existing 100-library fixed 10K draw, not the reviewed cohort |
+| Environmental and molecular inputs | [preparation guide](data_prep/README.md) | Audited joins, binary molecular inputs, and missingness |
+| Original input loader | [loader guide](README_LOADING_DATA.md) | Read-only access to original preparation objects; no automatic manuscript exclusions |
+| Master phylogeny and UniFrac | `microbes/03_build_phylogeny.R`, `05_unifrac.R` | Reuse the completed tree/distances; prune or subset for each analysis |
 
-Run [the data-preparation workflow](data_prep/README.md):
+## 2. Current comparative workflow
+
+Run these directly in Positron or source them from any directory inside the
+project. Settings and seeds are defined in the scripts; no arguments are needed.
 
 ```r
-system2(
-  file.path(R.home("bin"), "Rscript"),
-  "analysis/data_prep/run_data_preparation.R"
-)
+source(here::here("analysis", "microbes", "18_prepare_manuscript_cohort.R"))
+source(here::here("analysis", "microbes", "19_soil_porewater_sediment.R"))
 ```
 
-The first three steps can run while DADA2 is computing. The same command later
-adds the DADA2-dependent 44-site sediment multiblock and source-pool tables.
+Script 18 subsets the existing draw and records all 120 libraries in an
+inclusion audit. It excludes the 15 exact suspect water libraries and omits
+all planktonic communities from this manuscript. It retains 76 libraries:
+15 soil, 34 sediment, and 27 porewater, with 18 sediment-porewater pairs.
+The original draw has 20 sediment-porewater pairs; the older count of 26 is
+not supported by that input. Suspected contamination or sample-identity
+problems remain unresolved causes, not confirmed diagnoses.
 
-Load and validate all available objects with:
+Script 19 refits Hellinger PCA and Hill diversity, habitat distribution tests,
+soil-inventory sharing and coverage sensitivity, same-site resemblance tests,
+and porewater network/environment checks. Model-specific missingness never
+imposes one complete-case filter on unrelated analyses. Soil communities form
+a regional inventory, not paired aquatic observations. Sequencing plate is
+technical metadata and is excluded from ecological predictors and conditioning.
 
-```r
-source("analysis/00_load_analysis_data.R")
-hja <- load_hja_analysis_data()
-```
+Use [the cohort report](microbes/README_SOIL_POREWATER_SEDIMENT.md) for methods,
+nulls, multiplicity families, captions, and results. Constructed inputs belong
+in `data/derived/soil_porewater_sediment_2016/`, results in
+`results/diversity_2016/soil_porewater_sediment/`, and figures in `figures/`.
 
-See [the loader documentation](README_LOADING_DATA.md) for object names and
-the explicit in-memory analysis views.
+## 3. Within-sediment integration
 
-## 2. Microbial habitat and spatial patterns
+The sediment analyses retain all 34 microbial samples and 44 molecular
+profiles when describing each dataset separately. Direct comparisons use the
+identical 33-site overlap; site 43 remains in microbial-only work and in
+eligible sediment-porewater comparisons. Missing conductivity or texture
+restricts only the model requiring that measurement.
 
-Implemented script group: [`analysis/microbes/`](microbes/README.md).
+| Question | Scripts and documentation |
+| --- | --- |
+| Baseline composition and detection | `fticr/01_explore_sediment.R`, `02_river_composition.R`, `microbes/08_sediment_figures.R`; [molecular methods](fticr/README_RIVER_COMPOSITION.md) |
+| Water optics and property axes | `fticr/03_dom_optical_integration.R`, `04_integrated_chemistry_pca.R`; [integration report](fticr/README_DOM_INTEGRATION.md) |
+| Network dispersion | `fticr/05_network_dispersion.R`, `07_matched_sediment_dispersion.R`; [matched methods](fticr/README_MATCHED_SEDIMENT_DISPERSION.md) |
+| Sediment conditions and paired adjustment | `fticr/15_sediment_characteristics.R`; [methods](fticr/README_SEDIMENT_CHARACTERISTICS.md) |
+| Exploratory associations and selected groups | `fticr/08_bipartite_feasibility.R` through `11_stable_group_distribution.R`; [nulls and limits](fticr/README_BIPARTITE_NETWORKS.md) |
+| Manuscript-ready review panels | `figures/01_sediment_manuscript.R`; [panel guide](figures/README_SEDIMENT_FIGURES.md) |
 
-1. Report sample counts and site overlap before hypothesis tests.
-2. Summarize sequencing depth, ASV richness, and composition by planktonic,
-   hyporheic, sediment, and regional soil habitat.
-3. Test habitat differences with methods that respect unequal sample sizes.
-4. Within aquatic habitats, relate composition to stream order, drainage area,
-   valley geomorphology, and spatial coordinates.
-5. Treat repeated site codes as blocks where habitats are compared at a site;
-   do not imply a complete three-habitat design.
+Molecular ecology uses incidence. Raw signal and detection count are QC
+information; equal-feature thinning remains a sensitivity analysis. Whole-
+composition concordance is weak, and the molecular-property association
+weakens after sediment-condition adjustment. Formula signatures and selected
+ASV associations do not establish metabolites, metabolic guilds, production,
+or consumption. The core-2 branch hypothesis still requires audited geography.
 
-Run the complete baseline with:
+## 4. Assembly analysis and deployment state
 
-```sh
-Rscript analysis/microbes/01_prepare_diversity.R
-Rscript analysis/microbes/02_basic_diversity.R
-Rscript analysis/microbes/03_build_phylogeny.R
-Rscript analysis/microbes/04_network_environment.R
-Rscript analysis/microbes/05_unifrac.R
-```
+The four-habitat catchment iCAMP run completed October 9 as job 432103.
+It includes suspect and planktonic libraries and is historical for this
+manuscript. Its bins and null pool do not represent the reviewed 76-sample
+cohort. See [completed results](microbes/README_ICAMP_RESULTS.md).
 
-These scripts assume the repository root is the working folder and take no
-command-line arguments. The first writes inspectable flat tables to
-`data/derived/microbial_diversity_2016/`; the second reads those tables and
-writes the diversity results and figures.
+Sediment-only job 432228 was submitted with approval October 10 for all 34
+sediment samples and 17,946 ASVs, using 1,000 randomizations. Its current
+queue/run state has not been checked. Keep the deployed scripts and inputs
+unchanged. The [deployment record](cluster/README_SEDIMENT_DEPLOYMENT.md)
+contains its resources, log paths, and approved submission history; the
+[rerun record](README_ICAMP_RERUN.md) documents the earlier failed and pilot jobs.
 
-The network/environment script first makes descriptive figures within habitats;
-it does not launch a grid of models or permutation tests. Formal tests should be
-chosen only after inspecting those patterns. Catchment-gradient plots use
-drainage area and distance to the outlet; formal stream-network autocorrelation
-will require a connected reach topology or pairwise along-network distances
-that are not currently in the derived data.
+A reviewed three-habitat iCAMP analysis remains planned. It needs its own
+community pool, binning, outputs, validation, and approved remote actions.
+Do not infer its fractions by removing pairs from the old catchment results.
+Different null pools answer different questions; their process percentages
+are not interchangeable. Review binning and within-pool phylogenetic signal
+before mechanistic interpretation.
 
-The terrestrial soils are a regional comparison set, not paired observations
-from the aquatic sites.
+## 5. Spatial follow-up and historical workflows
 
-All microbial analyses retain assigned Bacteria and Archaea and remove
-chloroplast and mitochondrial sequences before depth filtering, rarefaction,
-diversity estimation, or phylogeny construction.
+The existing soil routing backbone, frozen public terrain, coordinate audits,
+and membership sensitivities remain available. See [spatial methods](microbes/README_SOIL_STREAM_LOCALIZATION.md).
+Water and pooled-habitat localization results predate the exclusions and need
+cohort-specific refitting before current manuscript use. Retain all 15 soils
+in general sharing; use only resolved coordinates and stable memberships for
+spatial claims. Cross-sectional similarity does not identify movement direction.
 
-The phylogeny is constructed once from the full screened ASV catalog, not from
-a rarefied table. Each phylogenetic analysis then prunes that master tree to
-the ASVs present in its selected community table.
+Original four-habitat PCA/diversity, water-community chemistry, microbial
+water dispersion, merged-water detection inventories, and catchment iCAMP
+remain historical outputs. The [sediment-only outline](SEDIMENT_ONLY_MANUSCRIPT.md)
+is an earlier alternative; its sediment results remain applicable.
+Dated decisions are preserved in [project history](history/PROJECT_HISTORY.md).
+The legacy mothur/R Markdown workflow remains connected at its original paths.
 
-Process inference uses two nested scales: a catchment-wide iCAMP analysis of all
-four habitats and a sediment-only iCAMP analysis of the 34 sediment libraries
-retained at 10,000 reads. An additional aquatic-only run is not planned because
-it would add computation and interpretation without a distinct primary
-question. Submit `analysis/cluster/run_icamp_sediment.sh` for the sediment run
-and `analysis/cluster/run_icamp_catchment.sh` for the catchment run.
-The two-scale design and the linked FT-ICR-MS analysis sequence are documented
-in `analysis/README_SEDIMENT_INTEGRATION.md`.
+## 6. Reproducibility and housekeeping
 
-The catchment job timed out before null randomization. Both scripts now use
-validated castor tip distances and fresh `_castor` output directories. Review
-[the rerun plan](README_ICAMP_RERUN.md) for the pilot before submitting either job.
-For completed microbial network dispersion, use
-`analysis/microbes/09_network_dispersion.R` and its
-[methods report](microbes/README_NETWORK_DISPERSION.md).
+Use `here::here()` paths, explicit settings/seeds, inspectable inclusion audits,
+and model-specific sample counts. Keep tables in `results/`, constructed
+inputs in `data/derived/`, and figures in `figures/`. Preserve raw sources and
+completed inference, and fail on identifier/count mismatches. Do not edit a
+script while it is running.
 
-## 3. Sediment FT-ICR-MS patterns
-
-Initial descriptive workflow implemented in [`analysis/fticr/`](fticr/README.md).
-`01_explore_sediment.R` uses presence/absence for molecular analyses and saves
-Jaccard PCoA, van Krevelen, and feature-count figures. Raw intensities are used
-only for detection and QC diagnostics. `02_river_composition.R` now explores
-chemical signatures, drainage associations, replacement/nestedness-resultant
-components, and repeated equal-feature subsampling. See the
-[river-composition report](fticr/README_RIVER_COMPOSITION.md) for results and
-published PNNL/GitHub precedents. Sediment-property models remain planned.
-
-`03_dom_optical_integration.R` now compares EEM peak summaries, fluorescence
-index, and SUVA254 across water compartments and against molecular composition.
-`04_integrated_chemistry_pca.R` supplies FT-ICR property and joint chemistry
-axes with explicit block weighting. See [DOM integration](fticr/README_DOM_INTEGRATION.md).
-
-`05_network_dispersion.R` now uses all 44 sites in three-group dispersion and
-richness-constrained Raup–Crick comparisons (headwater, intermediate, mainstem).
-The equal-feature sensitivity shows an ordered decline in dispersion, but
-complete-profile, chemical-property, replacement, and RC omnibus tests are
-not significant. Balanced draws retain six sites per group on distinct mapped
-segments. See [network dispersion](fticr/README_NETWORK_DISPERSION.md), including
-RC saturation and geographic-extent limitations.
-
-`07_matched_sediment_dispersion.R` now aligns the molecular and sediment
-microbial network comparison on the same 33 sites and uses identical
-segment-balanced site selections for both datasets. The equal-feature
-molecular pattern persists; microbial group tests remain nonsignificant.
-Use these matched figures for direct manuscript comparisons, retaining the
-full-site results as sampling summaries. See
-[matched sediment dispersion](fticr/README_MATCHED_SEDIMENT_DISPERSION.md).
-
-`06_aquatic_microbe_chemistry.R` adds habitat-matched aquatic comparisons:
-20 planktonic communities/surface optics and 31 hyporheic communities/hyporheic
-optics. Contextual sediment FT-ICR matches are 19/30, using fixed property-PC
-projections from the earlier reference. None of four partial RDA models survives
-correction. See [aquatic microbial chemistry](fticr/README_AQUATIC_MICROBE_CHEMISTRY.md).
-
-1. Describe retained-feature counts and total signal, with laboratory standards
-   reported separately.
-2. Examine molecular composition using presence/absence only, following the
-   user's decision on 2026-10-03. Retain intensities for detection/QC only.
-3. Relate molecular patterns to landscape position, hydrology, sediment
-   organic content and enzyme activities, surface/hyporheic DOM optics, and
-   nutrient chemistry.
-4. Use the environmental missingness audit to define a complete primary
-   predictor set; reserve discharge and sediment texture for smaller sensitivity
-   subsets.
-
-The feature filter is fixed in `data_prep/config.R` and is not re-created inside
-analysis scripts.
-
-## 4. Paired sediment integration
-
-Planned script group: `analysis/integration/`. The initial biogeochemistry
-universe is 44 sites with sediment libraries, molecular profiles, and
-master-table rows. The verified fixed-10K microbial intersection is 33 sites:
-site `43` has a retained microbial sample but no molecular profile. Paired
-analyses must use this intersection rather than assume all 34 retained sediment
-samples have molecular data.
-
-Initial paired dissimilarity, two-axis Procrustes, and one chemical-signature
-model are implemented in `fticr/02_river_composition.R`. They provide no robust
-overall molecular–microbial concordance under the examined comparisons.
-Broader environmental variation partitioning remains planned.
-
-The subsequent chemistry-axis partial RDA finds a modest FT-ICR property
-association after conditioning on drainage and detection count;
-adding water optics does not strengthen it. Broad environmental variation
-partitioning remains prospective. Exploratory taxon/formula association
-networks and stable-group distributions are implemented in
-`fticr/08_bipartite_feasibility.R` through `11_stable_group_distribution.R`;
-see [the bipartite report](fticr/README_BIPARTITE_NETWORKS.md) and
-[current findings](KEY_FINDINGS_2016.md). These associations do not establish
-metabolic guilds or molecular production/consumption.
-
-1. Compare whole-community microbial and molecular dissimilarity patterns.
-2. Ask whether shared environmental gradients explain both data blocks.
-3. Relate predeclared taxonomic or putative functional groups to molecular
-   classes and measured process proxies such as NAG, LAP, GLU, AP, organic
-   content, nutrients, and optical DOM indices.
-4. Label taxon–molecule associations as hypotheses or signatures, not direct
-   evidence of microbial function or metabolite production.
-5. Keep high-dimensional pairwise association searches explicitly exploratory
-   and use multiple-testing control plus stability/sensitivity checks.
-
-## 5. Potential source context
-
-Same-site source comparisons are available only where the corresponding
-libraries exist: 15 paired sediment–planktonic sites, 26
-sediment–hyporheic sites, and 10 sites with both water sources. Regional soil
-samples can describe a terrestrial source pool but cannot support same-site
-source attribution. These analyses can compare ASV sharing or compositional
-similarity; they should not infer colonization direction from this cross-section
-alone. Catchment-wide iCAMP provides habitat-filtering context but is not a
-source-tracking method.
-
-The descriptive soil-sharing maps and catchment-wide soil-ASV plot are now
-implemented. The catchment plot includes small habitat-specific smooths in
-log10 drainage area. `microbes/15_first_detection_flowpaths.R` also classifies
-ASVs by their earliest surveyed detection pool: soils first, then the earliest
-aquatic network stage, retaining ties among parallel habitats. Grouped
-within-sample richness and read percentages do not require paired sites.
-Equal-sample inventory draws diagnose sensitivity to unequal habitat coverage.
-See [the soil report](microbes/README_SOIL_STREAM_LOCALIZATION.md).
-The initial ASV-example, branch, and distance-correlation plots are archived;
-Python drainage preprocessing remains available for a revised upstream-soil
-comparison. Neither classification nor smooths establish movement or source
-percentages.
-
-## Reproducibility rule
-
-Every analysis script should:
-
-- read only declared inputs using paths relative to the repository root;
-- record all exclusions, transformations, and model formulas in code;
-- write tables and figures to a dedicated generated-results directory;
-- write inspectable flat tables when an intermediate data product is needed;
-- fail when sample identifiers or count tables are misaligned.
+The [input guide](../data/README.md), [result guide](../results/README.md),
+and [figure guide](../figures/README.md) distinguish current, supporting,
+and historical products. File paths remain stable. Commits, pushes, and each
+remote action require their own authorization; tidy-up does not include them.
