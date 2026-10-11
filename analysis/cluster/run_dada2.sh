@@ -60,10 +60,10 @@ if [[ -e "${HJA_OUTPUT_PATH}" ]]; then
 fi
 
 required_inputs=(
-  "analysis/build_sample_manifest.R"
-  "analysis/check_dada2_setup.R"
-  "analysis/dada2_pipeline.R"
-  "analysis/summarize_dada2_results.R"
+  "analysis/preparation/01_sample_manifest.R"
+  "analysis/preparation/check_dada2_setup.R"
+  "analysis/preparation/02_dada2.R"
+  "analysis/preparation/03_dada2_summary.R"
   "config/dada2_run_config.csv"
   "data/hja-synoptic_sequence-sample-list.csv"
   "data/hja-env_data_clean.csv"
@@ -108,11 +108,11 @@ mkdir -p "${HJA_OUTPUT_PATH}"
 } > "${HJA_OUTPUT_PATH}/cluster_environment.txt" 2>&1
 
 echo "[$(date --iso-8601=seconds)] Rebuilding the 2016 sample manifest."
-Rscript --vanilla analysis/build_sample_manifest.R \
+Rscript --vanilla analysis/preparation/01_sample_manifest.R \
   --project-root "${HJA_PROJECT_ROOT}"
 
 echo "[$(date --iso-8601=seconds)] Running the DADA2 preflight checks."
-Rscript --vanilla analysis/check_dada2_setup.R \
+Rscript --vanilla analysis/preparation/check_dada2_setup.R \
   --project-root "${HJA_PROJECT_ROOT}" \
   --output "${HJA_OUTPUT_PATH}"
 
@@ -130,13 +130,13 @@ else
 fi
 
 echo "[$(date --iso-8601=seconds)] Starting DADA2."
-Rscript --vanilla analysis/dada2_pipeline.R \
+Rscript --vanilla analysis/preparation/02_dada2.R \
   --project-root "${HJA_PROJECT_ROOT}" \
   --output "${HJA_OUTPUT_PATH}" \
   "${taxonomy_args[@]}"
 
 echo "[$(date --iso-8601=seconds)] Building DADA2 QC summaries."
-Rscript --vanilla analysis/summarize_dada2_results.R \
+Rscript --vanilla analysis/preparation/03_dada2_summary.R \
   --project-root "${HJA_PROJECT_ROOT}" \
   --input "${HJA_OUTPUT_PATH}"
 

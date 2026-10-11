@@ -1,86 +1,65 @@
-# HJA synoptic microbial-diversity analysis
+# HJA synoptic: 2016 microbial and molecular ecology
 
-[Six planned manuscript figures](analysis/MANUSCRIPT_FIGURES.md) lists current PDFs, scripts, and caption notes.
+Soil, hyporheic porewater, and sediment communities across the HJ Andrews
+stream network. Start with the six figures in [figures/manuscript](figures/manuscript).
 
-This repository analyzes microbial communities and sediment molecular
-signatures from the 2016 H.J. Andrews LTER synoptic survey. The current
-manuscript compares soils, hyporheic porewater, and sediments, with additional
-microbial-molecular integration within sediment. DADA2 inference and the fixed
-10K rarefaction are complete; routine manuscript work reuses their outputs.
+## Figure workflow
 
-The reviewed cohort has **76 libraries: 15 soil, 27 porewater, and 34 sediment**,
-with 18 sediment-porewater pairs. Fifteen suspect water libraries are excluded
-explicitly, and planktonic communities are outside manuscript scope. Sediment
-molecular descriptions retain 44 sites; direct microbial-molecular comparisons
-use the identical 33-site overlap. The original 100-library table remains the
-source draw and is not the reviewed manuscript cohort.
+The numbered scripts in `analysis/` contain the analyses and their plotting
+code. Open them directly in Positron; paths use `here()` and need no arguments.
+Run `01_prepare_cohort.R` first, then the figure scripts in order.
 
-Start here:
+| Script | Figure | Main output |
+| --- | --- | --- |
+| [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
+| [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1); 2. weighted UniFrac with habitat ellipses | [Alpha](figures/manuscript/2016_manuscript_alpha_diversity.pdf), [ordination](figures/manuscript/2016_manuscript_weighted_unifrac.pdf) |
+| [03_first_detection.R](analysis/03_first_detection.R) | 3. First-detected inventory along the network | [Flow figure](figures/manuscript/2016_first_detection_flowpaths.pdf) |
+| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 4. Microbial and molecular dispersion on matched sites | [Convergence](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
+| [05_molecular_classes.R](analysis/05_molecular_classes.R) | 5. Site-level molecular classes from headwaters to mainstem | [Class composition](figures/manuscript/2016_fticr_network_group_class_comparison.pdf) |
+| [06_network_localization.R](analysis/06_network_localization.R) | 6. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
 
-- [Current manuscript outline](analysis/SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md)
-  and [reviewed cohort methods and figures](analysis/microbes/README_SOIL_POREWATER_SEDIMENT.md).
-- [2016 key findings and follow-up](analysis/KEY_FINDINGS_2016.md) — current
-  microbial–molecular integration findings, interpretation limits, and the
-  proposed Lookout Mountain drainage/confluence comparison.
-- [Analysis roadmap](analysis/README_ANALYSIS_PLAN.md) — active scripts,
-  completed dependencies, and historical analyses.
-- [Figure guide](figures/README.md) and [result guide](results/README.md) —
-  current manuscript panels, sediment integration, and historical outputs.
-- [DADA2 workflow](analysis/README_DADA2.md) — completed inference, provenance,
-  and instructions for a specifically justified rebuild.
-- [Environmental and FT-ICR-MS preparation](analysis/data_prep/README.md) —
-  R-only, auditable construction of the 60-site FT-ICR and 44-site paired
-  sediment analysis tables.
-- [Analysis-data loader](analysis/README_LOADING_DATA.md) — one read-only R
-  entry point for the original preparation objects. The reviewed cohort is
-  constructed separately by script 18 below.
-- `data/derived/hja_2016_sequence_crosswalk.xlsx` — human-readable audit of
-  FASTQ-to-sample-to-environmental-metadata matching.
-- `config/dada2_run_config.csv` — the only file that normally needs editing
-  after reviewing read-quality profiles.
+The checkout contains the prepared inputs and completed results used by these
+scripts. Script 02 uses saved UniFrac distances; 04 refits dispersion and its
+balanced-sampling sensitivity; 05–06 read completed molecular/network results.
+They do not rerun DADA2, phylogeny construction, or network null simulations.
+Each script declares its packages and analytical settings at the top.
 
-## Current manuscript workflow
+## Where things belong
 
-Run locally from any directory within the project, or source the same files
-in Positron. No command-line arguments are needed.
+- `analysis/preparation/`: sample mapping, completed sequence processing,
+  microbial tables, phylogeny, and UniFrac. See its [preparation guide](analysis/preparation/README.md)
+  only when inputs need rebuilding.
+- `analysis/supporting/`: numbered molecular, chemistry, network, and sediment
+  analyses. These supply the main workflow and additional figures.
+- `figures/manuscript/`: the six selected figures. `figures/supplement/`:
+  individual panels, diagnostics, and supporting analyses.
+- `data/`: original inputs; `data/derived/`: constructed inputs.
+  `results/`: analysis tables, saved selections, checksums, and checkpoints.
+- `archive/`: legacy files and their recovery manifest. Older workflows and
+  removed duplicate figures are also recoverable from Git history.
 
-```r
-source(here::here("analysis", "microbes", "18_prepare_manuscript_cohort.R"))
-source(here::here("analysis", "microbes", "19_soil_porewater_sediment.R"))
-source(here::here("analysis", "microbes", "15_first_detection_flowpaths.R"))
-source(here::here("analysis", "figures", "02_current_manuscript.R"))
-```
+## Sample set and interpretation
 
-These scripts preserve the existing rarefaction, write an explicit inclusion
-audit, and generate reviewed habitat, soil-sharing, same-site, and porewater
-environment results. Existing sediment integration outputs remain applicable;
-see the roadmap for their scripts and methods. Do not rerun DADA2, phylogeny,
-or iCAMP as a routine preparation step.
+The reviewed fixed-10K cohort has **76 samples: 15 soil, 27 porewater, and
+34 sediment**. Script 01 records the 15 suspect water-library exclusions
+individually, preserves the original rarefaction, and separates QC exclusions
+from the decision to omit plankton. The cause of the anomalies is unresolved.
+There are 18 sediment–porewater pairs and 33 sediment microbial–molecular
+matches; sediment site 43 has no molecular profile. Soils form a regional pool.
 
-The completed four-habitat catchment iCAMP includes excluded libraries and is
-historical for this manuscript. Sediment-only job 432228 was submitted October
-10, 2026; its current state has not been checked. A reviewed three-habitat
-iCAMP run remains planned. Remote actions require separate authorization.
+[Methods](analysis/METHODS.md) gives the definitions and interpretation limits
+needed for the figures. Numerical results and diagnostics belong in the saved
+tables rather than duplicated reports.
 
-## Repository layout
+## Cluster work
 
-| Path | Purpose | Edit? |
-|---|---|---|
-| `sequences/` | 2016 paired raw FASTQ files | No; treat as immutable |
-| `data/` | Original environmental metadata, raw FT-ICR-MS workbook, and legacy mothur outputs | No; treat source files as immutable |
-| `data/derived/` | Reproducible manifests, mapping audits, and analysis inputs | Generated by documented R scripts |
-| `config/` | Run-specific DADA2 trimming and filtering settings | Yes, after quality review |
-| `analysis/` | Reproducible scripts and workflow documentation | Yes |
-| `figures/manuscript/` | Six selected main manuscript figures | Generated; see the figure plan |
-| `figures/supplement/` | Supporting panels, alternatives, diagnostics, and historical sets | Generated; retain individual panels |
-| `results/` | Analysis tables, diagnostics, provenance, and completed inference | Compact outputs are tracked; explicit cache/duplicate exclusions only |
-| `results/dada2_2016/` | Completed ASV tables, QC, and provenance | Preserve; final products are tracked |
-| `reference/` | Optional SILVA taxonomy training files | Large files; not committed |
-| `mothur/` | Legacy OTU-processing records | Reference only |
-| `archive/` | Reversibly archived provenance and old logs | Restore with the documented R housekeeping script |
-| `analysis/history/` | Dated continuity records and historical review guidance | Reference; current instructions remain in `AGENTS.md` |
+Sediment iCAMP job **432228** was submitted October 10, 2026; its current state
+has not been checked. Its deployed script remains at
+`analysis/microbes/06_icamp_sediment.R`, with launcher
+`analysis/cluster/run_icamp_sediment.sh`. These are intentionally unchanged.
+The completed four-habitat catchment run is historical and includes excluded
+libraries. It does not represent the reviewed cohort.
 
-The older mothur OTU source files remain intact. The obsolete mixed-habitat
-`hja-synoptic-analysis.Rmd` is recoverable from Git commit `908d201`. The [input guide](data/README.md) distinguishes raw sources,
-constructed tables, and the reviewed cohort. Commits and pushes require
-approval of their exact scope; repository housekeeping does not imply either.
+Do not submit, check, transfer, or change remote work without explicit approval
+of that action. Obtain approval of exact paths and message before committing;
+pushes require separate authorization.

@@ -24,7 +24,7 @@ mkdir -p logs results/phylogeny_2016
 
 if [[ ! -f "data/derived/microbial_diversity_2016/asv_metadata_screened.csv" ]]; then
   echo "Missing data/derived/microbial_diversity_2016/asv_metadata_screened.csv"
-  echo "Run analysis/microbes/01_prepare_diversity.R before submitting this job."
+  echo "Run analysis/preparation/04_microbial_tables.R before submitting this job."
   exit 3
 fi
 if [[ ! -x "${FASTTREE_BIN}" ]]; then
@@ -39,7 +39,7 @@ export FASTTREE_BIN
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
 
 Rscript --vanilla -e '
-required <- c("Biostrings", "DECIPHER", "ape")
+required <- c("Biostrings", "DECIPHER", "ape", "here")
 missing <- required[!vapply(required, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing)) stop("Missing R packages: ", paste(missing, collapse = ", "))
 '
@@ -55,7 +55,7 @@ if (length(missing)) stop("Missing R packages: ", paste(missing, collapse = ", "
 } > results/phylogeny_2016/cluster_environment.txt 2>&1
 
 echo "[$(date --iso-8601=seconds)] Starting full screened-ASV phylogeny."
-Rscript --vanilla analysis/microbes/03_build_phylogeny.R
+Rscript --vanilla analysis/preparation/05_phylogeny.R
 echo "end_time=$(date --iso-8601=seconds)" \
   >> results/phylogeny_2016/cluster_environment.txt
 echo "[$(date --iso-8601=seconds)] Phylogeny workflow complete."
