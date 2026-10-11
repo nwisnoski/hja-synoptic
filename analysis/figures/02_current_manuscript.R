@@ -13,6 +13,7 @@ habitat_colors <- c(soil = "#D55E00", hyporheic = "#0072B2", sediment = "#009E73
 habitat_shapes <- c(soil = 17, hyporheic = 15, sediment = 16)
 jitter_seed <- 20261010
 results_dir <- here("results", "manuscript_figures_2016")
+figures_dir <- here("figures", "manuscript")
 summary_file <- here("results", "diversity_2016", "soil_porewater_sediment", "sample_summary.csv")
 distance_file <- here("results", "diversity_2016", "tables", "unifrac_weighted_10k.csv")
 plot_theme <- theme_bw(base_size = 11) +
@@ -21,6 +22,7 @@ plot_theme <- theme_bw(base_size = 11) +
 theme_set(plot_theme)
 
 # 2. Read the reviewed communities and saved phylogenetic distances -------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_files <- c(summary_file, distance_file)
 input_hashes <- unname(tools::md5sum(input_files))
@@ -56,7 +58,7 @@ for (metric in names(alpha_labels)) {
     labs(x = NULL, y = alpha_labels[[metric]]) + theme(legend.position = "none")
 }
 alpha_plot <- wrap_plots(alpha_panels, nrow = 1)
-ggsave(here("figures", "2016_manuscript_alpha_diversity.pdf"), alpha_plot,
+ggsave(file.path(figures_dir, "2016_manuscript_alpha_diversity.pdf"), alpha_plot,
   width = 10, height = 3.6, bg = "white")
 
 # 4. Refit PCoA on exactly the reviewed 76-library distance submatrix ------------
@@ -78,7 +80,7 @@ ordination_plot <- ggplot(scores, aes(pcoa1, pcoa2, color = habitat, shape = hab
   scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("PCoA1 (%.1f%%)", 100 * variance[1]),
     y = sprintf("PCoA2 (%.1f%%)", 100 * variance[2]), color = NULL, shape = NULL)
-ggsave(here("figures", "2016_manuscript_weighted_unifrac.pdf"), ordination_plot,
+ggsave(file.path(figures_dir, "2016_manuscript_weighted_unifrac.pdf"), ordination_plot,
   width = 6.4, height = 5.2, bg = "white")
 
 # 5. Record unchanged inputs and the plotting session ----------------------------

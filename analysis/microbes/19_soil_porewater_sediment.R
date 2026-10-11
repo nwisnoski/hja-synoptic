@@ -11,7 +11,7 @@ library(patchwork)
 # 1. Settings and plotting theme -----------------------------------------------
 data_dir <- here("data", "derived", "soil_porewater_sediment_2016")
 results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 figure_prefix <- "2016_soil_porewater_sediment_"
 target_depth <- 10000L
 n_permutations <- 9999L
@@ -51,6 +51,7 @@ environment_design <- tibble::tribble(
 ) %>% mutate(seed = base_seed + 300L + row_number())
 
 # 2. Align the cohort and record checksums for all reused inputs -----------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
   file.path(data_dir, "asv_counts_10k.csv"),

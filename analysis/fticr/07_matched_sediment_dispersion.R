@@ -10,7 +10,7 @@ library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 target_depth <- 10000
 target_features <- 391
 n_feature_draws <- 1000
@@ -38,6 +38,7 @@ plot_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank(), legend.position = "none")
 
 # 2. Audit the intersection without translating or renaming sample identities -----
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
   here("data", "derived", "microbial_diversity_2016", "sample_metadata.csv"),
@@ -49,8 +50,8 @@ input_paths <- c(
 preserved_paths <- c(input_paths,
   list.files(here("results", "fticr_2016", "network_dispersion"), full.names = TRUE),
   list.files(here("results", "diversity_2016", "network_dispersion"), full.names = TRUE),
-  here("figures", "2016_fticr_dispersion_equal_features.pdf"),
-  here("figures", "2016_sediment_microbes_dispersion_bray.pdf"))
+  here("figures", "supplement", "2016_fticr_dispersion_equal_features.pdf"),
+  here("figures", "supplement", "2016_sediment_microbes_dispersion_bray.pdf"))
 preserved_paths <- unique(preserved_paths[file.exists(preserved_paths)])
 checks <- tibble(path = preserved_paths, initial_md5 = unname(tools::md5sum(preserved_paths)))
 metadata <- read_csv(input_paths[1], col_types = cols(site_code = col_character())) %>%

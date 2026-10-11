@@ -158,9 +158,9 @@ checks the original input/output hashes, shared site identities and group labels
 and agreement of plotted means with the saved test table. It retains the older
 figures and creates:
 
-- `figures/2016_sediment_microbes_fticr_dispersion_comparison.pdf`
-- `figures/2016_sediment_microbes_fticr_dispersion_microbial.pdf`
-- `figures/2016_sediment_microbes_fticr_dispersion_molecular.pdf`
+- `figures/supplement/2016_sediment_microbes_fticr_dispersion_comparison.pdf`
+- `figures/supplement/2016_sediment_microbes_fticr_dispersion_microbial.pdf`
+- `figures/supplement/2016_sediment_microbes_fticr_dispersion_molecular.pdf`
 
 Plot data, group means, and source hashes are in the `figure_comparison/`
 subdirectory of the matched results. The script runs from within the repository

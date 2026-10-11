@@ -20,7 +20,7 @@ and porewater environmental checks. Methods and captions are in
 `analysis/microbes/README_SOIL_POREWATER_SEDIMENT.md`; current framing is in
 `analysis/SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md`. Results are under
 `results/diversity_2016/soil_porewater_sediment/`; 12 vector PDFs use prefix
-`2016_soil_porewater_sediment_` in `figures/`. The prior four-habitat outputs
+`2016_soil_porewater_sediment_` in `figures/supplement/`. The prior four-habitat outputs
 remain historical and must not supply current pooled/water manuscript claims.
 The old source draw is retained to preserve exact rarefaction and deployed
 iCAMP hashes; new manuscript analyses should use the reviewed cohort.
@@ -80,8 +80,11 @@ Dropbox access. New explicit user instructions take precedence.
 - Validate readability rewrites against the original outputs with the same
   settings and seeds. Never edit a script while it is running. Benchmark a
   representative run before deciding that new work needs the cluster.
-- Put all figure outputs in the top-level `figures/` directory. Write analysis
-  tables to `results/` and constructed inputs to `data/derived/`.
+- Put the six selected main figures in `figures/manuscript/` and all other
+  figures in `figures/supplement/`, including individual panels, alternatives,
+  diagnostics, and historical sets. See `analysis/MANUSCRIPT_FIGURES.md` for
+  the selection. Write analysis tables to `results/` and constructed inputs
+  to `data/derived/`.
 - Prefer inspectable CSV/TSV intermediates. Existing large preparation objects
   and detailed iCAMP checkpoints use RDS; these are documented exceptions.
 - Keep raw CSVs, workbooks, reads, and completed DADA2 outputs intact. Record
@@ -167,7 +170,7 @@ Soils are a regional comparison pool, not paired aquatic-site observations.
    or running the prohibitively slow phylogenetic Hill workflow.
 6. **UniFrac:** `05_unifrac.R` computes weighted/unweighted UniFrac and PCoA.
    Source tables are in `results/diversity_2016/tables/`; reviewed figures are
-   made by `analysis/figures/02_current_manuscript.R` in `figures/`.
+   made by `analysis/figures/02_current_manuscript.R` in `figures/manuscript/`.
 7. **iCAMP:** `06_icamp_sediment.R` implements the sediment pool. The original
    four-habitat script 07 is historical (removed; Git `908d201`); it completed as job 432103 on
    October 9 and is historical for the reviewed manuscript. Sediment job

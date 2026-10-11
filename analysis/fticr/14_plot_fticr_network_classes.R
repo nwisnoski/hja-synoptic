@@ -9,7 +9,8 @@ library(ggplot2)
 # 1. Settings and plotting theme.
 results_dir <- here("results", "fticr_2016", "river_composition")
 plot_results_dir <- file.path(results_dir, "network_class_figures")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
+manuscript_dir <- here("figures", "manuscript")
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -31,6 +32,8 @@ plot_theme <- theme_bw(base_size = 12) +
   )
 
 # 2. Align the existing class fractions to the audited 44-site network groups.
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
   file.path(results_dir, "site_class_fractions.csv"),
   here("results", "fticr_2016", "network_dispersion", "site_network_position_audit.csv"),
@@ -111,7 +114,6 @@ group_labels <- paste0(group_levels, "\n(n = ", as.integer(group_counts), ")")
 names(group_labels) <- group_levels
 
 # 5. Draw the compact group comparison and the grouped site-level counterpart.
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 group_plot <- ggplot(group_summary, aes(network_group, mean_fraction, fill = class_label)) +
   geom_col(width = 0.65) +
   scale_fill_manual(values = class_colors, drop = FALSE) +
@@ -120,7 +122,7 @@ group_plot <- ggplot(group_summary, aes(network_group, mean_fraction, fill = cla
   labs(x = NULL, y = "Mean fraction of detected features", fill = NULL) +
   plot_theme +
   guides(fill = guide_legend(nrow = 3))
-ggsave(file.path(figures_dir, "2016_fticr_network_group_class_comparison.pdf"),
+ggsave(file.path(manuscript_dir, "2016_fticr_network_group_class_comparison.pdf"),
   group_plot, width = 9, height = 5.5, bg = "white")
 
 # Retain the original site bars, ordered by drainage area inside each group.

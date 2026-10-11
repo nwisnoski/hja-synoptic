@@ -9,7 +9,8 @@ Rscript --vanilla analysis/figures/01_sediment_manuscript.R
 
 The script reformats completed results and performs no new hypothesis tests.
 Original figures and analysis tables are preserved. All new PDFs have the
-prefix `2016_sediment_ms_` in the top-level `figures/` directory. Twenty-one
+prefix `2016_sediment_ms_`. The selected matched-dispersion composite is in
+`figures/manuscript/`; the other twenty PDFs are in `figures/supplement/`. Twenty-one
 PDFs include four candidate main figures, their individual panels, and
 supporting views. These are a manuscript review set, not a journal submission.
 
@@ -17,7 +18,7 @@ supporting views. These are a manuscript review set, not a journal submission.
 
 ### Figure 1. Sediment sampling across the stream network
 
-[`2016_sediment_ms_sampling_map.pdf`](../../figures/2016_sediment_ms_sampling_map.pdf)
+[`2016_sediment_ms_sampling_map.pdf`](../../figures/supplement/2016_sediment_ms_sampling_map.pdf)
 
 Sediment sampling locations across the H.J. Andrews stream network. Colors
 indicate first/second-order headwaters, third/fourth-order intermediate reaches,
@@ -32,7 +33,7 @@ availability differs from absence of individual ASVs or molecular features.
 
 ### Figure 2. Sediment composition and molecular signatures
 
-[`2016_sediment_ms_composition.pdf`](../../figures/2016_sediment_ms_composition.pdf)
+[`2016_sediment_ms_composition.pdf`](../../figures/supplement/2016_sediment_ms_composition.pdf)
 
 (A) Hellinger PCA of all 34 fixed-10K sediment microbial samples. Axes explain
 16.9% and 13.6% of microbial composition variation and are the saved sediment
@@ -46,7 +47,7 @@ do not test cross-dataset correspondence or differences among network groups.
 
 ### Figure 3. Paired microbial and molecular dispersion
 
-[`2016_sediment_ms_dispersion_paired.pdf`](../../figures/2016_sediment_ms_dispersion_paired.pdf)
+[`2016_sediment_ms_dispersion_paired.pdf`](../../figures/manuscript/2016_sediment_ms_dispersion_paired.pdf)
 
 Microbial and molecular dispersion across the same 33 sediment sites:
 18 headwater, 10 intermediate, and five mainstem. (A) Microbial Bray–Curtis
@@ -64,7 +65,7 @@ sensitivity, not calibrated analytical-depth rarefaction.
 
 ### Figure 4. Sediment conditions and microbial–molecular correspondence
 
-[`2016_sediment_ms_characteristics.pdf`](../../figures/2016_sediment_ms_characteristics.pdf)
+[`2016_sediment_ms_characteristics.pdf`](../../figures/supplement/2016_sediment_ms_characteristics.pdf)
 
 (A) Adjusted composition variation associated separately with organic content,
 the two-axis enzyme profile, or hydraulic conductivity. Microbial models
@@ -91,12 +92,12 @@ Full tests and sensitivity results are documented in the
 
 | Figure | Purpose and retained samples |
 | --- | --- |
-| [`2016_sediment_ms_dispersion_all_samples.pdf`](../../figures/2016_sediment_ms_dispersion_all_samples.pdf) | Full microbial Bray–Curtis (34), complete molecular Jaccard (44), and equal-feature molecular sensitivity (44). Retains every eligible site; panels are descriptive parallel views with unequal site sets. Use the paired main figure for direct comparisons. |
-| [`2016_sediment_ms_diversity.pdf`](../../figures/2016_sediment_ms_diversity.pdf) | Hill q = 1 across drainage area for all 34 sediment microbial samples, colored by network group. No regression or smoothing is added. |
-| [`2016_sediment_ms_unifrac.pdf`](../../figures/2016_sediment_ms_unifrac.pdf) | Weighted and unweighted UniFrac PCoA refitted on the same 34 sediment samples using saved pairwise distances. Axes describe within-sediment variation; no other habitats enter the ordination. |
-| [`2016_sediment_ms_molecular_pcoa.pdf`](../../figures/2016_sediment_ms_molecular_pcoa.pdf) | Complete incidence-Jaccard composition of all 44 molecular profiles, colored by network group. Interpret with the established strong PCo1/detection-count association. |
-| [`2016_sediment_ms_molecular_pcoa_equal.pdf`](../../figures/2016_sediment_ms_molecular_pcoa_equal.pdf) | Existing equal-feature sensitivity coordinates for all 44 molecular profiles. The first two axes explain only 5.25% and 3.26%; the display is a limited summary of the distance geometry. |
-| [`2016_sediment_ms_microbial_pca_organic.pdf`](../../figures/2016_sediment_ms_microbial_pca_organic.pdf) | The unchanged all-34 microbial PCA colored by measured sediment organic content; the multivariate test is supplied separately, not inferred from this color overlay. |
+| [`2016_sediment_ms_dispersion_all_samples.pdf`](../../figures/supplement/2016_sediment_ms_dispersion_all_samples.pdf) | Full microbial Bray–Curtis (34), complete molecular Jaccard (44), and equal-feature molecular sensitivity (44). Retains every eligible site; panels are descriptive parallel views with unequal site sets. Use the paired main figure for direct comparisons. |
+| [`2016_sediment_ms_diversity.pdf`](../../figures/supplement/2016_sediment_ms_diversity.pdf) | Hill q = 1 across drainage area for all 34 sediment microbial samples, colored by network group. No regression or smoothing is added. |
+| [`2016_sediment_ms_unifrac.pdf`](../../figures/supplement/2016_sediment_ms_unifrac.pdf) | Weighted and unweighted UniFrac PCoA refitted on the same 34 sediment samples using saved pairwise distances. Axes describe within-sediment variation; no other habitats enter the ordination. |
+| [`2016_sediment_ms_molecular_pcoa.pdf`](../../figures/supplement/2016_sediment_ms_molecular_pcoa.pdf) | Complete incidence-Jaccard composition of all 44 molecular profiles, colored by network group. Interpret with the established strong PCo1/detection-count association. |
+| [`2016_sediment_ms_molecular_pcoa_equal.pdf`](../../figures/supplement/2016_sediment_ms_molecular_pcoa_equal.pdf) | Existing equal-feature sensitivity coordinates for all 44 molecular profiles. The first two axes explain only 5.25% and 3.26%; the display is a limited summary of the distance geometry. |
+| [`2016_sediment_ms_microbial_pca_organic.pdf`](../../figures/supplement/2016_sediment_ms_microbial_pca_organic.pdf) | The unchanged all-34 microbial PCA colored by measured sediment organic content; the multivariate test is supplied separately, not inferred from this color overlay. |
 
 Individual panels are retained with the same prefix. The
 [`figure_manifest.csv`](../../results/sediment_manuscript_figures_2016/figure_manifest.csv)

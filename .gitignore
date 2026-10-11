@@ -59,25 +59,25 @@ reference/*
 !reference/README.md
 
 # Reproducible exploratory figures retained locally; selected figures are tracked.
-/figures/2016_dom_fluorescence_index_drainage.pdf
-/figures/2016_dom_optical_molecular_protein_comparison.pdf
-/figures/2016_dom_suva254_drainage.pdf
-/figures/2016_dom_t_c_ratio_drainage.pdf
-/figures/2016_fticr_h_c_drainage.pdf
-/figures/2016_fticr_pcoa_formula_overlay.pdf
-/figures/2016_fticr_protein_like_drainage.pdf
-/figures/2016_fticr_replacement_pcoa.pdf
-/figures/2016_integrated_chemistry_pca.pdf
-/figures/2016_microbial_pca_integrated_chemistry.pdf
-/figures/2016_paired_molecular_microbes_procrustes.pdf
+/figures/supplement/2016_dom_fluorescence_index_drainage.pdf
+/figures/supplement/2016_dom_optical_molecular_protein_comparison.pdf
+/figures/supplement/2016_dom_suva254_drainage.pdf
+/figures/supplement/2016_dom_t_c_ratio_drainage.pdf
+/figures/supplement/2016_fticr_h_c_drainage.pdf
+/figures/supplement/2016_fticr_pcoa_formula_overlay.pdf
+/figures/supplement/2016_fticr_protein_like_drainage.pdf
+/figures/supplement/2016_fticr_replacement_pcoa.pdf
+/figures/supplement/2016_integrated_chemistry_pca.pdf
+/figures/supplement/2016_microbial_pca_integrated_chemistry.pdf
+/figures/supplement/2016_paired_molecular_microbes_procrustes.pdf
 
 # Full-size nine-draw bipartite benchmark outputs; retain the main analysis.
 /results/fticr_2016/bipartite_network_pilot/
-/figures/pilot_2016_sediment_bipartite_association_nulls.pdf
-/figures/pilot_2016_sediment_bipartite_module_null.pdf
-/figures/pilot_2016_sediment_bipartite_groups.pdf
-/figures/pilot_2016_sediment_bipartite_association_matrix.png
-/figures/pilot_2016_sediment_bipartite_stable_group.pdf
+/figures/supplement/pilot_2016_sediment_bipartite_association_nulls.pdf
+/figures/supplement/pilot_2016_sediment_bipartite_module_null.pdf
+/figures/supplement/pilot_2016_sediment_bipartite_groups.pdf
+/figures/supplement/pilot_2016_sediment_bipartite_association_matrix.png
+/figures/supplement/pilot_2016_sediment_bipartite_stable_group.pdf
 
 # Regenerable phylogeny alignment and verbose log; retain the tree and provenance.
 /results/phylogeny_2016/asv_alignment_screened.fasta

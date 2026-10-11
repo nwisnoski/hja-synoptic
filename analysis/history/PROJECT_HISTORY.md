@@ -399,7 +399,7 @@ and 19.2/21.8/13.9% in planktonic samples. There is no universal monotonic
 decline. Three-soil inventories substantially lower absolute percentages.
 New tables/assignments/selections are in
 `results/diversity_2016/first_detection_flowpaths/`. The combined vector figure
-is `figures/2016_first_detection_flowpaths.pdf`; each row is also retained.
+is `figures/manuscript/2016_first_detection_flowpaths.pdf`; each row is also retained.
 Methods, captions, limitations, and checks are in the soil report. All four
 revised/new PDFs passed rendered inspection; all inputs remained unchanged.
 No remote action, commit, or push was performed; these changes are uncommitted.

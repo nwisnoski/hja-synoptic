@@ -11,7 +11,7 @@ library(vegan)
 input_dir <- here("data", "derived", "analysis_inputs")
 results_dir <- here("results", "fticr_2016", "tables")
 derived_dir <- here("data", "derived", "fticr_2016")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 presence_threshold <- 0
 pcoa_correction <- "lingoes"
 figure_width <- 6
@@ -27,9 +27,9 @@ plot_theme <- theme_bw(base_size = 12) +
   )
 
 # 2. Read prepared inputs and check their provenance ----------------------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(derived_dir, recursive = TRUE, showWarnings = FALSE)
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 inventory <- read_csv(file.path(input_dir, "audit", "source_file_inventory.csv"),
   show_col_types = FALSE)
 source_checks <- inventory %>%

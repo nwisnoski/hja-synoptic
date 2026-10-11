@@ -127,5 +127,6 @@ script while it is running.
 
 The [input guide](../data/README.md), [result guide](../results/README.md),
 and [figure guide](../figures/README.md) distinguish current, supporting,
-and historical products. File paths remain stable. Commits, pushes, and each
+and historical products. Main figure outputs go to `figures/manuscript/`; supporting panels, alternatives,
+and diagnostics go to `figures/supplement/`. Commits, pushes, and each
 remote action require their own authorization; tidy-up does not include them.

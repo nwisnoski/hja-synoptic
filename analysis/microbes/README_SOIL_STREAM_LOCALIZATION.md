@@ -423,7 +423,7 @@ Outputs are in `results/diversity_2016/first_detection_flowpaths/`:
 - `inventory_diagnostics.csv`, `analysis_settings.csv`, `input_checksums.csv`,
   and `session_info.txt`: computational and input provenance.
 
-Caption for `figures/2016_first_detection_flowpaths.pdf`: Mean within-sample
+Caption for `figures/manuscript/2016_first_detection_flowpaths.pdf`: Mean within-sample
 ASV richness (upper row) and read percentages (lower row) assigned to their
 earliest surveyed detection pool, by network stage and aquatic habitat.
 Soil-detected ASVs have precedence; other ASVs are assigned to Sediment,

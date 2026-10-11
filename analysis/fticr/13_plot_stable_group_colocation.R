@@ -13,7 +13,8 @@ expected_asvs <- 38L
 expected_molecules <- 8L
 results_dir <- here("results", "fticr_2016", "stable_group_distribution")
 plot_results_dir <- file.path(results_dir, "colocation_figure")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
+manuscript_dir <- here("figures", "manuscript")
 figure_file <- "2016_sediment_stable_group_colocation_map.pdf"
 labeled_figure_file <- "2016_sediment_stable_group_colocation_map_labeled.pdf"
 label_seed <- 20261044L
@@ -35,6 +36,8 @@ plot_theme <- theme_bw(base_size = 11) +
   )
 
 # 2. Check that the completed site profiles still describe the current inputs.
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 reference_checks <- read_csv(file.path(results_dir, "input_integrity.csv"),
   show_col_types = FALSE)
 reference_checks$path <- sub("^.*?/hja-synoptic/", "", reference_checks$path)
@@ -149,8 +152,7 @@ map <- ggplot(map_lines, aes(x, y, group = segment)) +
   coord_equal() +
   labs(x = "UTM easting (m)", y = "UTM northing (m)") +
   plot_theme
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
-ggsave(file.path(figures_dir, figure_file), map,
+ggsave(file.path(manuscript_dir, figure_file), map,
   width = figure_width, height = figure_height, bg = "white")
 
 # Retain all site IDs with the original label seed and leader-line styling.

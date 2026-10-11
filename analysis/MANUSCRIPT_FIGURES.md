@@ -2,16 +2,17 @@
 
 October 10, 2026. Nathan's six-figure sequence uses the reviewed soil,
 hyporheic porewater, and sediment cohort. Figures are candidates for manuscript
-review; supporting panels remain available in `figures/`.
+review. The six selected PDFs are in `figures/manuscript/`; supporting panels,
+alternative views, and diagnostics are in `figures/supplement/`.
 
 | Figure | Current PDF | Data and script |
 | --- | --- | --- |
-| 1. Alpha diversity across habitats | [Hill diversity](../figures/2016_manuscript_alpha_diversity.pdf) | 15 soil, 27 hyporheic, 34 sediment; `figures/02_current_manuscript.R` |
-| 2. Beta diversity ordination | [Weighted UniFrac PCoA](../figures/2016_manuscript_weighted_unifrac.pdf) | Same 76 libraries, refitted axes; `figures/02_current_manuscript.R` |
-| 3. First-detected flowpath inventory | [ASV richness and reads](../figures/2016_first_detection_flowpaths.pdf) | Reviewed cohort only; `microbes/15_first_detection_flowpaths.R` |
-| 4. Sediment microbial and molecular convergence | [Matched dispersion](../figures/2016_sediment_ms_dispersion_paired.pdf) | Identical 33 sites; `fticr/07_matched_sediment_dispersion.R`, reformatted by `figures/01_sediment_manuscript.R` |
-| 5. Molecular classes along the network | [Class composition](../figures/2016_fticr_network_group_class_comparison.pdf) | 44 molecular sites, grouped 24/14/6; `fticr/14_plot_fticr_network_classes.R` |
-| 6. Localized microbial–molecular group | [Core-2 colocation map](../figures/2016_sediment_stable_group_colocation_map.pdf) | 34 microbial and 44 molecular profiles, 45 distinct sites; `fticr/13_plot_stable_group_colocation.R` |
+| 1. Alpha diversity across habitats | [Hill diversity](../figures/manuscript/2016_manuscript_alpha_diversity.pdf) | 15 soil, 27 hyporheic, 34 sediment; `figures/02_current_manuscript.R` |
+| 2. Beta diversity ordination | [Weighted UniFrac PCoA](../figures/manuscript/2016_manuscript_weighted_unifrac.pdf) | Same 76 libraries, refitted axes; `figures/02_current_manuscript.R` |
+| 3. First-detected flowpath inventory | [ASV richness and reads](../figures/manuscript/2016_first_detection_flowpaths.pdf) | Reviewed cohort only; `microbes/15_first_detection_flowpaths.R` |
+| 4. Sediment microbial and molecular convergence | [Matched dispersion](../figures/manuscript/2016_sediment_ms_dispersion_paired.pdf) | Identical 33 sites; `fticr/07_matched_sediment_dispersion.R`, reformatted by `figures/01_sediment_manuscript.R` |
+| 5. Molecular classes along the network | [Class composition](../figures/manuscript/2016_fticr_network_group_class_comparison.pdf) | 44 molecular sites, grouped 24/14/6; `fticr/14_plot_fticr_network_classes.R` |
+| 6. Localized microbial–molecular group | [Core-2 colocation map](../figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) | 34 microbial and 44 molecular profiles, 45 distinct sites; `fticr/13_plot_stable_group_colocation.R` |
 
 ## Caption and interpretation notes
 

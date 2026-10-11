@@ -11,7 +11,7 @@ library(adespatial)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "river_composition")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 n_permutations <- 9999
 n_subsamples <- 1000
 subsample_seed <- 20261003
@@ -28,6 +28,7 @@ plot_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank())
 
 # 2. Align incidence, formula metadata, and environment -------------------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 pa_table <- read_csv(here("data", "derived", "fticr_2016", "sediment_44_presence_absence.csv"),
   col_types = cols(site_code = col_character()))

@@ -10,7 +10,7 @@ library(ggplot2)
 test_run <- FALSE
 minimum_support <- 0.8
 minimum_nodes_per_type <- 3L
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 figure_prefix <- "2016_sediment_bipartite"
 display_group_rank <- 1L
 node_colors <- c(Acidobacteriota = "#009E73", Pseudomonadota = "#0072B2",
@@ -28,6 +28,7 @@ checks <- tibble(path = input_paths, initial_md5 = unname(tools::md5sum(input_pa
 stopifnot(!anyNA(checks$initial_md5))
 
 # 2. Retain stable positive links with the same direction after adjustment --------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 edges <- read_csv(input_paths[1], show_col_types = FALSE)
 mapping <- read_csv(input_paths[2], show_col_types = FALSE)
 asvs <- read_csv(input_paths[3], show_col_types = FALSE)

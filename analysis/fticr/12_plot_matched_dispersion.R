@@ -10,7 +10,7 @@ library(patchwork)
 # 1. Settings and plotting theme.
 results_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
 plot_results_dir <- file.path(results_dir, "figure_comparison")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 figure_prefix <- "2016_sediment_microbes_fticr_dispersion"
 plot_seed <- 20261017
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
@@ -33,6 +33,7 @@ plot_theme <- theme_bw(base_size = 12) +
   )
 
 # 2. Check that the completed matched analysis still describes these inputs.
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 reference_checks <- read_csv(
   file.path(results_dir, "preserved_input_output_checksums.csv"),
   show_col_types = FALSE
@@ -99,7 +100,6 @@ for (metric_name in panel_design$metric) {
 # 4. Plot site distributions and group means on their original metric scales.
 # Black diamonds are means; boxes describe the observed site distribution.
 # No trend lines or new tests are introduced for these categorical groups.
-dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 panels <- list()
 for (i in seq_len(nrow(panel_design))) {
   metric_name <- panel_design$metric[i]

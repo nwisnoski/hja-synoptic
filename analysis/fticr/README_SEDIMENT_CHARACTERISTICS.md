@@ -127,10 +127,10 @@ Constructed site and model inputs are in
 All seven input checksums remained unchanged. The new PDFs were rendered and
 visually inspected after the final run.
 
-- `figures/2016_sediment_characteristics_coverage.pdf`: Availability of microbial
+- `figures/supplement/2016_sediment_characteristics_coverage.pdf`: Availability of microbial
   libraries, molecular profiles, and measured sediment characteristics across
   the 45-site union. Missing profiles are distinguished from missing predictors.
-- `figures/2016_sediment_characteristics_unique_fractions.pdf`: Adjusted
+- `figures/supplement/2016_sediment_characteristics_unique_fractions.pdf`: Adjusted
   composition variation beyond drainage area (microbes) or drainage area and
   molecular detection count (molecules). Each characteristic uses all available
   samples, with counts printed beside points. Predictors are fitted separately;

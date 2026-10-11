@@ -24,7 +24,7 @@ quasiswap_thin <- 100L
 minimum_group_nodes <- 3L
 results_dir <- here("results", "fticr_2016", "bipartite_networks")
 figure_prefix <- "2016_sediment_bipartite"
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 if (test_run) {
   n_null <- 9L
   results_dir <- here("results", "fticr_2016", "bipartite_network_pilot")
@@ -40,8 +40,8 @@ plot_theme <- theme_bw(base_size = 11) +
 source(here("analysis", "fticr", "bipartite_helpers.R"))
 
 # 2. Read and audit the paired inputs -------------------------------------------
-dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
   here("data", "derived", "microbial_diversity_2016", "sample_metadata.csv"),
   here("data", "derived", "microbial_diversity_2016", "asv_counts_10k.csv"),

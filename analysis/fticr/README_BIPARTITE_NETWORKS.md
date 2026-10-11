@@ -274,8 +274,8 @@ PDFs were rendered and visually inspected:
 ### Single-panel co-location map added on 2026-10-06
 
 Run `source(here::here("analysis", "fticr", "13_plot_stable_group_colocation.R"))`
-to create `figures/2016_sediment_stable_group_colocation_map.pdf` and the labeled
-version `figures/2016_sediment_stable_group_colocation_map_labeled.pdf` directly
+to create `figures/manuscript/2016_sediment_stable_group_colocation_map.pdf` and the labeled
+version `figures/supplement/2016_sediment_stable_group_colocation_map_labeled.pdf` directly
 from the completed distribution tables. It verifies the original input hashes and
 site coordinates, and does not repeat network inference or change group
 membership. The labeled component maps and their multipanel combination above

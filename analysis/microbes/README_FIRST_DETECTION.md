@@ -31,9 +31,9 @@ identities, ASV assignments, per-sample profiles, full and balanced summaries,
 all 21,000 selections, diagnostics, settings, and unchanged-input checksums.
 The three current vector PDFs are:
 
-- [Combined richness and reads](../../figures/2016_first_detection_flowpaths.pdf)
-- [Richness](../../figures/2016_first_detection_richness_percent.pdf)
-- [Reads](../../figures/2016_first_detection_read_percent.pdf)
+- [Combined richness and reads](../../figures/manuscript/2016_first_detection_flowpaths.pdf)
+- [Richness](../../figures/supplement/2016_first_detection_richness_percent.pdf)
+- [Reads](../../figures/supplement/2016_first_detection_read_percent.pdf)
 
 These displays describe detection overlap. They do not estimate source
 contributions, recruitment, viability, transport rates, or direction. The

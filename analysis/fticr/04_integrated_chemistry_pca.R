@@ -11,7 +11,7 @@ library(permute)
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "integrated_chemistry")
 derived_dir <- here("data", "derived", "fticr_2016")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 n_permutations <- 9999
 permutation_seed <- 20261006
 retained_axes <- 2
@@ -33,6 +33,7 @@ plot_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank())
 
 # 2. Construct and audit the common site table ----------------------------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(derived_dir, recursive = TRUE, showWarnings = FALSE)
 formula <- read_csv(here("results", "fticr_2016", "river_composition",

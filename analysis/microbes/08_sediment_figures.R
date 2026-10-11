@@ -9,7 +9,7 @@ library(vegan)
 # 1. Settings and plotting theme ------------------------------------------------
 data_dir <- here("data", "derived", "microbial_diversity_2016")
 results_dir <- here("results", "diversity_2016", "tables")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 target_depth <- 10000
 figure_width <- 6
 figure_height <- 4.8
@@ -18,8 +18,8 @@ plot_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank())
 
 # 2. Align the sediment subset --------------------------------------------------
-dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 metadata <- read_csv(file.path(data_dir, "sample_metadata.csv"),
   col_types = cols(site_code = col_character()))
 count_table <- read_csv(file.path(data_dir, "asv_counts_10k.csv"), show_col_types = FALSE)

@@ -9,7 +9,7 @@ library(permute)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "network_dispersion")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 null_seed <- 20261007
 permutation_seed <- 20261008
 resampling_seed <- 20261009
@@ -32,6 +32,7 @@ plot_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank(), legend.position = "bottom")
 
 # 2. Match site identities and derive audited network positions ------------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 pa_table <- read_csv(here("data", "derived", "fticr_2016", "sediment_44_presence_absence.csv"),
   col_types = cols(site_code = col_character()))

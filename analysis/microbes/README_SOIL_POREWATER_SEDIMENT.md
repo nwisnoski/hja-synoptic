@@ -20,10 +20,10 @@ Constructed inputs are in `data/derived/soil_porewater_sediment_2016/`.
 Results are in `results/diversity_2016/soil_porewater_sediment/`, and all 12
 vector figures have prefix `figures/2016_soil_porewater_sediment_`.
 
-Start figure review with the [sampling map](../../figures/2016_soil_porewater_sediment_sampling_map.pdf),
-[habitat context](../../figures/2016_soil_porewater_sediment_habitat_context.pdf),
-[soil sharing](../../figures/2016_soil_porewater_sediment_soil_sharing.pdf), and
-[same-site comparison](../../figures/2016_soil_porewater_sediment_same_site_comparison.pdf).
+Start figure review with the [sampling map](../../figures/supplement/2016_soil_porewater_sediment_sampling_map.pdf),
+[habitat context](../../figures/supplement/2016_soil_porewater_sediment_habitat_context.pdf),
+[soil sharing](../../figures/supplement/2016_soil_porewater_sediment_soil_sharing.pdf), and
+[same-site comparison](../../figures/supplement/2016_soil_porewater_sediment_same_site_comparison.pdf).
 
 The baseline `microbial_diversity_2016` directory remains the immutable source
 of the existing rarefaction and deployed sediment-iCAMP inputs. Its 100-sample

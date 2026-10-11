@@ -160,8 +160,8 @@ combined patterns, not measured transport or metabolic mechanisms.
    water-versus-sediment pool sizes. These results support habitat-specific
    sharing, not percentages of communities originating in soils.
    [Methods and captions](microbes/README_SOIL_STREAM_LOCALIZATION.md#earliest-detection-along-network-stages),
-   [richness row](../figures/2016_first_detection_richness_percent.pdf),
-   [read row](../figures/2016_first_detection_read_percent.pdf), and
+   [richness row](../figures/supplement/2016_first_detection_richness_percent.pdf),
+   [read row](../figures/supplement/2016_first_detection_read_percent.pdf), and
    [plotted summaries](../results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv).
 
 8. **Reviewed habitats differ in community distributions and diversity.**
@@ -194,10 +194,10 @@ Use the [soil-porewater-sediment outline](SOIL_POREWATER_SEDIMENT_MANUSCRIPT.md)
    contrast, with soil-inventory coverage sensitivity in supporting material.
 3. Same-site comparisons test whether porewater preferentially resembles its
    co-located sediment using 18 matched sites and explicit identity nulls.
-4. [Matched-site dispersion](../figures/2016_matched_sediment_dispersion_comparison.pdf)
+4. [Matched-site dispersion](../figures/supplement/2016_matched_sediment_dispersion_comparison.pdf)
    separates the molecular sensitivity result from microbial heterogeneity.
 5. Sediment organic content, the adjusted molecular-property association, and
-   [core-2 maps](../figures/2016_sediment_stable_group_catchment_maps.pdf)
+   [core-2 maps](../figures/supplement/2016_sediment_stable_group_catchment_maps.pdf)
    connect modest aggregate chemistry information to a localized feature set.
 
 The original four-habitat PCA/diversity, merged-water detection inventory,
@@ -358,7 +358,7 @@ equal detection completeness.
 
 Tables, ASV assignments, sampling selections, and validation records are in
 `results/diversity_2016/first_detection_flowpaths/`. The combined figure is
-`figures/2016_first_detection_flowpaths.pdf`, with both individual rows also
+`figures/manuscript/2016_first_detection_flowpaths.pdf`, with both individual rows also
 saved. All revised/new PDFs passed rendered visual inspection; input hashes
 remained unchanged. No remote action, commit, or push was performed.
 

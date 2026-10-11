@@ -15,7 +15,7 @@ expected_asvs <- 38L
 expected_asv_patterns <- 37L
 expected_molecules <- 8L
 results_dir <- here("results", "fticr_2016", "stable_group_distribution")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
 network_dir <- here("results", "fticr_2016", "bipartite_networks")
 figure_prefix <- "2016_sediment_stable_group"
 plot_theme <- theme_bw(base_size = 11) +
@@ -34,6 +34,7 @@ stopifnot(!anyNA(checks$initial_md5))
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 
 # 2. Retain the existing identities; do not infer a new group --------------------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 asvs <- read_csv(input_paths[1], show_col_types = FALSE) %>% filter(core == core_id)
 molecules <- read_csv(input_paths[2], show_col_types = FALSE) %>% filter(core == core_id)
 metadata <- read_csv(input_paths[3], col_types = cols(site_code = col_character()),

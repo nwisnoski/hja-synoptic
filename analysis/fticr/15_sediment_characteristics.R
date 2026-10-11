@@ -10,6 +10,7 @@ library(permute)
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "sediment_characteristics")
 derived_dir <- here("data", "derived", "sediment_characteristics_2016")
+figures_dir <- here("figures", "supplement")
 n_permutations <- 9999
 permutation_seed <- 20261010
 enzyme_axes <- 2
@@ -48,6 +49,7 @@ response_colors <- c(microbial_hellinger = "#0072B2", molecular_jaccard = "#D55E
   molecular_equal_features = "#009E73")
 
 # 2. Audit every sample; missing predictors affect only their own analyses --------
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(derived_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
@@ -318,7 +320,7 @@ coverage_plot <- bind_rows(coverage %>% select(site_code, label, available), pro
   labs(x = "Sediment site (34 microbial and 44 molecular sites; 45 unique)", y = NULL) + plot_theme +
   theme(panel.grid = element_blank(), axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
     legend.position = "top")
-ggsave(here("figures", "2016_sediment_characteristics_coverage.pdf"), coverage_plot,
+ggsave(file.path(figures_dir, "2016_sediment_characteristics_coverage.pdf"), coverage_plot,
   width = 10, height = 4.2, bg = "white")
 effect_plot <- tests %>% filter(grepl("^primary", role)) %>%
   left_join(comparison_design %>% select(comparison, characteristic = label), by = "comparison") %>%
@@ -332,7 +334,7 @@ effect_plot <- tests %>% filter(grepl("^primary", role)) %>%
   scale_x_continuous(expand = expansion(mult = c(0.22, 0.22))) +
   labs(x = "Adjusted variation beyond conditioning variables (%)", y = NULL) + plot_theme +
   theme(panel.grid.major.y = element_blank())
-ggsave(here("figures", "2016_sediment_characteristics_unique_fractions.pdf"), effect_plot,
+ggsave(file.path(figures_dir, "2016_sediment_characteristics_unique_fractions.pdf"), effect_plot,
   width = 10, height = 3.4, bg = "white")
 checks$final_md5 <- unname(tools::md5sum(input_paths))
 checks$unchanged <- checks$initial_md5 == checks$final_md5

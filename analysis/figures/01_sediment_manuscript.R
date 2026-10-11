@@ -10,7 +10,8 @@ library(vegan)
 
 # 1. Settings and one shared plotting style -------------------------------------
 results_dir <- here("results", "sediment_manuscript_figures_2016")
-figures_dir <- here("figures")
+figures_dir <- here("figures", "supplement")
+manuscript_dir <- here("figures", "manuscript")
 figure_prefix <- "2016_sediment_ms_"
 plot_seed <- 20261090
 centerline_stride <- 10
@@ -36,11 +37,11 @@ dispersion_design <- tribble(
   "dispersion_molecules_paired", "paired", "molecular_equal_features", "Paired sediment molecular signatures\nEqual-feature sensitivity")
 panel_design <- tribble(
   ~key, ~width, ~height, ~samples, ~role,
-  "sampling_map", 8, 7, "45 unique: 34 microbial, 44 molecular, 33 paired", "main",
+  "sampling_map", 8, 7, "45 unique: 34 microbial, 44 molecular, 33 paired", "supporting",
   "microbial_pca", 5.8, 5, "34 microbial", "individual",
   "molecular_pcoa", 5.8, 5, "44 molecular", "supporting",
   "molecular_classes", 6.6, 5, "44 molecular", "individual",
-  "composition", 12, 5.4, "34 microbial; 44 molecular", "main",
+  "composition", 12, 5.4, "34 microbial; 44 molecular", "supporting",
   "diversity", 6, 4.7, "34 microbial", "supporting",
   "dispersion_microbes_all", 5.4, 4.6, "34 microbial", "individual",
   "dispersion_molecules_complete_all", 5.4, 4.6, "44 molecular", "individual",
@@ -51,7 +52,7 @@ panel_design <- tribble(
   "dispersion_paired", 10.8, 4.6, "33 identical sites", "main",
   "characteristic_associations", 8, 4.3, "Microbial 34/34/33; molecular 44/44/41", "individual",
   "paired_property_adjustment", 5.8, 4.3, "33 paired; 32 conductivity sensitivity", "individual",
-  "characteristics", 14, 4.5, "All eligible samples per model", "main",
+  "characteristics", 14, 4.5, "All eligible samples per model", "supporting",
   "microbial_pca_organic", 6, 5, "34 microbial", "supporting",
   "unifrac_weighted", 5.8, 5, "34 microbial", "individual",
   "unifrac_unweighted", 5.8, 5, "34 microbial", "individual",
@@ -59,6 +60,8 @@ panel_design <- tribble(
   "molecular_pcoa_equal", 5.8, 5, "44 molecular", "supporting")
 
 # 2. Read completed results and checksum all inputs and pre-existing figures -----
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 paths <- c(
   microbial_summary = here("results", "diversity_2016", "tables", "sediment_10k_figure_summary.csv"),
@@ -82,7 +85,7 @@ paths <- c(
   unweighted = here("results", "diversity_2016", "tables", "unifrac_unweighted_10k.csv"),
   equal_scores = here("results", "fticr_2016", "river_composition", "sensitivity_pcoa_scores.csv"),
   equal_ordination = here("results", "fticr_2016", "river_composition", "sensitivity_pcoa_summary.csv"))
-old_figures <- list.files(figures_dir, pattern = "\\.(pdf|png)$", full.names = TRUE)
+old_figures <- list.files(here("figures"), pattern = "\\.(pdf|png)$", full.names = TRUE, recursive = TRUE)
 old_figures <- old_figures[!startsWith(basename(old_figures), figure_prefix)]
 preserved_paths <- unique(c(unname(paths), old_figures))
 checks <- tibble(path = preserved_paths, initial_md5 = unname(tools::md5sum(preserved_paths)))
@@ -276,7 +279,11 @@ panels$molecular_pcoa_equal <- ggplot(equal_scores, aes(axis1, axis2, color = ne
 stopifnot(setequal(names(panels), panel_design$key))
 panel_design <- panel_design %>% mutate(file = paste0(figure_prefix, key, ".pdf"))
 for (j in seq_len(nrow(panel_design))) {
-  ggsave(file.path(figures_dir, panel_design$file[j]), panels[[panel_design$key[j]]],
+  output_dir <- figures_dir
+  if (panel_design$key[j] == "dispersion_paired") {
+    output_dir <- manuscript_dir
+  }
+  ggsave(file.path(output_dir, panel_design$file[j]), panels[[panel_design$key[j]]],
     width = panel_design$width[j], height = panel_design$height[j], bg = "white")
 }
 write_csv(panel_design, file.path(results_dir, "figure_manifest.csv"))

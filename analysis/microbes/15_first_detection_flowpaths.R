@@ -22,6 +22,8 @@ category_labels <- c("Soil", "Sediment", "Hyporheic", "Sediment + Hyporheic")
 category_colors <- c("Soil" = "#D55E00", "Sediment" = "#009E73",
   "Hyporheic" = "#0072B2", "Sediment + Hyporheic" = "#CC79A7")
 results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
+manuscript_dir <- here("figures", "manuscript")
+supplement_dir <- here("figures", "supplement")
 plot_theme <- theme_bw(base_size = 11) +
   theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),
     strip.background = element_blank(), legend.position = "bottom",
@@ -29,6 +31,8 @@ plot_theme <- theme_bw(base_size = 11) +
 theme_set(plot_theme)
 
 # 2. Align fixed-depth samples and retain every identity in an audit -------------
+dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(supplement_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(here("data", "derived", "soil_porewater_sediment_2016", "asv_counts_10k.csv"),
   here("data", "derived", "soil_porewater_sediment_2016", "sample_metadata.csv"))
@@ -180,12 +184,12 @@ for (metric in c("richness_percent", "read_percent")) {
     scale_y_continuous(breaks = seq(0, 100, 25), limits = c(0, 108), expand = expansion(mult = c(0, 0))) +
     scale_x_discrete(labels = c("Headwater\n(order 1-2)", "Intermediate\n(order 3-4)", "Mainstem\n(order 5)")) +
     labs(x = NULL, y = y_label)
-  ggsave(here("figures", paste0("2016_first_detection_", metric, ".pdf")),
+  ggsave(file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")),
     plots[[metric]], width = 8.5, height = 4.3, bg = "white")
 }
 combined <- (plots$richness_percent / plots$read_percent) + plot_layout(guides = "collect") &
   theme(legend.position = "bottom")
-ggsave(here("figures", "2016_first_detection_flowpaths.pdf"), combined,
+ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), combined,
   width = 8.5, height = 7.4, bg = "white")
 if (interactive()) {
   print(combined)
