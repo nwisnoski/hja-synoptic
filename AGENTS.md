@@ -32,6 +32,9 @@ win. Check in briefly that these project instructions are visible and understood
 - Keep documentation short. Do not duplicate numerical output across reports.
   Keep only workflow, input provenance, methodological definitions, and necessary
   interpretation limits. Write American English with precise, calibrated claims.
+- Save substantive results, required inputs, and meaningful diagnostics. Avoid
+  separate CSVs for duplicate plot data, settings already declared in scripts,
+  or simple summaries of saved tables. Remove outputs of retired workflows.
 - Preserve unrelated changes and all raw inputs. Encode translations, exclusions,
   and transformations reproducibly. Keep completed DADA2 outputs and the master
   phylogeny intact. Do not rerun expensive processing without reason and authority.

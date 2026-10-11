@@ -8,7 +8,6 @@ library(ggplot2)
 
 # 1. Settings and plotting theme.
 results_dir <- here("results", "fticr_2016", "river_composition")
-plot_results_dir <- file.path(results_dir, "network_class_figures")
 figures_dir <- here("figures", "supplement")
 manuscript_dir <- here("figures", "manuscript")
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
@@ -169,11 +168,6 @@ for (group_name in c("All", group_levels)) {
 ggsave(file.path(manuscript_dir, "2016_fticr_network_group_class_comparison.pdf"),
   site_panels$All, width = site_figure_width, height = site_figure_height, bg = "white")
 
-# 6. Save plot data and confirm that the original figure and inputs are intact.
+# 6. Confirm that the original figure and inputs are intact.
 stopifnot(identical(input_hashes, unname(tools::md5sum(input_paths))))
-dir.create(plot_results_dir, recursive = TRUE, showWarnings = FALSE)
-write_csv(class_table, file.path(plot_results_dir, "site_class_plot_data.csv"))
-write_csv(group_summary, file.path(plot_results_dir, "network_group_class_summary.csv"))
-write_csv(tibble(path = input_paths, md5 = input_hashes),
-  file.path(plot_results_dir, "preserved_input_figure_checksums.csv"))
 message("Saved network-group class comparisons for ", nrow(network), " FT-ICR sites.")

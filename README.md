@@ -38,6 +38,10 @@ Each script declares its packages and analytical settings at the top.
 - `archive/`: legacy files and their recovery manifest. Older workflows and
   removed duplicate figures are also recoverable from Git history.
 
+Results retain current analyses and their required inputs. Retired workflows
+and redundant plot-data, settings, and summary exports have been removed;
+their earlier versions remain in Git history.
+
 ## Sample set and interpretation
 
 The reviewed fixed-10K cohort has **76 samples: 15 soil, 27 porewater, and

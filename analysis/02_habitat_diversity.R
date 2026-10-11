@@ -102,10 +102,6 @@ pairs <- pair_audit %>% filter(paired_manuscript) %>% arrange(site_code)
 pairs <- pairs %>% left_join(metadata %>% filter(habitat == "hyporheic") %>%
   select(site_code, site_stream_order, site_segment_number, network_group), by = "site_code")
 stopifnot(nrow(pairs) == 18, !anyNA(pairs$site_stream_order))
-write_csv(pairs, file.path(results_dir, "paired_site_manifest.csv"))
-write_csv(habitat_design, file.path(results_dir, "habitat_test_design.csv"))
-write_csv(pair_design, file.path(results_dir, "pairing_test_design.csv"))
-write_csv(environment_design, file.path(results_dir, "porewater_environment_design.csv"))
 
 # 3. Refit habitat ordination, diversity, and exploratory distribution tests -----
 hellinger <- decostand(counts, method = "hellinger")
@@ -118,9 +114,6 @@ sample_summary <- metadata %>% mutate(
 write_csv(sample_summary, file.path(results_dir, "sample_summary.csv"))
 write_csv(tibble(axis = seq_along(variance), percent = variance),
   file.path(results_dir, "hellinger_pca_variance.csv"))
-write_csv(sample_summary %>% group_by(habitat) %>% summarize(
-  samples = n(), median_q0 = median(q0), median_q1 = median(q1), median_q2 = median(q2),
-  .groups = "drop"), file.path(results_dir, "habitat_diversity_summary.csv"))
 # Refit weighted UniFrac on these same 76 libraries using saved distances.
 # The completed tree and its midpoint-rooted distance reference are unchanged.
 weighted_matrix <- distance_matrices[["Weighted UniFrac"]][metadata$sample_id, metadata$sample_id]
@@ -371,7 +364,6 @@ stopifnot(nrow(map_points) == 118, sum(map_points$molecular_pair) == 66,
   all(is.finite(map_points$x)), all(is.finite(map_points$y)))
 map_points$layer <- factor(map_points$layer, levels = c("Soil microbes (13 mapped / 15)",
   "Porewater microbes (27)", "Sediment microbes (34)", "Sediment molecular profiles (44)"))
-write_csv(map_points, file.path(results_dir, "sampling_map_points.csv"))
 plots$sampling_map <- ggplot(geometry, aes(x / 1000, y / 1000, group = segment)) +
   geom_path(color = "gray75", linewidth = 0.3) +
   geom_point(data = map_points, aes(x / 1000, y / 1000, color = layer),
@@ -480,14 +472,11 @@ ggsave(file.path(manuscript_dir, "2016_manuscript_alpha_diversity.pdf"),
   plots$alpha_diversity, width = alpha_figure_width, height = alpha_figure_height, bg = "white")
 ggsave(file.path(manuscript_dir, "2016_manuscript_weighted_unifrac.pdf"),
   plots$weighted_unifrac, width = ordination_figure_width, height = ordination_figure_height, bg = "white")
-write_csv(figure_design, file.path(results_dir, "figure_manifest.csv"))
 
-# 8. Check provenance and save settings/session information ---------------------
+# 8. Check provenance and save session information ------------------------------
 checks$final_md5 <- unname(tools::md5sum(checks$path))
 stopifnot(identical(checks$initial_md5, checks$final_md5))
 write_csv(checks, file.path(results_dir, "input_checksums.csv"))
-write_csv(tibble(target_depth, n_permutations, base_seed, soil_inventory_draws, soil_inventory_size, centerline_stride, alpha),
-  file.path(results_dir, "analysis_settings.csv"))
 writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(results_dir, "session_info.txt"))
 print(habitat_tests)
 print(pair_tests)

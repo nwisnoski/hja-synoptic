@@ -28,7 +28,7 @@ f=json
 ```
 
 A new service extract may differ from the frozen input. Input MD5 hashes are
-recorded in `results/diversity_2016/soil_stream_localization/`.
+recorded in `data/derived/soil_drainage_2016/routing_input_checksums.csv`.
 
 `hja_gaged_watersheds.geojson` contains 12 publicly served gaged watershed
 polygons from the Andrews Forest research program's

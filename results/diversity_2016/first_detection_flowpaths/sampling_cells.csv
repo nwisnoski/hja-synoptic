@@ -1,8 +1,0 @@
-cell,habitat,source_pool,network_group,samples,segments
-hyporheic_Headwater,hyporheic,Hyporheic,Headwater,14,11
-hyporheic_Intermediate,hyporheic,Hyporheic,Intermediate,8,7
-hyporheic_Mainstem,hyporheic,Hyporheic,Mainstem,5,5
-sediment_Headwater,sediment,Sediment,Headwater,19,13
-sediment_Intermediate,sediment,Sediment,Intermediate,10,9
-sediment_Mainstem,sediment,Sediment,Mainstem,5,5
-soil_Soil,soil,Soil,Soil,15,0

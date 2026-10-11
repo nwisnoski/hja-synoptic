@@ -12,7 +12,6 @@ core_id <- 2L
 expected_asvs <- 38L
 expected_molecules <- 8L
 results_dir <- here("results", "fticr_2016", "stable_group_distribution")
-plot_results_dir <- file.path(results_dir, "colocation_figure")
 figures_dir <- here("figures", "supplement")
 manuscript_dir <- here("figures", "manuscript")
 figure_file <- "2016_sediment_stable_group_colocation_map.pdf"
@@ -176,11 +175,7 @@ labeled_map <- map +
 ggsave(file.path(figures_dir, labeled_figure_file), labeled_map,
   width = figure_width, height = figure_height, bg = "white")
 
-# 5. Save the map data and verify that supplementary figures remain intact.
+# 5. Verify that supplementary figures remain intact.
 stopifnot(identical(preserved_hashes, unname(tools::md5sum(preserved_paths))))
-dir.create(plot_results_dir, recursive = TRUE, showWarnings = FALSE)
-write_csv(plot_data, file.path(plot_results_dir, "site_plot_data.csv"))
-write_csv(tibble(path = preserved_paths, md5 = preserved_hashes),
-  file.path(plot_results_dir, "preserved_input_figure_checksums.csv"))
 message("Saved labeled and unlabeled single-panel overlays: ", nrow(paired), " paired sites and ",
   nrow(unpaired), " sites with one profile unavailable; supplementary maps unchanged.")

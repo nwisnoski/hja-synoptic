@@ -54,7 +54,6 @@ input_paths <- c(
   here("results", "fticr_2016", "river_composition", "subsampling_summary.csv"))
 preserved_paths <- c(input_paths,
   list.files(here("results", "fticr_2016", "network_dispersion"), full.names = TRUE),
-  list.files(here("results", "diversity_2016", "network_dispersion"), full.names = TRUE),
   here("figures", "supplement", "2016_fticr_dispersion_equal_features.pdf"),
   here("figures", "supplement", "2016_sediment_microbes_dispersion_bray.pdf"))
 preserved_paths <- unique(preserved_paths[file.exists(preserved_paths)])
@@ -90,9 +89,6 @@ stopifnot(!anyNA(site), identical(reference$site_code, site$site_code),
 site$detected_molecular_features <- reference$detected_primary_features
 site$basin_outlet_stream_distance_m <- reference$basin_outlet_stream_distance_m
 write_csv(site, file.path(results_dir, "matched_site_manifest.csv"))
-group_counts <- site %>% group_by(network_group) %>%
-  summarize(sites = n(), segments = n_distinct(site_segment_number), .groups = "drop")
-write_csv(group_counts, file.path(results_dir, "group_sample_counts.csv"))
 
 # 3. Retain preparation settings and construct distances on the shared sites -------
 count_table <- read_csv(input_paths[2], show_col_types = FALSE)
@@ -120,9 +116,6 @@ distances <- list(molecular_equal_features = equal_features,
   microbial_bray = as.matrix(vegdist(community, method = "bray")),
   molecular_jaccard = as.matrix(vegdist(pa, method = "jaccard", binary = TRUE)),
   microbial_jaccard = as.matrix(vegdist(community, method = "jaccard", binary = TRUE)))
-write_csv(tibble(sites = nrow(site), microbial_asvs = ncol(community),
-  molecular_features = ncol(pa), target_depth, target_features, n_feature_draws),
-  file.path(results_dir, "community_summary.csv"))
 
 # 4. Refit spatial medians and use the same residual permutations for each view ----
 set.seed(permutation_seed)
@@ -174,7 +167,6 @@ write_csv(dispersion, file.path(results_dir, "site_dispersion.csv"))
 write_csv(tests, file.path(results_dir, "three_group_tests.csv"))
 write_csv(contrasts, file.path(results_dir, "pairwise_group_contrasts.csv"))
 write_csv(bind_rows(correction_rows), file.path(results_dir, "distance_correction_audit.csv"))
-write_csv(test_design, file.path(results_dir, "test_design.csv"))
 
 # 5. Select identical segment-balanced site sets for molecules and microbes -------
 mainstem_indices <- which(site$network_group == "Mainstem")
@@ -241,8 +233,6 @@ stopifnot(nrow(balanced) == n_balanced_draws * nrow(test_design),
   all(selection_audit$samples == balanced_n), all(selection_audit$segments == balanced_n))
 write_csv(balanced, file.path(results_dir, "balanced_segment_draws.csv"))
 write_csv(selections, file.path(results_dir, "balanced_site_selection.csv"))
-write_csv(selection_audit, file.path(results_dir, "balanced_selection_audit.csv"))
-write_csv(draw_design, file.path(results_dir, "balanced_draw_design.csv"))
 balanced_summary <- balanced %>% group_by(metric) %>%
   summarize(draws = n(), successful_draws = sum(succeeded), failed_draws = sum(!succeeded),
     draws_with_diagnostics = sum(nchar(diagnostic) > 0),

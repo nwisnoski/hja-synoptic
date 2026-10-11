@@ -1,9 +1,0 @@
-variable,transform,seed
-site_drainage_area_ha,log10,20261311
-hyporheic_npoc_mg_l,log10,20261312
-hyporheic_suva254,identity,20261313
-hyporheic_fluorescence_index,identity,20261314
-hyporheic_do_mg_l,identity,20261315
-hyporheic_water_temperature_c,identity,20261316
-hyporheic_tdn_mg_l,log10,20261317
-sediment_hydraulic_conductivity_geomean_m_s,log10,20261318

@@ -21,14 +21,12 @@ import pysheds
 root = Path(__file__).resolve().parents[2]
 input_dir = root / "data/spatial/soil_routing"
 output_dir = root / "data/derived/soil_drainage_2016"
-results_dir = root / "results/diversity_2016/soil_stream_localization"
 snap_radii_m = [15, 30, 50]
 primary_snap_radius_m = 30
 soil_offsets_m = [-20, 0, 20]
 acceptable_area_ratio = [0.5, 2.0]
 dirmap = (64, 128, 1, 2, 4, 8, 16, 32)
 output_dir.mkdir(parents=True, exist_ok=True)
-results_dir.mkdir(parents=True, exist_ok=True)
 start_time = time.monotonic()
 
 # 2. Condition the DEM with established pysheds routines ------------------------
@@ -55,7 +53,7 @@ conditioning = pd.DataFrame([{
     "mean_fill_m": float(np.mean(depression_filled - dem)),
     "pixel_area_m2": 100,
 }])
-conditioning.to_csv(results_dir / "dem_conditioning_audit.csv", index=False)
+conditioning.to_csv(output_dir / "dem_conditioning_audit.csv", index=False)
 
 # 3. Preserve all soils, and transform only coordinates with known identities ----
 metadata = pd.read_csv(metadata_path, dtype={"site_code": str})
@@ -172,8 +170,8 @@ checksums = []
 for path in [dem_path, metadata_path]:
     checksums.append({"path": str(path.relative_to(root)),
                       "md5": hashlib.md5(path.read_bytes()).hexdigest()})
-pd.DataFrame(checksums).to_csv(results_dir / "routing_input_checksums.csv", index=False)
-with open(results_dir / "routing_session.json", "w") as handle:
+pd.DataFrame(checksums).to_csv(output_dir / "routing_input_checksums.csv", index=False)
+with open(output_dir / "routing_session.json", "w") as handle:
     json.dump({"pysheds_version": pysheds.__version__, "elapsed_seconds": time.monotonic() - start_time,
                "routing": "D8", "snap_radii_m": snap_radii_m,
                "soil_offsets_m": soil_offsets_m, "acceptable_area_ratio": acceptable_area_ratio},

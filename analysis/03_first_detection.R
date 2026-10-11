@@ -60,13 +60,9 @@ metadata <- metadata %>% mutate(network_group = case_when(
 stopifnot(nrow(metadata) == 76, sum(metadata$habitat == "soil") == 15,
   sum(metadata$habitat == "sediment") == 34, sum(metadata$habitat == "hyporheic") == 27,
   !anyNA(metadata$network_group), all(metadata$habitat %in% c("soil", habitats)))
-write_csv(metadata %>% select(sample_id, site_code, habitat, mapping_status,
-  site_stream_order, site_segment_number, network_group, source_pool, cell),
-  file.path(results_dir, "sample_network_audit.csv"))
 cell_design <- metadata %>% group_by(cell, habitat, source_pool, network_group) %>%
   summarize(samples = n(), segments = n_distinct(site_segment_number, na.rm = TRUE), .groups = "drop")
 stopifnot(nrow(cell_design) == 7, min(cell_design$samples) >= balanced_samples_per_cell)
-write_csv(cell_design, file.path(results_dir, "sampling_cells.csv"))
 presence <- counts >= detection_threshold
 cell_indices <- split(seq_len(nrow(metadata)), metadata$cell)
 
@@ -199,12 +195,7 @@ if (interactive()) {
   print(combined)
 }
 
-# 5. Retain settings and verify that the community inputs were not changed -------
-write_csv(tibble(target_depth = target_depth, detection_threshold = detection_threshold,
-  balanced_draws = balanced_draws, balanced_samples_per_cell = balanced_samples_per_cell,
-  base_seed = base_seed, aquatic_pool = "Hyporheic porewater only",
-  assignment = "Soil first; earliest network group; retain sediment-hyporheic ties",
-  summary = "Mean within-sample percentages"), file.path(results_dir, "analysis_settings.csv"))
+# 5. Verify that the community inputs were not changed ---------------------------
 checks$final_md5 <- unname(tools::md5sum(input_paths))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))
