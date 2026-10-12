@@ -1,4 +1,4 @@
-# Figure 6: overlay both components of the stable group on one catchment map.
+# Figure 4: overlay both components of the stable group on one catchment map.
 # Run directly in Positron; the labeled supplementary maps remain unchanged.
 
 library(here)

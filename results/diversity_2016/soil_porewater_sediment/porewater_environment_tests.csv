@@ -1,17 +1,17 @@
-variable,restriction,samples,rho,p,status,p_bh_family8
-site_drainage_area_ha,All sites,27,0.03423413385906454,0.3463,ok; positive-association Mantel test,0.8817142857142857
-site_drainage_area_ha,Within stream order,27,0.03423413385906454,0.5106,ok; positive-association Mantel test,0.905
-hyporheic_npoc_mg_l,All sites,27,-0.05825898080505384,0.728,ok; positive-association Mantel test,0.8817142857142857
-hyporheic_npoc_mg_l,Within stream order,27,-0.05825898080505384,0.7526,ok; positive-association Mantel test,0.905
-hyporheic_suva254,All sites,27,-0.07494557324902187,0.7715,ok; positive-association Mantel test,0.8817142857142857
-hyporheic_suva254,Within stream order,27,-0.07494557324902187,0.898,ok; positive-association Mantel test,0.905
-hyporheic_fluorescence_index,All sites,27,-0.1384623784395619,0.9157,ok; positive-association Mantel test,0.9157
-hyporheic_fluorescence_index,Within stream order,27,-0.1384623784395619,0.905,ok; positive-association Mantel test,0.905
-hyporheic_do_mg_l,All sites,26,-0.020932602784820138,0.5484,ok; positive-association Mantel test,0.8817142857142857
-hyporheic_do_mg_l,Within stream order,26,-0.020932602784820138,0.5803,ok; positive-association Mantel test,0.905
-hyporheic_water_temperature_c,All sites,26,0.050597069130799345,0.3153,ok; positive-association Mantel test,0.8817142857142857
-hyporheic_water_temperature_c,Within stream order,26,0.050597069130799345,0.2807,ok; positive-association Mantel test,0.905
-hyporheic_tdn_mg_l,All sites,16,-0.0558103033138661,0.5866,ok; positive-association Mantel test,0.8817142857142857
-hyporheic_tdn_mg_l,Within stream order,16,-0.0558103033138661,0.3185,ok; positive-association Mantel test,0.905
-sediment_hydraulic_conductivity_geomean_m_s,All sites,26,0.06780291434162863,0.2782,ok; positive-association Mantel test,0.8817142857142857
-sediment_hydraulic_conductivity_geomean_m_s,Within stream order,26,0.06780291434162863,0.3536,ok; positive-association Mantel test,0.905
+variable,restriction,samples,rho,p,status,metric,p_bh_family8
+site_drainage_area_ha,All sites,27,0.03090909090909091,0.3584,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+site_drainage_area_ha,Within stream order,27,0.03090909090909091,0.5436,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_npoc_mg_l,All sites,27,-0.0761979686979687,0.7945,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+hyporheic_npoc_mg_l,Within stream order,27,-0.0761979686979687,0.8402,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_suva254,All sites,27,-0.08237706737706738,0.7971,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+hyporheic_suva254,Within stream order,27,-0.08237706737706738,0.9076,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_fluorescence_index,All sites,27,-0.16781884781884782,0.953,ok; positive-association Mantel test,Hellinger,0.953
+hyporheic_fluorescence_index,Within stream order,27,-0.16781884781884782,0.9411,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_do_mg_l,All sites,26,-0.030156411997514926,0.5858,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+hyporheic_do_mg_l,Within stream order,26,-0.030156411997514926,0.6472,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_water_temperature_c,All sites,26,0.010379242026198087,0.4416,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+hyporheic_water_temperature_c,Within stream order,26,0.010379242026198087,0.3799,ok; positive-association Mantel test,Hellinger,0.9411
+hyporheic_tdn_mg_l,All sites,16,-0.05591360511146607,0.6041,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+hyporheic_tdn_mg_l,Within stream order,16,-0.05591360511146607,0.3866,ok; positive-association Mantel test,Hellinger,0.9411
+sediment_hydraulic_conductivity_geomean_m_s,All sites,26,0.08643543202179087,0.2352,ok; positive-association Mantel test,Hellinger,0.9109714285714285
+sediment_hydraulic_conductivity_geomean_m_s,Within stream order,26,0.08643543202179087,0.344,ok; positive-association Mantel test,Hellinger,0.9411

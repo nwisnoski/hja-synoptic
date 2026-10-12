@@ -44,7 +44,7 @@ has 60 profiles and 4,760 features; its inclusion decisions are saved explicitly
 The numbered scripts in `analysis/supporting/` have this dependency order:
 
 - 01–02 prepare sediment molecular profiles, class fractions, and the saved
-  equal-feature Jaccard reference. These supply main figures 4–5.
+  equal-feature Jaccard reference. These supply main figures 3–4.
 - 03–04 add water optics and integrated chemistry; 05 examines full-site
   molecular dispersion and supplies the network-position audit.
 - 06–09 prepare, fit, assess stability, and describe the bipartite network.

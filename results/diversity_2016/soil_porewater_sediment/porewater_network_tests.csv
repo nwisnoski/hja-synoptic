@@ -1,2 +1,2 @@
-samples,r_squared,p,dispersion_p,null
-27,0.0783608681108578,0.2932,0.9266,Unrestricted sites; exploratory network association
+metric,samples,r_squared,p,dispersion_p,null
+Hellinger,27,0.07762706335085395,0.3453,0.9432,Unrestricted sites; exploratory network association

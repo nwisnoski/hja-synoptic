@@ -26,39 +26,45 @@ formulas with measured mass 200–900, C13 <= 0, and positive intensity in at
 least two of 60 profiles. Raw intensity is retained for QC. Detected-feature
 counts depend on detection and are not calibrated molecular richness.
 
-## Figures 1–2: habitat diversity
+## Supplementary sampling coverage
+
+Four map panels show the 13 located soils, 27 porewater libraries, 34 sediment
+libraries, and 44 sediment molecular profiles. Black rings identify the 33
+sediment sites with both data types. The two unmapped soils remain in the
+regional inventory. Maps use equal coordinate scales.
+
+## Figure 1: habitat diversity
 
 The main alpha-diversity panel shows Hill q = 1, the exponential of Shannon
 entropy; q = 0 and 2 remain supplementary. Weighted UniFrac PCoA subsets the completed normalized
 distance matrix to the 76 samples and refits with a Lingoes correction. The
 underlying master tree was pruned and midpoint-rooted in memory for UniFrac.
-Supplementary Hellinger PCA is also refitted on the reviewed cohort. Shaded
-PCoA ellipses are approximate 95% confidence regions for habitat centroids,
-using [vegan's standard-error ellipses](https://vegandevs.github.io/vegan/reference/ordihull.html).
-They do not describe 95% sample coverage or account for spatial dependence.
+Supplementary Hellinger PCA is also refitted on the reviewed cohort. Panel A
+shows Hill diversity and panel B shows individual libraries in the weighted
+UniFrac ordination, without centroid ellipses.
 
-Habitat PERMANOVA and median-based, bias-adjusted PERMDISP use separate BH
-families for the overall test and three pairwise contrasts. Unrestricted
+Companion Hellinger habitat PERMANOVA and median-based, bias-adjusted
+PERMDISP use separate BH families for the overall test and three pairwise contrasts. Unrestricted
 permutations do not control geography or repeated sites; dispersion differences
-limit a pure centroid interpretation. The 18-site sediment–porewater test
-conditions on site and exchanges habitat labels only within site.
+limit a pure centroid interpretation, especially with unequal group sizes
+([Anderson and Walsh, 2013](https://doi.org/10.1890/12-2010.1)). These tests use
+Hellinger rather than the plotted weighted UniFrac distances. Hellinger is
+Euclidean distance between square-root relative-abundance profiles, with range
+0 to sqrt(2) ([Legendre and Gallagher, 2001](https://doi.org/10.1007/s004420100716)). The 18-site
+sediment–porewater test conditions on site and exchanges habitat labels only within site.
 
-Script 02 also retains soil-inventory and paired-site checks. Soil sharing is
-observed overlap; 1,000 three-soil draws assess inventory sensitivity with
-receiving communities fixed. Drainage slopes use stream-segment means and a
-four-test BH correction; lines appear only when adjusted P <= 0.05. Same-site
-resemblance permutes intact porewater profiles among sediment sites, globally
-and within exact stream order, with four metrics corrected separately per null.
-Porewater environmental Mantel checks exchange whole site labels and use
-separate eight-test BH families for unrestricted and within-order permutations.
+Script 02 also retains porewater environmental Mantel checks, which exchange
+whole site labels and use separate eight-test BH families for unrestricted and
+within-order permutations.
 
-## Figure 3: first detection
+## Figure 2: first detection and paired habitat comparisons
 
 A single read establishes detection. Soil detections have precedence; remaining
 ASVs are assigned at the first surveyed stream-order group containing them:
 orders 1–2, 3–4, then 5. Sediment and porewater pools are parallel; ties remain
-shared. Main-figure bars summarize percentages of ASV reads per library;
-percentages of detected ASVs remain supplementary.
+shared. Panels A–B show sediment and porewater, respectively; bars summarize
+percentages of ASV reads per library. Percentages of detected ASVs remain
+supplementary.
 The 1,000 balanced draws select three libraries in each of six stream
 habitat–network cells and three soils, rebuilding the inventory each time.
 Draw quantiles describe sampling sensitivity, not confidence intervals.
@@ -66,24 +72,61 @@ This inventory does not establish contributing drainage, transport direction,
 source proportions, viability, or recruitment. It adapts the inventory framework
 of [Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499).
 
-## Figure 4: sediment convergence
+Panel C connects soil-sharing percentages for sediment and porewater at each
+of the 18 paired sites. Sharing is the percentage of reads belonging to ASVs
+detected in any of the 15 soils. Its two-sided test exchanges habitat labels
+within sites and tests the mean paired difference. This panel tests the habitat
+contrast underlying the soil component of panels A–B; it is not independent
+corroboration of that inventory. Script 02 retains 1,000 three-soil draws with
+receiving communities fixed, plus drainage regressions on stream-segment means
+with a four-test BH correction; fitted lines require adjusted P <= 0.05.
 
-Microbial Bray-Curtis and molecular equal-feature Jaccard dispersion are refitted
-on the same 33 sites. The molecular sensitivity averages 1,000 draws of
-391 detections per site. Complete molecular and binary microbial Jaccard are
+Panel D shows individual same-site Hellinger distances as thin gray lines and
+their mean as a single black line, from ASV through genus, family, order, class,
+and phylum across the 18 pairs.
+The mean curve for comparisons to the other 17 sediments nearly overlaps the
+same-site curve at every rank and is omitted for clarity;
+both comparisons remain in the saved tables and supplementary sensitivity plot.
+Aggregation sums counts before the Hellinger transformation; its expected
+reduction in distance does not itself
+demonstrate ecological convergence. Taxa are grouped by complete lineage
+prefixes to avoid conflating homonyms. ASVs with missing or generic unresolved
+labels at any rank in the prefix remain ASV-specific, preserving every read
+without treating unclassified taxa as shared. Sample-level classification
+coverage is saved. A supplementary sensitivity retains the same ASVs with
+complete genus lineages at every rank, renormalizing each sample.
+
+Tests permute intact porewater profiles among sediment sites, globally and
+within exact stream order, using the same 9,999 permutations at every rank and
+in both read scopes. Each scope and null has its own six-rank BH family.
+The ASV-level Hellinger, UniFrac, and read-sharing comparison in script 02 has
+four metrics corrected separately per null. No detectable enhancement of
+same-site resemblance does not establish equivalence, temporal transience,
+or sediment retention of a local signal.
+
+## Figure 3: sediment dispersion and molecular classes
+
+Panels A–B show molecular equal-feature Jaccard and microbial Hellinger
+dispersion, respectively, refitted on the same 33 sites. The molecular
+sensitivity averages 1,000 draws of 391 detections per site. Complete molecular and binary microbial Jaccard are
 additional views. Network groups are orders 1–2, 3–4, and 5. Median-based
 dispersion tests use 9,999 permutations; the two primary views form one BH
 family. The 1,000 segment-balanced draws use identical site selections across
 all views. Their frequencies are descriptive, not independent tests. A difference
 in significance does not itself test a difference between microbial and molecular
-responses. Network position is confounded with geography in this survey.
+responses. Lower molecular dispersion is supported in the equal-feature view;
+complete molecular Jaccard does not show a significant network-group dispersion
+difference. Network position is confounded with geography in this survey.
 
-## Figures 5–6: molecular classes and association group
+Panel C shows molecular class fractions at these identical 33 sites, ordered
+by drainage within network groups. Bars use workbook classifications and
+fractions of binary detections. Broad class fractions provide chemical context;
+they do not directly measure convergence in individual formula detections.
+The full 44-site class figure and equally weighted group means remain
+supplementary. Formula classes are broad signatures, not identified structures
+or confirmed metabolites.
 
-Class bars show individual sites, ordered by drainage within network groups,
-using workbook classifications and fractions of binary detections. Group means
-remain supplementary and give each site equal weight. Formula classes are broad signatures,
-not identified structures or confirmed metabolites.
+## Figure 4: exploratory association-group distribution
 
 The sediment bipartite network retains features present and absent in at least
 10 of 33 sites, collapses identical detection patterns, and selects phi >= 0.6

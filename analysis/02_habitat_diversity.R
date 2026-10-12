@@ -1,4 +1,4 @@
-# Figures 1–2 and habitat comparisons; run 01_prepare_cohort.R first.
+# Figure 1: habitat diversity, with supplementary sampling coverage; run 01_prepare_cohort.R first.
 library(here)
 library(readr)
 library(dplyr)
@@ -21,16 +21,19 @@ soil_inventory_draws <- 1000L
 soil_inventory_size <- 3L
 centerline_stride <- 10L
 alpha <- 0.05
+point_size <- 3
+point_alpha <- 0.5
 panel_aspect <- 0.8
-ellipse_confidence <- 0.95
-ellipse_vertices <- 101L
 alpha_figure_width <- 5.8
 alpha_figure_height <- 5.2
 ordination_figure_width <- 6.2
 ordination_figure_height <- 5.6
+habitat_figure_width <- 11.5
+habitat_figure_height <- 5.6
 habitat_levels <- c("soil", "sediment", "hyporheic")
 habitat_labels <- c(soil = "Soil", sediment = "Sediment", hyporheic = "Porewater")
 habitat_colors <- c(soil = "#D55E00", sediment = "#009E73", hyporheic = "#0072B2")
+habitat_shapes <- c(soil = 17, sediment = 16, hyporheic = 15)
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 diversity_labels <- c(q0 = "ASV richness (q = 0)", q1 = "Hill diversity (q = 1; exp Shannon)",
   q2 = "Hill diversity (q = 2)")
@@ -45,7 +48,7 @@ habitat_design <- tibble::tribble(
   "Sediment-porewater", "sediment", "hyporheic", base_seed + 4L
 )
 pair_design <- expand_grid(
-  metric = c("Bray-Curtis", "Weighted UniFrac", "Unweighted UniFrac", "Sediment ASV read share"),
+  metric = c("Hellinger", "Weighted UniFrac", "Unweighted UniFrac", "Sediment ASV read share"),
   null = c("All paired sites", "Within stream order")
 ) %>% mutate(seed = base_seed + 100L + row_number())
 environment_design <- tibble::tribble(
@@ -85,9 +88,10 @@ stopifnot(identical(metadata$sample_id, rownames(counts)),
   nrow(counts) == 76, all(rowSums(counts) == target_depth))
 metadata$habitat <- factor(metadata$habitat, levels = habitat_levels)
 metadata$network_group <- factor(metadata$network_group, levels = group_levels)
-bray <- vegdist(counts, method = "bray")
-bray_matrix <- as.matrix(bray)
-distance_matrices <- list("Bray-Curtis" = bray_matrix)
+# Euclidean distance after square-rooting relative abundances (range 0 to sqrt(2)).
+hellinger <- decostand(counts, method = "hellinger")
+hellinger_matrix <- as.matrix(dist(hellinger))
+distance_matrices <- list("Hellinger" = hellinger_matrix)
 for (i in 4:5) {
   saved <- read_csv(input_paths[i], show_col_types = FALSE)
   saved_matrix <- as.matrix(saved[, -1])
@@ -104,7 +108,6 @@ pairs <- pairs %>% left_join(metadata %>% filter(habitat == "hyporheic") %>%
 stopifnot(nrow(pairs) == 18, !anyNA(pairs$site_stream_order))
 
 # 3. Refit habitat ordination, diversity, and exploratory distribution tests -----
-hellinger <- decostand(counts, method = "hellinger")
 pca <- prcomp(hellinger, center = TRUE, scale. = FALSE)
 variance <- 100 * pca$sdev^2 / sum(pca$sdev^2)
 sample_summary <- metadata %>% mutate(
@@ -134,17 +137,17 @@ for (i in seq_len(nrow(habitat_design))) {
   current <- metadata
   if (i > 1) current <- metadata %>% filter(habitat %in% c(habitat_design$first[i], habitat_design$second[i]))
   current$habitat <- droplevels(current$habitat)
-  d <- as.dist(bray_matrix[current$sample_id, current$sample_id])
+  d <- as.dist(hellinger_matrix[current$sample_id, current$sample_id])
   set.seed(habitat_design$seed[i])
   fit <- adonis2(d ~ habitat, data = current, permutations = n_permutations)
   dispersion <- betadisper(d, current$habitat, type = "median", bias.adjust = TRUE)
   set.seed(habitat_design$seed[i] + 1000L)
   dispersion_test <- permutest(dispersion, permutations = n_permutations)
-  habitat_rows[[i]] <- tibble(comparison = habitat_design$comparison[i], samples = nrow(current),
+  habitat_rows[[i]] <- tibble(comparison = habitat_design$comparison[i], metric = "Hellinger", samples = nrow(current),
     r_squared = fit$R2[1], f = fit$F[1], p = fit$`Pr(>F)`[1],
     dispersion_f = dispersion_test$tab$F[1], dispersion_p = dispersion_test$tab$`Pr(>F)`[1],
     null = "Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled")
-  if (i == 1) dispersion_rows[[1]] <- tibble(sample_id = current$sample_id,
+  if (i == 1) dispersion_rows[[1]] <- tibble(sample_id = current$sample_id, metric = "Hellinger",
     habitat = current$habitat, distance_to_median = dispersion$distances)
 }
 habitat_tests <- bind_rows(habitat_rows) %>% mutate(
@@ -154,12 +157,12 @@ write_csv(bind_rows(dispersion_rows), file.path(results_dir, "habitat_dispersion
 # This paired contrast conditions on site and exchanges habitat only within site.
 paired_metadata <- metadata %>% filter(sample_id %in% c(pairs$sediment_id, pairs$porewater_id))
 paired_metadata$pair_site <- factor(paired_metadata$site_code)
-paired_d <- as.dist(bray_matrix[paired_metadata$sample_id, paired_metadata$sample_id])
+paired_d <- as.dist(hellinger_matrix[paired_metadata$sample_id, paired_metadata$sample_id])
 set.seed(base_seed + 20L)
 paired_fit <- adonis2(paired_d ~ pair_site + habitat, data = paired_metadata, by = "margin",
   permutations = how(nperm = n_permutations, blocks = paired_metadata$pair_site))
 # Site is a conditioning term and cannot be tested by within-site exchanges.
-write_csv(tibble(term = rownames(paired_fit), as.data.frame(paired_fit),
+write_csv(tibble(term = rownames(paired_fit), metric = "Hellinger", as.data.frame(paired_fit),
   null = "Habitat labels exchangeable within each of 18 paired sites; site conditioned") %>%
     filter(term == "habitat"),
   file.path(results_dir, "paired_habitat_permanova.csv"))
@@ -292,13 +295,13 @@ write_csv(tibble(pairs = nrow(pairs), mean_difference_percentage_points = mean(s
 
 # 6. Refit porewater network and chemistry checks after the four exclusions ------
 porewater <- metadata %>% filter(habitat == "hyporheic")
-porewater_bray <- as.dist(bray_matrix[porewater$sample_id, porewater$sample_id])
+porewater_hellinger <- as.dist(hellinger_matrix[porewater$sample_id, porewater$sample_id])
 set.seed(base_seed + 250L)
-network_fit <- adonis2(porewater_bray ~ network_group, data = porewater, permutations = n_permutations)
-network_dispersion <- betadisper(porewater_bray, porewater$network_group, type = "median", bias.adjust = TRUE)
+network_fit <- adonis2(porewater_hellinger ~ network_group, data = porewater, permutations = n_permutations)
+network_dispersion <- betadisper(porewater_hellinger, porewater$network_group, type = "median", bias.adjust = TRUE)
 set.seed(base_seed + 251L)
 network_dispersion_test <- permutest(network_dispersion, permutations = n_permutations)
-write_csv(tibble(samples = nrow(porewater), r_squared = network_fit$R2[1],
+write_csv(tibble(metric = "Hellinger", samples = nrow(porewater), r_squared = network_fit$R2[1],
   p = network_fit$`Pr(>F)`[1], dispersion_p = network_dispersion_test$tab$`Pr(>F)`[1],
   null = "Unrestricted sites; exploratory network association"),
   file.path(results_dir, "porewater_network_tests.csv"))
@@ -322,7 +325,7 @@ for (i in seq_len(nrow(environment_design))) {
         samples = nrow(current), rho = NA_real_, p = NA_real_, status = "Insufficient variable data")
       next
     }
-    d <- as.dist(bray_matrix[current$sample_id, current$sample_id])
+    d <- as.dist(hellinger_matrix[current$sample_id, current$sample_id])
     set.seed(environment_design$seed[i])
     control <- n_permutations
     if (restriction == "Within stream order") control <- how(nperm = n_permutations,
@@ -333,7 +336,7 @@ for (i in seq_len(nrow(environment_design))) {
       status = "ok; positive-association Mantel test")
   }
 }
-environment_tests <- bind_rows(environment_rows) %>% group_by(restriction) %>%
+environment_tests <- bind_rows(environment_rows) %>% mutate(metric = "Hellinger") %>% group_by(restriction) %>%
   mutate(p_bh_family8 = p.adjust(p, "BH")) %>% ungroup()
 write_csv(environment_tests, file.path(results_dir, "porewater_environment_tests.csv"))
 write_csv(bind_rows(environment_audit), file.path(results_dir, "porewater_environment_inclusion.csv"))
@@ -374,51 +377,38 @@ plots$sampling_map <- ggplot(geometry, aes(x / 1000, y / 1000, group = segment))
   scale_color_manual(values = c("#D55E00", "#0072B2", "#009E73", "#CC79A7")) +
   labs(x = "Easting (km, UTM zone 10N)", y = "Northing (km)") +
   plot_theme + theme(legend.position = "none")
+plots$sampling_map <- plots$sampling_map +
+  geom_text(data = tibble(layer = factor(levels(map_points$layer),
+      levels = levels(map_points$layer)), tag = LETTERS[1:4]),
+    aes(x = -Inf, y = Inf, label = tag), inherit.aes = FALSE,
+    hjust = -0.5, vjust = 1.3, fontface = "bold", size = 4)
 plots$hellinger_pca <- ggplot(sample_summary, aes(pc1, pc2, color = habitat, shape = habitat)) +
-  geom_point(size = 2.3, alpha = 0.85) + coord_equal() +
+  geom_point(size = point_size, alpha = point_alpha) + coord_equal() +
   scale_color_manual(values = habitat_colors, labels = habitat_labels) +
-  scale_shape_manual(values = c(soil = 17, sediment = 16, hyporheic = 15), labels = habitat_labels) +
+  scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("Hellinger PC1 (%.1f%%)", variance[1]),
     y = sprintf("Hellinger PC2 (%.1f%%)", variance[2]), color = "Habitat", shape = "Habitat") + plot_theme
 for (order in c("q0", "q1", "q2")) {
   plots[[paste0("diversity_", order)]] <- ggplot(sample_summary, aes(habitat, .data[[order]], color = habitat)) +
     geom_boxplot(outlier.shape = NA, color = "gray40") +
-    geom_point(position = position_jitter(width = 0.12, seed = base_seed), size = 1.5) +
+    geom_point(aes(shape = habitat), position = position_jitter(width = 0.12, seed = base_seed), size = point_size, alpha = point_alpha) +
+    scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
     scale_color_manual(values = habitat_colors) + scale_x_discrete(labels = habitat_labels) +
     labs(x = NULL, y = diversity_labels[[order]]) +
     plot_theme + theme(legend.position = "none")
 }
 # The manuscript uses exponential Shannon diversity; q = 0 and 2 remain supplementary.
 plots$alpha_diversity <- plots$diversity_q1 + theme(aspect.ratio = panel_aspect)
-# Standard-error ellipses show approximate confidence regions for habitat centroids.
-# They do not enclose 95% of samples or control spatial dependence.
-ellipse_fit <- ordiellipse(as.matrix(weighted_scores[, c("pcoa1", "pcoa2")]),
-  weighted_scores$habitat, kind = "se", conf = ellipse_confidence, draw = "none")
-angles <- seq(0, 2 * pi, length.out = ellipse_vertices)
-unit_circle <- cbind(cos(angles), sin(angles))
-ellipse_rows <- list()
-for (habitat_name in habitat_levels) {
-  current <- ellipse_fit[[habitat_name]]
-  coordinates <- sweep(current$scale * unit_circle %*% chol(current$cov),
-    2, current$center, "+")
-  ellipse_rows[[habitat_name]] <- tibble(habitat = habitat_name,
-    pcoa1 = coordinates[, 1], pcoa2 = coordinates[, 2])
-}
-ellipse_data <- bind_rows(ellipse_rows)
+# Show individual libraries; distribution tests retain the dispersion diagnostic.
 plots$weighted_unifrac <- ggplot(weighted_scores, aes(pcoa1, pcoa2, color = habitat, shape = habitat)) +
-  geom_polygon(data = ellipse_data, aes(pcoa1, pcoa2, fill = habitat, group = habitat),
-    inherit.aes = FALSE, color = NA, alpha = 0.12, show.legend = FALSE) +
-  geom_path(data = ellipse_data, aes(pcoa1, pcoa2, color = habitat, group = habitat),
-    inherit.aes = FALSE, linewidth = 0.65, show.legend = FALSE) +
-  geom_point(size = 2.4, alpha = 0.8) + coord_equal() +
-  scale_fill_manual(values = habitat_colors) +
+  geom_point(size = point_size, alpha = point_alpha) + coord_equal() +
   scale_color_manual(values = habitat_colors, labels = habitat_labels) +
-  scale_shape_manual(values = c(soil = 17, sediment = 16, hyporheic = 15), labels = habitat_labels) +
+  scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("PCoA1 (%.1f%%)", weighted_percent[1]),
     y = sprintf("PCoA2 (%.1f%%)", weighted_percent[2]), color = NULL, shape = NULL) + plot_theme
 for (metric in c("soil_read_percent", "soil_asv_percent")) {
   plot <- ggplot(sharing, aes(site_drainage_area_ha, .data[[metric]], color = habitat)) +
-    geom_point(size = 2.2, alpha = 0.85) + scale_x_log10() +
+    geom_point(size = point_size, alpha = point_alpha) + scale_x_log10() +
     scale_color_manual(values = habitat_colors, labels = habitat_labels) +
     facet_wrap(~habitat, labeller = as_labeller(habitat_labels)) +
     labs(x = "Drainage area (ha)", y = ifelse(metric == "soil_read_percent",
@@ -433,7 +423,7 @@ distance_data <- pair_samples %>% filter(metric != "Sediment ASV read share") %>
   pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "distance") %>%
   mutate(comparison = factor(comparison, levels = c("same_site", "other_site_mean")))
 plots$same_site_distances <- ggplot(distance_data, aes(comparison, distance, group = site_code)) +
-  geom_line(color = "gray70") + geom_point(size = 1.8, color = "#0072B2") +
+  geom_line(color = "gray70") + geom_point(size = point_size, alpha = point_alpha, color = "#0072B2") +
   facet_wrap(~metric, scales = "free_y") +
   scale_x_discrete(labels = c(same_site = "Same site", other_site_mean = "Other sites\n(mean)")) +
   labs(x = NULL, y = "Sediment-porewater dissimilarity") + plot_theme
@@ -441,7 +431,7 @@ read_data <- pair_samples %>% filter(metric == "Sediment ASV read share") %>%
   pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "read_percent") %>%
   mutate(comparison = factor(comparison, levels = c("same_site", "other_site_mean")))
 plots$same_site_read_sharing <- ggplot(read_data, aes(comparison, read_percent, group = site_code)) +
-  geom_line(color = "gray70") + geom_point(size = 2, color = "#0072B2") +
+  geom_line(color = "gray70") + geom_point(size = point_size, alpha = point_alpha, color = "#0072B2") +
   scale_x_discrete(labels = c(same_site = "Same site", other_site_mean = "Other sites\n(mean)")) +
   labs(x = NULL, y = "Porewater reads detected in sediment (%)") + plot_theme
 plots$habitat_context <- (plots$hellinger_pca | plots$diversity_q1) + plot_layout(widths = c(1.4, 1)) +
@@ -468,10 +458,18 @@ for (i in seq_len(nrow(figure_design))) {
   ggsave(file.path(figures_dir, paste0(figure_prefix, figure_design$panel[i], ".pdf")),
     plots[[figure_design$panel[i]]], width = figure_design$width[i], height = figure_design$height[i], bg = "white")
 }
-ggsave(file.path(manuscript_dir, "2016_manuscript_alpha_diversity.pdf"),
+ggsave(file.path(figures_dir, "2016_manuscript_alpha_diversity.pdf"),
   plots$alpha_diversity, width = alpha_figure_width, height = alpha_figure_height, bg = "white")
-ggsave(file.path(manuscript_dir, "2016_manuscript_weighted_unifrac.pdf"),
+ggsave(file.path(figures_dir, "2016_manuscript_weighted_unifrac.pdf"),
   plots$weighted_unifrac, width = ordination_figure_width, height = ordination_figure_height, bg = "white")
+habitat_panel_aspect <- diff(range(weighted_scores$pcoa2)) / diff(range(weighted_scores$pcoa1))
+plots$habitat_diversity <- ((plots$alpha_diversity + guides(color = "none", shape = "none") +
+    theme(aspect.ratio = habitat_panel_aspect)) |
+  plots$weighted_unifrac) +
+  plot_layout(widths = c(1, 1), guides = "collect") + plot_annotation(tag_levels = "A") &
+  theme(legend.position = "bottom")
+ggsave(file.path(manuscript_dir, "2016_habitat_diversity.pdf"), plots$habitat_diversity,
+  width = habitat_figure_width, height = habitat_figure_height, bg = "white")
 
 # 8. Check provenance and save session information ------------------------------
 checks$final_md5 <- unname(tools::md5sum(checks$path))
@@ -481,4 +479,4 @@ writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(res
 print(habitat_tests)
 print(pair_tests)
 print(environment_tests)
-message("Three-habitat analysis complete: 76 samples, 18 pairs, 12 supporting and 2 main figures.")
+message("Three-habitat analysis complete: 76 samples, 18 pairs, main habitat diversity and supplementary sampling map.")

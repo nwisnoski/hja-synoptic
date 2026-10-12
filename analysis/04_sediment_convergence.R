@@ -1,4 +1,4 @@
-# Figure 4: compare molecular and sediment microbial dispersion on identical sites.
+# Figure 3: sediment dispersion and molecular classes on identical sites.
 library(here)
 library(readr)
 library(dplyr)
@@ -10,6 +10,7 @@ library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
+class_results_dir <- here("results", "fticr_2016", "river_composition")
 figures_dir <- here("figures", "supplement")
 manuscript_dir <- here("figures", "manuscript")
 target_depth <- 10000
@@ -20,9 +21,12 @@ n_balanced_draws <- 1000
 permutation_seed <- 20261015
 resampling_seed <- 20261016
 plot_seed <- 20261017
+point_size <- 3
+point_alpha <- 0.5
 panel_aspect <- 0.8
 panel_width <- 5.8
 figure_height <- 5.2
+composite_height <- 11.5
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -32,7 +36,7 @@ group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#
 test_design <- tribble(
   ~metric, ~role, ~label,
   "molecular_equal_features", "primary", "Molecular signatures (equal-feature Jaccard)",
-  "microbial_bray", "primary", "Sediment microbes (Bray-Curtis)",
+  "microbial_hellinger", "primary", "Sediment microbes (Hellinger)",
   "molecular_jaccard", "sensitivity", "Molecular signatures (complete Jaccard)",
   "microbial_jaccard", "sensitivity", "Sediment microbes (binary Jaccard)") %>%
   mutate(seed = permutation_seed)
@@ -40,6 +44,25 @@ draw_design <- tibble(run = seq_len(n_balanced_draws), seed = resampling_seed + 
 plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     strip.background = element_blank(), legend.position = "none")
+
+site_panel_aspect <- 0.8
+site_figure_width <- 7.5
+site_figure_height <- 5.8
+class_order <- c("Lipid", "Protein", "AminoSugar", "Carb", "Lignin", "Tannin", "ConHC", "UnsatHC", "Other")
+class_labels <- c("Lipid-like", "Protein-like", "Amino-sugar-like", "Carbohydrate-like",
+  "Lignin-like", "Tannin-like", "Condensed-hydrocarbon-like", "Unsaturated-hydrocarbon-like", "Other")
+class_colors <- c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77",
+  "#CC6677", "#882255", "#AA4499")
+names(class_colors) <- class_labels
+class_theme <- theme_bw(base_size = 12) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.background = element_blank(),
+    strip.placement = "outside",
+    strip.text.x = element_text(size = 12),
+    legend.position = "bottom"
+  )
 
 # 2. Audit the intersection without translating or renaming sample identities -----
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -54,8 +77,7 @@ input_paths <- c(
   here("results", "fticr_2016", "river_composition", "subsampling_summary.csv"))
 preserved_paths <- c(input_paths,
   list.files(here("results", "fticr_2016", "network_dispersion"), full.names = TRUE),
-  here("figures", "supplement", "2016_fticr_dispersion_equal_features.pdf"),
-  here("figures", "supplement", "2016_sediment_microbes_dispersion_bray.pdf"))
+  here("figures", "supplement", "2016_fticr_dispersion_equal_features.pdf"))
 preserved_paths <- unique(preserved_paths[file.exists(preserved_paths)])
 checks <- tibble(path = preserved_paths, initial_md5 = unname(tools::md5sum(preserved_paths)))
 metadata <- read_csv(input_paths[1], col_types = cols(site_code = col_character())) %>%
@@ -113,7 +135,7 @@ stopifnot(!anyDuplicated(thinned$site_code), all(site$site_code %in% thinned$sit
 equal_features <- as.matrix(thinned[match(site$site_code, thinned$site_code), site$site_code])
 rownames(equal_features) <- site$site_code
 distances <- list(molecular_equal_features = equal_features,
-  microbial_bray = as.matrix(vegdist(community, method = "bray")),
+  microbial_hellinger = as.matrix(dist(decostand(community, method = "hellinger"))),
   molecular_jaccard = as.matrix(vegdist(pa, method = "jaccard", binary = TRUE)),
   microbial_jaccard = as.matrix(vegdist(community, method = "jaccard", binary = TRUE)))
 
@@ -253,7 +275,7 @@ for (test in which(test_design$role == "primary")) {
   set.seed(plot_seed)
   p <- ggplot(panel, aes(network_group, distance, color = network_group)) +
     geom_boxplot(outlier.shape = NA, width = 0.5, linewidth = 0.5) +
-    geom_jitter(width = 0.1, height = 0, size = 2, alpha = 0.85) +
+    geom_jitter(width = 0.1, height = 0, size = point_size, alpha = point_alpha) +
     facet_wrap(~metric, labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
     scale_color_manual(values = group_colors) + scale_x_discrete(labels = x_labels) +
     labs(x = NULL, y = "Distance to group spatial median") +
@@ -262,8 +284,163 @@ for (test in which(test_design$role == "primary")) {
   ggsave(file.path(figures_dir, paste0("2016_matched_sediment_dispersion_", metric, ".pdf")),
     p, width = panel_width, height = figure_height, bg = "white")
 }
+ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
+  wrap_plots(panels, ncol = 2) + plot_annotation(tag_levels = "A"),
+  width = 2 * panel_width, height = figure_height, bg = "white")
+# 7. Align the existing class fractions to the audited 44-site network groups.
+dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
+class_input_paths <- c(
+  file.path(class_results_dir, "site_class_fractions.csv"),
+  here("results", "fticr_2016", "network_dispersion", "site_network_position_audit.csv"),
+  here("data", "derived", "fticr_2016", "sediment_44_presence_absence.csv"),
+  here("results", "fticr_2016", "tables", "primary_peak_properties.csv"),
+  file.path(figures_dir, "2016_fticr_site_class_composition.pdf")
+)
+class_input_hashes <- unname(tools::md5sum(class_input_paths))
+stopifnot(!anyNA(class_input_hashes))
+class_table <- read_csv(class_input_paths[1], col_types = cols(site_code = col_character()))
+class_network <- read_csv(class_input_paths[2], col_types = cols(site_code = col_character()))
+class_incidence <- read_csv(class_input_paths[3], col_types = cols(site_code = col_character()))
+class_properties <- read_csv(class_input_paths[4], show_col_types = FALSE)
+stopifnot(
+  !anyDuplicated(class_network$site_code),
+  !anyDuplicated(class_incidence$site_code),
+  !anyDuplicated(class_properties$peak_id),
+  !anyDuplicated(class_table[c("site_code", "source_class")]),
+  setequal(class_table$site_code, class_network$site_code),
+  setequal(class_incidence$site_code, class_network$site_code),
+  setequal(class_table$source_class, class_order)
+)
+class_network$expected_group <- case_when(
+  class_network$site_stream_order %in% headwater_orders ~ "Headwater",
+  class_network$site_stream_order %in% intermediate_orders ~ "Intermediate",
+  class_network$site_stream_order == mainstem_order ~ "Mainstem"
+)
+stopifnot(!anyNA(class_network$expected_group), all(class_network$network_group == class_network$expected_group))
+class_site_order <- class_network %>%
+  mutate(network_group = factor(network_group, levels = group_levels)) %>%
+  arrange(network_group, site_drainage_area_ha, site_code)
+class_reference <- class_network[match(class_table$site_code, class_network$site_code), ]
+stopifnot(
+  all(class_table$site_stream_order == class_reference$site_stream_order),
+  all(abs(class_table$site_drainage_area_ha - class_reference$site_drainage_area_ha) < 1e-8),
+  all(is.finite(class_table$fraction_detected)),
+  all(class_table$fraction_detected >= 0 & class_table$fraction_detected <= 1)
+)
+class_table$network_group <- factor(class_reference$network_group, levels = group_levels)
+class_table$class_label <- factor(class_table$source_class, levels = class_order, labels = class_labels)
+class_table$site_code <- factor(class_table$site_code, levels = class_site_order$site_code)
+
+# 8. Verify that the saved fractions agree with current binary detections.
+# Keep workbook classifications and detection rules unchanged.
+class_pa <- as.matrix(class_incidence[, -1])
+class_properties <- class_properties[match(colnames(class_pa), class_properties$peak_id), ]
+stopifnot(
+  identical(colnames(class_pa), class_properties$peak_id),
+  all(class_pa %in% c(0, 1)),
+  all(rowSums(class_pa) > 0),
+  all(class_properties$molecular_class_source %in% class_order)
+)
+for (source_name in class_order) {
+  selected <- class_properties$molecular_class_source == source_name
+  expected <- rowSums(class_pa[, selected, drop = FALSE]) / rowSums(class_pa)
+  current <- class_table %>% filter(source_class == source_name)
+  expected <- expected[match(as.character(current$site_code), class_incidence$site_code)]
+  stopifnot(nrow(current) == nrow(class_network), all(abs(current$fraction_detected - expected) < 1e-12))
+}
+site_sums <- class_table %>% group_by(site_code) %>%
+  summarize(fraction_sum = sum(fraction_detected), .groups = "drop")
+stopifnot(all(abs(site_sums$fraction_sum - 1) < 1e-12))
+
+# 9. Average site fractions within groups, giving every site equal weight.
+# Pooling raw feature counts would give feature-rich sites greater weight.
+class_group_summary <- class_table %>% group_by(network_group, source_class, class_label) %>%
+  summarize(
+    n_sites = n(),
+    mean_fraction = mean(fraction_detected),
+    sd_fraction = sd(fraction_detected),
+    .groups = "drop"
+  )
+group_sums <- class_group_summary %>% group_by(network_group) %>%
+  summarize(fraction_sum = sum(mean_fraction), .groups = "drop")
+stopifnot(all(abs(group_sums$fraction_sum - 1) < 1e-12))
+class_group_counts <- table(factor(class_network$network_group, levels = group_levels))
+class_group_labels <- paste0(group_levels, "\n(n = ", as.integer(class_group_counts), ")")
+names(class_group_labels) <- group_levels
+
+# 10. Retain full-site class panels and match the manuscript to dispersion.
+group_plot <- ggplot(class_group_summary, aes(network_group, mean_fraction, fill = class_label)) +
+  geom_col(width = 0.65) +
+  scale_fill_manual(values = class_colors, drop = FALSE) +
+  scale_x_discrete(labels = class_group_labels) +
+  scale_y_continuous(labels = scales::label_percent(), breaks = seq(0, 1, 0.25)) +
+  labs(x = NULL, y = "Mean fraction of detected features", fill = NULL) +
+  class_theme +
+  guides(fill = guide_legend(nrow = 3))
+ggsave(file.path(figures_dir, "2016_fticr_network_group_class_means.pdf"),
+  group_plot, width = 9, height = 5.5, bg = "white")
+
+# Retain the original site bars, ordered by drainage area inside each group.
+# Bottom facet labels serve as the group labels on the x axis.
+# Facet widths follow site counts so every site's bar has the same width.
+site_panels <- list()
+for (group_name in c("All", "Matched", group_levels)) {
+  current <- class_table
+  if (group_name == "Matched") {
+    current <- class_table %>% filter(as.character(site_code) %in% site$site_code)
+    stopifnot(setequal(as.character(current$site_code), site$site_code),
+      n_distinct(current$site_code) == 33)
+    matched_reference <- site[match(as.character(current$site_code), site$site_code), ]
+    stopifnot(all(as.character(current$network_group) == as.character(matched_reference$network_group)))
+  } else if (group_name != "All") {
+    current <- class_table %>% filter(network_group == group_name)
+  }
+  current_sizes <- current %>% distinct(site_code, network_group) %>% count(network_group)
+  current_labels <- setNames(paste0(current_sizes$network_group, "\n(n = ",
+    current_sizes$n, ")"), as.character(current_sizes$network_group))
+  site_panels[[group_name]] <- ggplot(current, aes(site_code, fraction_detected, fill = class_label)) +
+    geom_col(width = 0.95) +
+    scale_fill_manual(values = class_colors, drop = FALSE) +
+    scale_y_continuous(labels = scales::label_percent(), breaks = seq(0, 1, 0.25)) +
+    facet_grid(. ~ network_group, scales = "free_x",
+      space = if (group_name %in% c("All", "Matched")) "free_x" else "fixed", switch = "x",
+      labeller = labeller(network_group = current_labels)) +
+    labs(x = NULL, y = "Fraction of detected features", fill = NULL) +
+    class_theme +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 8)) +
+    guides(fill = guide_legend(nrow = 3))
+  if (group_name %in% c("All", "Matched")) {
+    site_panels[[group_name]] <- site_panels[[group_name]] +
+      guides(fill = guide_legend(ncol = 2, byrow = TRUE))
+  } else {
+    site_panels[[group_name]] <- site_panels[[group_name]] +
+      theme(aspect.ratio = site_panel_aspect)
+  }
+  file_suffix <- "by_network_group"
+  class_panel_width <- site_figure_width
+  class_panel_height <- site_figure_height
+  if (group_name == "Matched") {
+    file_suffix <- "matched_sites"
+    class_panel_width <- 2 * panel_width
+  } else if (group_name != "All") {
+    file_suffix <- tolower(group_name)
+    class_panel_width <- 5.8
+    class_panel_height <- 5.2
+  }
+  ggsave(file.path(figures_dir, paste0("2016_fticr_site_class_composition_", file_suffix, ".pdf")),
+    site_panels[[group_name]], width = class_panel_width, height = class_panel_height, bg = "white")
+}
+# The lower panel describes broad class fractions, not feature-level turnover.
+# All three panels use exactly the same 33 sites (18, 10, and 5 by network group).
+combined <- wrap_plots(panels[["molecular_equal_features"]], panels[["microbial_hellinger"]],
+  site_panels$Matched + guides(fill = guide_legend(nrow = 3, byrow = TRUE)),
+  design = "AB\nCC", heights = c(1, 1.25)) + plot_annotation(tag_levels = "A")
 ggsave(file.path(manuscript_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
-  wrap_plots(panels, ncol = 2), width = 2 * panel_width, height = figure_height, bg = "white")
+  combined, width = 2 * panel_width, height = composite_height, bg = "white")
+stopifnot(identical(class_input_hashes, unname(tools::md5sum(class_input_paths))))
+
+# 11. Confirm that the reused inputs and full-site dispersion results are intact.
 checks$final_md5 <- unname(tools::md5sum(checks$path))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))

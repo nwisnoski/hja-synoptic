@@ -1,7 +1,7 @@
 # HJA synoptic: 2016 microbial and molecular ecology
 
 Soil, hyporheic porewater, and sediment communities across the HJ Andrews
-stream network. Start with the six figures in [figures/manuscript](figures/manuscript).
+stream network. Start with the four figures in [figures/manuscript](figures/manuscript).
 
 ## Figure workflow
 
@@ -12,17 +12,22 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | Script | Figure | Main output |
 | --- | --- | --- |
 | [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
-| [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1); 2. weighted UniFrac with habitat ellipses | [Alpha](figures/manuscript/2016_manuscript_alpha_diversity.pdf), [ordination](figures/manuscript/2016_manuscript_weighted_unifrac.pdf) |
-| [03_first_detection.R](analysis/03_first_detection.R) | 3. First-detected inventory along the network | [Flow figure](figures/manuscript/2016_first_detection_flowpaths.pdf) |
-| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 4. Microbial and molecular dispersion on matched sites | [Convergence](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
-| [05_molecular_classes.R](analysis/05_molecular_classes.R) | 5. Site-level molecular classes from headwaters to mainstem | [Class composition](figures/manuscript/2016_fticr_network_group_class_comparison.pdf) |
-| [06_network_localization.R](analysis/06_network_localization.R) | 6. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
+| [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1) and weighted UniFrac | [Habitat diversity](figures/manuscript/2016_habitat_diversity.pdf) |
+| [03_first_detection.R](analysis/03_first_detection.R) | 2. First detection, paired soil sharing, and taxonomic resolution | [Paired comparisons](figures/manuscript/2016_first_detection_flowpaths.pdf) |
+| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Dispersion and molecular classes on the same 33 sediment sites | [Dispersion and classes](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
+| [05_network_localization.R](analysis/05_network_localization.R) | 4. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
-scripts. Script 02 uses saved UniFrac distances; 04 refits dispersion and its
-balanced-sampling sensitivity; 05–06 read completed molecular/network results.
+scripts. Script 02 uses saved UniFrac distances and supplies the paired tests
+for 03; 04 refits dispersion and its balanced-sampling sensitivity, then reads
+completed molecular-class results; 05 reads completed network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
+Microbial abundance comparisons use Hellinger distance. Script 03 compares
+same-site resemblance across taxonomic ranks and audits classification coverage.
+The [sampling map](figures/supplement/2016_soil_porewater_sediment_sampling_map.pdf),
+individual panels, the fixed genus-classified sensitivity, additional same-site
+metrics, and the full 44-site molecular class figure remain in `figures/supplement/`.
 
 [Supporting script 12](analysis/supporting/12_sediment_icamp_figures.R) maps the
 completed sediment iCAMP assignments and compares headwater, intermediate, and
@@ -42,7 +47,7 @@ shows arithmetic means.
   only when inputs need rebuilding.
 - `analysis/supporting/`: numbered molecular, chemistry, network, and sediment
   analyses. These supply the main workflow and additional figures.
-- `figures/manuscript/`: the six selected figures. `figures/supplement/`:
+- `figures/manuscript/`: the four selected figures. `figures/supplement/`:
   individual panels, diagnostics, and supporting analyses.
 - `data/`: original inputs; `data/derived/`: constructed inputs.
   `results/`: analysis tables, saved selections, checksums, and checkpoints.

@@ -1,5 +1,5 @@
-comparison,samples,r_squared,f,p,dispersion_f,dispersion_p,null,p_bh_family4,dispersion_p_bh_family4
-All three habitats,76,0.20181240268688394,9.228598293017125,1e-4,91.12477326455605,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
-Soil-sediment,49,0.1934628848584439,11.273821647688196,1e-4,16.326539059762055,2e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2e-4
-Soil-porewater,42,0.12432638252602544,5.67911971059105,1e-4,37.53969796484724,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
-Sediment-porewater,61,0.15746699592709137,11.026930357370826,1e-4,292.6852075067736,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
+comparison,metric,samples,r_squared,f,p,dispersion_f,dispersion_p,null,p_bh_family4,dispersion_p_bh_family4
+All three habitats,Hellinger,76,0.17247027856484104,7.6071771255528935,1e-4,103.93580197310588,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
+Soil-sediment,Hellinger,49,0.15916345709696986,8.896714286144313,1e-4,16.2589731132964,2e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2e-4
+Soil-porewater,Hellinger,42,0.10989350661821394,4.938443093508733,1e-4,45.01781090491709,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
+Sediment-porewater,Hellinger,61,0.13231611705950677,8.997114110331221,1e-4,351.91382572473896,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4

@@ -1,2 +1,2 @@
-term,Df,SumOfSqs,R2,F,Pr(>F),null
-habitat,1,2.1553645616666612,0.16474706864375974,6.715971206974577,3e-4,Habitat labels exchangeable within each of 18 paired sites; site conditioned
+term,metric,Df,SumOfSqs,R2,F,Pr(>F),null
+habitat,Hellinger,1,3.8341063419991954,0.14097633925321407,5.612199678672026,3e-4,Habitat labels exchangeable within each of 18 paired sites; site conditioned

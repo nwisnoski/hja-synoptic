@@ -1,0 +1,45 @@
+table,comparison,rows,excluded_columns,absolute_tolerance,relative_tolerance,max_absolute_difference,status
+results/diversity_2016/first_detection_flowpaths/asv_first_detection_assignments.csv,All rows unchanged,33974,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/balanced_inventory_draws.csv,All rows unchanged,24000,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/balanced_inventory_summary.csv,All rows unchanged,24,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/balanced_sample_selections.csv,All rows unchanged,21000,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv,All rows unchanged,24,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/inventory_diagnostics.csv,All rows unchanged,1001,seconds,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/sample_first_detection_profiles.csv,All rows unchanged,244,,1e-10,1e-10,0,pass
+results/diversity_2016/first_detection_flowpaths/sample_first_stage_profiles.csv,All rows unchanged,244,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/habitat_dispersion.csv,Metric changed; recomputed Hellinger,76,,1e-10,1e-10,,recomputed
+results/diversity_2016/soil_porewater_sediment/habitat_distribution_tests.csv,Metric changed; recomputed Hellinger,4,,1e-10,1e-10,,recomputed
+results/diversity_2016/soil_porewater_sediment/hellinger_pca_variance.csv,All rows unchanged,76,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/paired_habitat_permanova.csv,Metric changed; recomputed Hellinger,1,,1e-10,1e-10,,recomputed
+results/diversity_2016/soil_porewater_sediment/paired_soil_sharing_test.csv,All rows unchanged,1,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/porewater_environment_inclusion.csv,All rows unchanged,216,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/porewater_environment_tests.csv,Metric changed; recomputed Hellinger,16,,1e-10,1e-10,,recomputed
+results/diversity_2016/soil_porewater_sediment/porewater_network_sample_sizes.csv,All rows unchanged,3,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/porewater_network_tests.csv,Metric changed; recomputed Hellinger,1,,1e-10,1e-10,,recomputed
+results/diversity_2016/soil_porewater_sediment/same_site_null_draws.csv,UniFrac and read-sharing rows unchanged; Hellinger recomputed,59994,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/same_site_sample_comparisons.csv,UniFrac and read-sharing rows unchanged; Hellinger recomputed,54,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/same_site_tests.csv,UniFrac and read-sharing rows unchanged; Hellinger recomputed,6,p_bh_family4,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/sample_summary.csv,All rows unchanged,76,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_inventory.csv,All rows unchanged,33974,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_inventory_draws.csv,All rows unchanged,2000,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_inventory_selections.csv,All rows unchanged,3000,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_inventory_sensitivity_summary.csv,All rows unchanged,2,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_sharing_by_sample.csv,All rows unchanged,61,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_sharing_drainage_slopes.csv,All rows unchanged,4,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_sharing_segment_means.csv,All rows unchanged,50,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/soil_sharing_summary.csv,All rows unchanged,2,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/weighted_unifrac_scores.csv,All rows unchanged,76,,1e-10,1e-10,0,pass
+results/diversity_2016/soil_porewater_sediment/weighted_unifrac_summary.csv,All rows unchanged,1,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/balanced_segment_draws.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,3000,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/balanced_segment_summary.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,3,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/balanced_site_selection.csv,All rows unchanged,15000,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/distance_correction_audit.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,3,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/matched_site_manifest.csv,All rows unchanged,33,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/microbial_jaccard_distance_matrix.csv,All rows unchanged,33,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/molecular_equal_features_distance_matrix.csv,All rows unchanged,33,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/molecular_jaccard_distance_matrix.csv,All rows unchanged,33,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/pairwise_group_contrasts.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,9,p_bh,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/run_settings.csv,All rows unchanged,1,balanced_runtime_seconds,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/site_dispersion.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,99,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/site_inclusion_audit.csv,All rows unchanged,45,,1e-10,1e-10,0,pass
+results/fticr_2016/matched_sediment_dispersion/three_group_tests.csv,Molecular and binary microbial rows unchanged; Hellinger recomputed,3,p_bh,1e-10,1e-10,0,pass

@@ -1,21 +1,37 @@
-# Figure 3: describe the earliest surveyed pool in which each ASV was detected.
+# Figure 2: first detection, paired soil sharing, and taxonomic resolution.
 # Adapt Ruiz-Gonzalez et al. (2015), doi:10.1111/ele.12499, to parallel
 # aquatic compartments. Earliest detection is not a demonstrated source.
 library(here)
 library(readr)
 library(dplyr)
 library(tidyr)
+library(vegan)
+library(permute)
 library(ggplot2)
+library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
 target_depth <- 10000
 detection_threshold <- 1
 balanced_draws <- 1000
 balanced_samples_per_cell <- 3
+point_size <- 3
+point_alpha <- 0.5
 panel_aspect <- 0.8
 figure_width <- 9
 single_row_height <- 4.8
+composite_width <- 11.5
+composite_height <- 10
 base_seed <- 20261005
+rank_seed <- 20261010L
+rank_permutations <- 9999L
+taxonomic_lineage <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")
+rank_levels <- c("ASV", "Genus", "Family", "Order", "Class", "Phylum")
+rank_scopes <- c("All reads", "Genus-classified ASVs")
+unresolved_labels <- "^(uncultured|unclassified|unknown|unidentified|metagenome|Ambiguous_taxa)$"
+rank_nulls <- tibble(null = c("All paired sites", "Within stream order"),
+  seed = rank_seed + seq_len(2))
+comparison_labels <- c(same_site = "Same site", other_site_mean = "Other sites (mean)")
 habitats <- c("sediment", "hyporheic")
 habitat_labels <- c(sediment = "Sediment", hyporheic = "Porewater")
 source_pools <- c("Sediment", "Hyporheic")
@@ -28,6 +44,7 @@ category_colors <- c("Soil" = "#D55E00", "Sediment" = "#009E73",
 results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
 manuscript_dir <- here("figures", "manuscript")
 supplement_dir <- here("figures", "supplement")
+habitat_results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
 plot_theme <- theme_bw(base_size = 11) +
   theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),
     strip.background = element_blank(), legend.position = "bottom",
@@ -39,8 +56,13 @@ dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(supplement_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(here("data", "derived", "soil_porewater_sediment_2016", "asv_counts_10k.csv"),
-  here("data", "derived", "soil_porewater_sediment_2016", "sample_metadata.csv"))
+  here("data", "derived", "soil_porewater_sediment_2016", "sample_metadata.csv"),
+  here("data", "derived", "soil_porewater_sediment_2016", "sediment_porewater_pair_audit.csv"),
+  file.path(habitat_results_dir, "soil_sharing_by_sample.csv"),
+  file.path(habitat_results_dir, "paired_soil_sharing_test.csv"),
+  here("results", "dada2_2016", "asv_taxonomy.csv"))
 checks <- tibble(path = input_paths, initial_md5 = unname(tools::md5sum(input_paths)))
+stopifnot(!anyNA(checks$initial_md5))
 count_table <- read_csv(input_paths[1], show_col_types = FALSE)
 metadata <- read_csv(input_paths[2], col_types = cols(site_code = col_character()), show_col_types = FALSE)
 counts <- as.matrix(count_table[, -1])
@@ -168,7 +190,111 @@ write_csv(summaries %>% filter(draw_id > 0), file.path(results_dir, "balanced_in
 write_csv(bind_rows(selection_rows), file.path(results_dir, "balanced_sample_selections.csv"))
 write_csv(bind_rows(draw_diagnostics), file.path(results_dir, "inventory_diagnostics.csv"))
 
-# 4. Show richness and read representation along the network ---------------------
+# 4. Compare paired habitats across nested taxonomic resolutions ----------------
+pair_audit <- read_csv(input_paths[3], col_types = cols(site_code = col_character())) %>%
+  filter(paired_manuscript) %>% arrange(site_code)
+stopifnot(nrow(pair_audit) == 18, !anyDuplicated(pair_audit$site_code),
+  all(c(pair_audit$sediment_id, pair_audit$porewater_id) %in% colnames(counts)),
+  all(metadata$site_code[match(pair_audit$sediment_id, metadata$sample_id)] == pair_audit$site_code),
+  all(metadata$site_code[match(pair_audit$porewater_id, metadata$sample_id)] == pair_audit$site_code),
+  all(metadata$habitat[match(pair_audit$sediment_id, metadata$sample_id)] == "sediment"),
+  all(metadata$habitat[match(pair_audit$porewater_id, metadata$sample_id)] == "hyporheic"))
+paired_counts <- counts[, c(pair_audit$sediment_id, pair_audit$porewater_id), drop = FALSE]
+active <- rowSums(paired_counts) > 0
+paired_counts <- paired_counts[active, , drop = FALSE]
+taxonomy <- read_csv(input_paths[6], show_col_types = FALSE)
+stopifnot(!anyDuplicated(taxonomy$asv_id))
+taxonomy <- taxonomy[match(rownames(paired_counts), taxonomy$asv_id), ]
+stopifnot(identical(taxonomy$asv_id, rownames(paired_counts)))
+for (rank in taxonomic_lineage) {
+  taxonomy[[rank]] <- trimws(taxonomy[[rank]])
+  unresolved <- is.na(taxonomy[[rank]]) | taxonomy[[rank]] == "" |
+    grepl(unresolved_labels, taxonomy[[rank]], ignore.case = TRUE)
+  taxonomy[[rank]][unresolved] <- NA_character_
+}
+# Reuse identical intact-profile permutations at every rank and in both scopes.
+orders <- metadata$site_stream_order[match(pair_audit$porewater_id, metadata$sample_id)]
+stopifnot(!anyNA(orders),
+  all(orders == metadata$site_stream_order[match(pair_audit$sediment_id, metadata$sample_id)]))
+rank_shuffles <- list()
+for (i in seq_len(nrow(rank_nulls))) {
+  set.seed(rank_nulls$seed[i])
+  control <- how()
+  if (rank_nulls$null[i] == "Within stream order") control <- how(blocks = factor(orders))
+  rank_shuffles[[rank_nulls$null[i]]] <- shuffleSet(nrow(pair_audit),
+    nset = rank_permutations, control = control)
+}
+# The sensitivity fixes the same genus-classified ASVs across all ranks and
+# renormalizes each sample. Rank-dependent filtering would change composition.
+genus_classified <- complete.cases(taxonomy[, taxonomic_lineage])
+rank_sample_rows <- list()
+rank_test_rows <- list()
+coverage_rows <- list()
+for (scope in rank_scopes) {
+  retained <- if (scope == "All reads") rep(TRUE, nrow(paired_counts)) else genus_classified
+  current_counts <- paired_counts[retained, , drop = FALSE]
+  current_taxonomy <- taxonomy[retained, ]
+  stopifnot(all(colSums(current_counts) > 0))
+  previous_distance <- NULL
+  for (rank in rank_levels) {
+    if (rank == "ASV") {
+      assigned <- rep(TRUE, nrow(current_counts))
+      aggregated <- current_counts
+    } else {
+      prefix <- taxonomic_lineage[seq_len(match(rank, taxonomic_lineage))]
+      assigned <- complete.cases(current_taxonomy[, prefix])
+      keys <- apply(current_taxonomy[, prefix], 1, paste, collapse = "|")
+      # Missing ranks stay ASV-specific, preserving reads without creating a
+      # shared "unclassified" taxon. Complete lineage prefixes avoid homonyms.
+      keys[!assigned] <- paste0("unresolved_ASV|", current_taxonomy$asv_id[!assigned])
+      aggregated <- rowsum(current_counts, keys, reorder = FALSE)
+    }
+    stopifnot(identical(unname(colSums(aggregated)), unname(colSums(current_counts))))
+    distance <- as.matrix(dist(decostand(t(aggregated), method = "hellinger")))
+    stopifnot(all(is.finite(distance)), all(distance >= 0), all(diag(distance) == 0),
+      max(abs(distance - t(distance))) < 1e-12, max(distance) <= sqrt(2) + 1e-12)
+    # Nested aggregation must not increase Hellinger distance. Its decline
+    # alone is expected mathematically and does not demonstrate convergence.
+    if (!is.null(previous_distance)) stopifnot(all(distance <= previous_distance + 1e-12))
+    previous_distance <- distance
+    cross <- distance[pair_audit$sediment_id, pair_audit$porewater_id, drop = FALSE]
+    observed <- mean(diag(cross))
+    rank_sample_rows[[length(rank_sample_rows) + 1L]] <- pair_audit %>%
+      select(site_code, sediment_id, porewater_id) %>%
+      mutate(scope, rank, metric = "Hellinger", same_site = diag(cross),
+        other_site_mean = (colSums(cross) - diag(cross)) / (nrow(pair_audit) - 1L))
+    for (i in seq_len(nrow(rank_nulls))) {
+      shuffles <- rank_shuffles[[rank_nulls$null[i]]]
+      null_values <- apply(shuffles, 1, function(p) mean(cross[cbind(seq_len(nrow(pair_audit)), p)]))
+      rank_test_rows[[length(rank_test_rows) + 1L]] <- tibble(scope, rank,
+        metric = "Hellinger", null = rank_nulls$null[i], pairs = nrow(pair_audit),
+        observed_mean = observed, observed_median = median(diag(cross)),
+        offsite_mean = mean(cross[row(cross) != col(cross)]),
+        random_assignment_mean = mean(null_values),
+        null_p025 = unname(quantile(null_values, 0.025)),
+        null_p975 = unname(quantile(null_values, 0.975)),
+        p = (1L + sum(null_values <= observed)) / (1L + length(null_values)),
+        permutations = length(null_values), seed = rank_nulls$seed[i],
+        alternative = "Lower same-site distance")
+    }
+    if (scope == "All reads") {
+      coverage_rows[[length(coverage_rows) + 1L]] <- metadata[
+        match(colnames(paired_counts), metadata$sample_id), ] %>%
+        select(sample_id, site_code, habitat) %>% mutate(rank,
+          classified_reads = colSums(current_counts[assigned, , drop = FALSE]),
+          total_reads = colSums(current_counts),
+          classified_read_percent = 100 * classified_reads / total_reads)
+    }
+  }
+}
+rank_samples <- bind_rows(rank_sample_rows)
+rank_tests <- bind_rows(rank_test_rows) %>% group_by(scope, null) %>%
+  mutate(p_bh_family6 = p.adjust(p, "BH")) %>% ungroup()
+write_csv(rank_samples, file.path(results_dir, "taxonomic_rank_sample_comparisons.csv"))
+write_csv(rank_tests, file.path(results_dir, "taxonomic_rank_tests.csv"))
+write_csv(bind_rows(coverage_rows), file.path(results_dir, "taxonomic_rank_coverage.csv"))
+
+# 5. Show inventories, paired soil sharing, and taxonomic resolution --------------
 plot_data <- full_summary %>% mutate(category = factor(category, levels = category_labels),
   habitat = factor(habitat, levels = habitats), network_group = factor(network_group, levels = network_groups))
 plots <- list()
@@ -188,13 +314,80 @@ for (metric in c("richness_percent", "read_percent")) {
   ggsave(file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")),
     plots[[metric]], width = figure_width, height = single_row_height, bg = "white")
 }
-ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), plots$read_percent,
-  width = figure_width, height = single_row_height, bg = "white")
+# Reuse script 02's formal paired soil-sharing test and verify it from counts.
+sharing <- read_csv(input_paths[4], col_types = cols(site_code = col_character()))
+soil_test <- read_csv(input_paths[5], show_col_types = FALSE)
+stopifnot(!anyDuplicated(sharing$sample_id), soil_test$pairs == 18,
+  all(c(pair_audit$sediment_id, pair_audit$porewater_id) %in% sharing$sample_id))
+soil_inventory <- rowSums(presence[, metadata$habitat == "soil", drop = FALSE]) > 0
+expected_sharing <- 100 * colSums(counts[soil_inventory, sharing$sample_id, drop = FALSE]) / target_depth
+stopifnot(max(abs(expected_sharing - sharing$soil_read_percent)) < 1e-10)
+paired_sharing <- pair_audit %>% transmute(site_code,
+  sediment = sharing$soil_read_percent[match(sediment_id, sharing$sample_id)],
+  hyporheic = sharing$soil_read_percent[match(porewater_id, sharing$sample_id)])
+stopifnot(abs(mean(paired_sharing$sediment - paired_sharing$hyporheic) -
+  soil_test$mean_difference_percentage_points) < 1e-10)
+paired_sharing <- paired_sharing %>%
+  pivot_longer(c(sediment, hyporheic), names_to = "habitat", values_to = "read_percent") %>%
+  mutate(habitat = factor(habitat, levels = habitats))
+plots$paired_soil_sharing <- ggplot(paired_sharing, aes(habitat, read_percent, group = site_code)) +
+  geom_line(color = "gray70", linewidth = 0.4) +
+  geom_point(aes(color = habitat), size = point_size, alpha = point_alpha) +
+  scale_color_manual(values = c(sediment = "#009E73", hyporheic = "#0072B2")) +
+  scale_x_discrete(labels = habitat_labels) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 25)) +
+  labs(x = NULL, y = "Reads shared with soil inventory (%)") +
+  plot_theme + theme(legend.position = "none", aspect.ratio = panel_aspect)
+rank_plot_data <- rank_samples %>%
+  pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "distance") %>%
+  mutate(rank = factor(rank, levels = rank_levels), scope = factor(scope, levels = rank_scopes),
+    comparison = factor(comparison, levels = names(comparison_labels)))
+rank_means <- rank_plot_data %>% group_by(scope, rank, comparison) %>%
+  summarize(distance = mean(distance), .groups = "drop")
+for (view in c("taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
+  profiles <- rank_plot_data %>% filter(comparison == "same_site")
+  means <- rank_means
+  if (view == "taxonomic_resolution") {
+    # The two mean curves nearly overlap. Show the same-site mean alone in
+    # panel D; retain both comparisons in the sensitivity plot and tables.
+    profiles <- profiles %>% filter(scope == "All reads")
+    means <- means %>% filter(scope == "All reads", comparison == "same_site")
+  }
+  plots[[view]] <- ggplot(profiles, aes(rank, distance, group = site_code)) +
+    geom_line(color = "gray80", linewidth = 0.35) +
+    geom_line(data = means, aes(group = comparison, linetype = comparison),
+      color = "black", linewidth = 0.8) +
+    scale_linetype_manual(values = c(same_site = "solid", other_site_mean = "dashed"),
+      labels = comparison_labels, name = NULL) +
+    scale_y_continuous(limits = c(0, sqrt(2)), breaks = c(0, 0.4, 0.8, 1.2)) +
+    labs(x = "Taxonomic resolution", y = "Sediment-porewater Hellinger distance") +
+    plot_theme + theme(aspect.ratio = panel_aspect, legend.text = element_text(size = 9),
+      legend.key.width = grid::unit(1.2, "lines"))
+  if (view == "taxonomic_resolution") {
+    plots[[view]] <- plots[[view]] + theme(legend.position = "none")
+  } else {
+    plots[[view]] <- plots[[view]] + facet_wrap(~scope)
+  }
+}
+for (panel in c("paired_soil_sharing", "taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
+  ggsave(file.path(supplement_dir, paste0("2016_", panel, ".pdf")), plots[[panel]],
+    width = ifelse(panel == "taxonomic_resolution_sensitivity", 11.5, 5.8),
+    height = single_row_height, bg = "white")
+}
+inventory_panel <- plots$read_percent +
+  geom_text(data = tibble(habitat = factor(habitats, levels = habitats), tag = LETTERS[1:2]),
+    aes(x = -Inf, y = Inf, label = tag), inherit.aes = FALSE,
+    hjust = -0.5, vjust = 1.3, fontface = "bold", size = 4)
+combined <- inventory_panel / (
+  (plots$paired_soil_sharing + labs(tag = "C")) |
+  (plots$taxonomic_resolution + labs(tag = "D")))
+ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), combined,
+  width = composite_width, height = composite_height, bg = "white")
 if (interactive()) {
-  print(plots$read_percent)
+  print(combined)
 }
 
-# 5. Verify that the community inputs were not changed ---------------------------
+# 6. Verify that the community inputs were not changed ---------------------------
 checks$final_md5 <- unname(tools::md5sum(input_paths))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))
