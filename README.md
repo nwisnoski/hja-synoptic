@@ -24,6 +24,17 @@ balanced-sampling sensitivity; 05–06 read completed molecular/network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
 
+[Supporting script 12](analysis/supporting/12_sediment_icamp_figures.R) maps the
+completed sediment iCAMP assignments and compares headwater, intermediate, and
+mainstem turnover. Start with the [network composition](figures/supplement/2016_sediment_icamp_network_composition.pdf)
+and [catchment maps](figures/supplement/2016_sediment_icamp_catchment_maps.pdf);
+the [balanced comparison](figures/supplement/2016_sediment_icamp_network_comparison.pdf)
+shows sampling sensitivity. It reads saved results without rerunning iCAMP.
+The [all-pair distributions](figures/supplement/2016_sediment_icamp_all_within_pairs.pdf)
+show every within-position sample pair, including same-segment pairs, with
+equal weight; their [composition view](figures/supplement/2016_sediment_icamp_all_within_pair_composition.pdf)
+shows arithmetic means.
+
 ## Where things belong
 
 - `analysis/preparation/`: sample mapping, completed sequence processing,
@@ -57,8 +68,9 @@ tables rather than duplicated reports.
 
 ## Cluster work
 
-Sediment iCAMP job **432228** was submitted October 10, 2026; its current state
-has not been checked. Its deployed script remains at
+Sediment iCAMP job **432228** completed October 11, 2026, with exit code `0:0`.
+Its small results are saved in `results/icamp_2016/sediment_castor/`; the
+phylogenetic distance cache remains on the cluster. Its deployed script remains at
 `analysis/microbes/06_icamp_sediment.R`, with launcher
 `analysis/cluster/run_icamp_sediment.sh`. These are intentionally unchanged.
 The completed four-habitat catchment run is historical and includes excluded

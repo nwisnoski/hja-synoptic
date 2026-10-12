@@ -105,3 +105,46 @@ groups rather than uniformly stable blocks. The mapped group has 38 ASVs and
 eight molecular features. Its apparent upper Lookout/Mack concentration is an
 exploratory map-based hypothesis; no selection-adjusted branch test establishes
 localization, direct interaction, production, consumption, or a metabolic guild.
+
+## Supplementary sediment iCAMP maps and network comparisons
+
+Supporting script 12 summarizes the completed sediment-only iCAMP run
+(34 fixed-10K samples, 1,000 null randomizations). The 561 sample-pair assignments
+are relative process importance under the [iCAMP framework](https://doi.org/10.1038/s41467-020-18560-z).
+The residual category includes drift and other processes; these assignments
+are not measured local rates or evidence of transport direction.
+
+Each mapped site averages its comparisons with sites in other stream segments,
+first within each partner segment and then equally across the 26 partner
+segments. Same-segment partners are excluded. Map color scales differ among
+processes to show spatial variation; their legends give percentages. The
+network-position map identifies orders 1-2, 3-4, and 5. These are relational
+site summaries, not process estimates for the land area draining to each site.
+
+Network comparisons exclude same-segment pairs and first average sample pairs
+within each distinct, unordered segment pair. Segment pairs then receive equal
+weight within each of six within-position or between-position comparisons.
+Composition bars show the three within-position means on a common percentage
+scale. In 1,000 balanced draws, each position contributes five randomly selected
+segments and one randomly selected site per segment; all processes and pair
+types use the same selection. Points and ranges show draw medians and middle
+95% ranges; hollow diamonds show full-data segment-pair means. Panel y-axis
+ranges differ. All five mainstem sites enter every draw, so their draw range is
+zero. These ranges describe sampling sensitivity, not confidence intervals.
+Selections and draw-level contrasts are retained in
+`results/icamp_2016/sediment_castor/network_figures/`.
+
+Segment weighting and balanced selection address unequal representation and
+repeated sampling within segments. They do not model flow connectivity,
+shared upstream drainage, or spatial dependence among branches. Pairwise rows
+share samples, and network position is confounded with geography; no independent
+pairwise tests or causal network-position claims are made.
+
+The all-within-position figures additionally show every headwater-headwater,
+intermediate-intermediate, and mainstem-mainstem sample pair with equal weight
+(171, 45, and 10 pairs). Same-segment pairs are included and marked with crosses;
+white diamonds show arithmetic means. Boxes show medians and interquartile
+ranges with standard 1.5-IQR whiskers; every pair is plotted, including values
+beyond the whiskers. The stacked figure shows the same arithmetic means.
+Panel y-axis ranges differ. Pair counts are not independent sample sizes, and
+these figures carry no significance tests or confidence intervals.
