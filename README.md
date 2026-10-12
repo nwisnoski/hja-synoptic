@@ -76,6 +76,15 @@ phylogenetic distance cache remains on the cluster. Its deployed script remains 
 The completed four-habitat catchment run is historical and includes excluded
 libraries. It does not represent the reviewed cohort.
 
+[Supporting script 13](analysis/supporting/13_reviewed_pool_icamp.R) defines a
+fresh iCAMP sensitivity using the reviewed soil, porewater, and sediment pool.
+It is built but has not been run. The [cluster launcher](analysis/cluster/run_icamp_reviewed_pool.sh)
+requests 16 CPUs, 192 GB, and a seven-day walltime limit; runtime is unknown.
+Results will go in `results/icamp_2016/reviewed_pool_castor/`. The same script
+will make separate sediment and porewater maps, network-position comparisons,
+and all-within-position pair distributions, plus an 18-shared-site comparison.
+Reopening a completed run reads its saved result and regenerates the figures.
+
 Do not submit, check, transfer, or change remote work without explicit approval
 of that action. Obtain approval of exact paths and message before committing;
 pushes require separate authorization.

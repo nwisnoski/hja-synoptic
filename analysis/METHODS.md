@@ -148,3 +148,31 @@ ranges with standard 1.5-IQR whiskers; every pair is plotted, including values
 beyond the whiskers. The stacked figure shows the same arithmetic means.
 Panel y-axis ranges differ. Pair counts are not independent sample sizes, and
 these figures carry no significance tests or confidence intervals.
+
+## Reviewed-cohort regional-pool iCAMP sensitivity
+
+Supporting script 13 defines a fresh pooled analysis of the reviewed 76-sample,
+33,974-ASV cohort: soil, hyporheic porewater, and sediment. It preserves the
+original fixed-10K counts and uses 1,000 randomizations (seed 2016), midpoint
+rooting after pruning, bMPD/Confidence, within-bin phylogenetic randomization,
+across-all taxonomic randomization, minimum bin size 24, and ds = 0.2. It
+requires iCAMP 1.9.1 and a distinct, validated distance cache. This analysis
+has been prepared but not executed; it does not replace the sediment-only run.
+
+The regional abundance weights are mean relative abundances across all 76
+samples, following the iCAMP default; habitats receive weights proportional
+to their sample counts. Adding soils and porewater changes the ASV pool, bins,
+and null reference. This is a sensitivity to the regional-pool definition,
+not source attribution or a test of directional soil-to-stream dispersal.
+All soils remain in the regional pool, including unresolved identity/GPS flags.
+
+Figures use only sediment-sediment or porewater-porewater assignments from
+the fresh pooled run. Within each habitat, maps, segment-pair means, five-segment
+balanced draws, and all-within-position pair distributions follow script 12.
+Map color scales vary by process and habitat; compare numerical legends rather
+than color alone. Sediment and porewater have different spatial coverage. A
+separate sensitivity retains their 18 shared sites (11 headwater, three
+intermediate, four mainstem) and compares the same unordered within-position
+site pairs in both habitats, with pair-level porewater-minus-sediment contrasts
+retained. Lines connect descriptive group means; no significance tests or
+confidence intervals are attached. The shared-site intermediate group is sparse.
