@@ -1,0 +1,5 @@
+input,md5
+data/derived/soil_porewater_sediment_2016/asv_counts_10k.csv,1b44e4767c23c176a5dfad351b3b8939
+data/derived/soil_porewater_sediment_2016/sample_metadata.csv,161194c54e297b8b40e503c878f8a92b
+data/derived/microbial_diversity_2016/asv_metadata_screened.csv,7fc8eb797b749ee90fd4bab5816f68f6
+results/phylogeny_2016/asv_tree_screened_fasttree.nwk,e29b5c119cf476c07529eab3c6c50aa4
