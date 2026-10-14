@@ -54,14 +54,19 @@ The numbered scripts in `analysis/supporting/` have this dependency order:
   `soil_drainage_routing.py` reproduces optional drainage membership; its
   requirements are in `analysis/supporting/soil_routing_requirements.txt` and terrain
   provenance is [documented with the inputs](../../data/spatial/soil_routing/README.md).
-- 12 plots the completed sediment-only iCAMP sensitivity; 13 contains the
-  completed reviewed-pool inference and plots. Saved results are reused when
-  present. See the [figure guide](../../figures/supplement/icamp/README.md).
+- `icamp/` groups the reviewed-pool analysis and sediment-only sensitivity.
+  See the [figure guide](../../figures/supplement/icamp/README.md).
+
+| Script in `analysis/supporting/icamp/` | Role |
+| --- | --- |
+| [01_reviewed_pool.R](../supporting/icamp/01_reviewed_pool.R) | Primary exploratory view: validates and reuses the completed reviewed-pool result, then plots; can start inference if the result is absent. |
+| [02_sediment_sensitivity.R](../supporting/icamp/02_sediment_sensitivity.R) | Sediment-only inference; retained byte-for-byte from the completed deployment and stops if its completed result exists. |
+| [03_sediment_sensitivity_figures.R](../supporting/icamp/03_sediment_sensitivity_figures.R) | Maps and comparisons from completed sediment-only assignments; does not rerun inference. |
 
 Reuse completed results when plotting. Network inference and sequence processing
 are substantial computations. `analysis/cluster/` contains batch launchers;
-all remote actions require explicit approval. Sediment iCAMP remains at its
-deployed path `analysis/microbes/06_icamp_sediment.R`; settings are in that script.
+all remote actions require explicit approval. The local iCAMP launchers use the
+paths above; script moves do not synchronize the remote checkout.
 A distance-cache descriptor is reusable only with matching input hashes, tip
 order, a completion record, and numerical validation. Resume checkpoints only
 within the same run with unchanged inputs, settings, and package version.

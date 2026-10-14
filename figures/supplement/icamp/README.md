@@ -10,6 +10,10 @@ figures are in `reviewed_pool/`:
 
 The [shared-site habitat comparison](reviewed_pool/2016_reviewed_pool_icamp_matched_habitats.pdf)
 uses the same 18 sites and unordered site pairs in both habitats.
+Its dispersal-limitation and homogeneous-selection means also supply Figure 2
+C–D via [03_first_detection.R](../../../analysis/03_first_detection.R).
+Those main-figure panels share a 0–60% scale and have individual exports in
+`../first_detection/`.
 
 `sediment_sensitivity/` holds the sediment-only
 [composition](sediment_sensitivity/2016_sediment_icamp_network_composition.pdf)
@@ -25,8 +29,9 @@ same-segment pairs; overview composition weights distinct segment pairs equally
 and excludes same-segment pairs. These views answer different descriptive
 questions and do not provide independent pairwise tests.
 
-Producers: [supporting 13](../../../analysis/supporting/13_reviewed_pool_icamp.R)
-for the reviewed pool and [supporting 12](../../../analysis/supporting/12_sediment_icamp_figures.R)
-for the sediment-only sensitivity. Neither needs fresh inference with completed
+Producers: [reviewed-pool analysis](../../../analysis/supporting/icamp/01_reviewed_pool.R)
+and [sediment-only figures](../../../analysis/supporting/icamp/03_sediment_sensitivity_figures.R).
+The [sediment inference script](../../../analysis/supporting/icamp/02_sediment_sensitivity.R)
+preserves the completed deployment. Plotting needs no fresh inference with completed
 results present. See [Methods](../../../analysis/METHODS.md) for interpretation
 and [saved runs](../../../results/icamp_2016/README.md) for provenance.

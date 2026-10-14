@@ -81,9 +81,12 @@ expected runtime or state that it is unknown. Prefer `sbatch` for substantial
 work; cap arrays at five concurrent tasks. Inspect local/remote status before
 approved synchronization, preserve unrelated files, and never use destructive sync.
 
-Sediment job **432228** was submitted October 10, 2026; its current state has
-not been checked. Keep `analysis/microbes/06_icamp_sediment.R` and
-`analysis/cluster/run_icamp_sediment.sh` unchanged while that deployment stands.
+Sediment job **432228** has completed results in the local checkout; its saved
+environment record ends October 11, 2026. iCAMP scripts are now grouped under
+`analysis/supporting/icamp/`: `01_reviewed_pool.R`, `02_sediment_sensitivity.R`,
+and `03_sediment_sensitivity_figures.R`. Their contents were preserved during
+relocation; local launchers use the new paths. The remote checkout was not
+checked or synchronized during this cleanup. Never edit a script while it is running.
 Resources: normal, 16 CPUs, 192 GB, 96 hours; runtime unknown. Logs:
 `logs/hja2016_icamp_sediment-432228.out` and `.err`; results:
 `results/icamp_2016/sediment_castor/`. Create `logs/` before future submissions.

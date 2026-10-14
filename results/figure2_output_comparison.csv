@@ -1,0 +1,21 @@
+file,status,rows_before,rows_after,max_numeric_difference
+results/diversity_2016/first_detection_flowpaths/asv_first_detection_assignments.csv,equivalent,33974,33974,0
+results/diversity_2016/first_detection_flowpaths/balanced_inventory_draws.csv,equivalent,24000,24000,0
+results/diversity_2016/first_detection_flowpaths/balanced_inventory_summary.csv,equivalent,24,24,0
+results/diversity_2016/first_detection_flowpaths/balanced_sample_selections.csv,equivalent,21000,21000,0
+results/diversity_2016/first_detection_flowpaths/full_inventory_network_summary.csv,equivalent,24,24,0
+results/diversity_2016/first_detection_flowpaths/input_checksums.csv,existing hashes retained; six completed iCAMP inputs added,6,12,0
+results/diversity_2016/first_detection_flowpaths/inventory_diagnostics.csv,non-timing fields equivalent; prior runtime record retained,1001,1001,0
+results/diversity_2016/first_detection_flowpaths/sample_first_detection_profiles.csv,equivalent,244,244,0
+results/diversity_2016/first_detection_flowpaths/sample_first_stage_profiles.csv,equivalent,244,244,0
+results/diversity_2016/first_detection_flowpaths/taxonomic_rank_coverage.csv,equivalent,216,216,0
+results/diversity_2016/first_detection_flowpaths/taxonomic_rank_sample_comparisons.csv,equivalent,216,216,0
+results/diversity_2016/first_detection_flowpaths/taxonomic_rank_tests.csv,equivalent,24,24,0
+figures/supplement/first_detection/2016_first_detection_read_percent.pdf,render-identical; original PDF retained,1,1,0
+figures/supplement/first_detection/2016_first_detection_richness_percent.pdf,render-identical; original PDF retained,1,1,0
+figures/supplement/first_detection/2016_paired_soil_sharing.pdf,render-identical; original PDF retained,1,1,0
+figures/supplement/first_detection/2016_taxonomic_resolution.pdf,render-identical; original PDF retained,1,1,0
+figures/supplement/first_detection/2016_taxonomic_resolution_sensitivity.pdf,render-identical; original PDF retained,1,1,0
+figures/manuscript/2016_first_detection_flowpaths.pdf,visually checked; pairwise points and unchanged means verified,4,4,0
+figures/supplement/first_detection/2016_first_detection_icamp_dispersal_limitation.pdf,visually checked; pairwise points and unchanged means verified,6,128,0
+figures/supplement/first_detection/2016_first_detection_icamp_homogeneous_selection.pdf,visually checked; pairwise points and unchanged means verified,6,128,0

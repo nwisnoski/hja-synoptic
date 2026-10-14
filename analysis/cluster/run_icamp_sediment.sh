@@ -24,7 +24,7 @@ cd "${HJA_PROJECT_ROOT}"
 mkdir -p logs "${HJA_OUTPUT_DIR}"
 
 required_inputs=(
-  "analysis/microbes/06_icamp_sediment.R"
+  "analysis/supporting/icamp/02_sediment_sensitivity.R"
   "data/derived/microbial_diversity_2016/asv_counts_10k.csv"
   "data/derived/microbial_diversity_2016/asv_metadata_screened.csv"
   "data/derived/microbial_diversity_2016/sample_metadata.csv"
@@ -61,7 +61,7 @@ if (length(missing)) stop("Missing R packages: ", paste(missing, collapse = ", "
 } > "${HJA_OUTPUT_DIR}/cluster_environment.txt" 2>&1
 
 echo "[$(date --iso-8601=seconds)] Starting sediment iCAMP analysis."
-Rscript --vanilla analysis/microbes/06_icamp_sediment.R
+Rscript --vanilla analysis/supporting/icamp/02_sediment_sensitivity.R
 echo "end_time=$(date --iso-8601=seconds)" \
   >> "${HJA_OUTPUT_DIR}/cluster_environment.txt"
 echo "[$(date --iso-8601=seconds)] Sediment iCAMP analysis complete."

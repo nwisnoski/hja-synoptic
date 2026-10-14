@@ -26,7 +26,7 @@ cd "${HJA_PROJECT_ROOT}"
 mkdir -p logs "${HJA_OUTPUT_DIR}"
 
 required_inputs=(
-  "analysis/supporting/13_reviewed_pool_icamp.R"
+  "analysis/supporting/icamp/01_reviewed_pool.R"
   "data/derived/soil_porewater_sediment_2016/asv_counts_10k.csv"
   "data/derived/microbial_diversity_2016/asv_metadata_screened.csv"
   "data/derived/soil_porewater_sediment_2016/sample_metadata.csv"
@@ -66,7 +66,7 @@ stopifnot(as.character(packageVersion("iCAMP")) == "1.9.1")
 } > "logs/hja2016_icamp_reviewed_pool-${SLURM_JOB_ID}.environment.txt" 2>&1
 
 echo "[$(date --iso-8601=seconds)] Starting reviewed-pool iCAMP analysis."
-Rscript --vanilla analysis/supporting/13_reviewed_pool_icamp.R
+Rscript --vanilla analysis/supporting/icamp/01_reviewed_pool.R
 echo "end_time=$(date --iso-8601=seconds)" \
   >> "logs/hja2016_icamp_reviewed_pool-${SLURM_JOB_ID}.environment.txt"
 echo "[$(date --iso-8601=seconds)] Reviewed-pool iCAMP analysis complete."

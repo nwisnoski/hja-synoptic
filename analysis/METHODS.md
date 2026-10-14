@@ -57,7 +57,7 @@ Script 02 also retains porewater environmental Mantel checks, which exchange
 whole site labels and use separate eight-test BH families for unrestricted and
 within-order permutations.
 
-## Figure 2: first detection and paired habitat comparisons
+## Figure 2: first detection and matched-habitat iCAMP contrasts
 
 A single read establishes detection. Soil detections have precedence; remaining
 ASVs are assigned at the first surveyed stream-order group containing them:
@@ -72,17 +72,35 @@ This inventory does not establish contributing drainage, transport direction,
 source proportions, viability, or recruitment. It adapts the inventory framework
 of [Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499).
 
-Panel C connects soil-sharing percentages for sediment and porewater at each
-of the 18 paired sites. Sharing is the percentage of reads belonging to ASVs
+Panels C–D show inferred dispersal limitation and homogeneous selection,
+respectively, from the completed reviewed soil–porewater–sediment iCAMP pool.
+Both habitats use the same 18 sites: 11 headwater, three intermediate, and four
+mainstem. Small translucent points show all unordered within-position site
+pairs in each habitat (55, three, and six pairs), including same-segment pairs.
+Each site pair receives the same horizontal jitter in both habitats and both
+process panels; there is no vertical jitter. Large opaque points and connecting
+lines show arithmetic means. Both panels use the same
+0–60% scale; no significance tests or confidence intervals are attached.
+Pairwise rows share sites, and the intermediate group is sparse. These
+assignments depend on the null model and regional-pool definition; they do not
+measure dispersal or selection rates or establish soil-to-stream transport.
+The first-detection inventory and iCAMP panels use different summaries and
+sample coverage; their juxtaposition does not establish a causal link.
+The full process composition, balancing sensitivities, and sediment-only run
+remain supplementary; the iCAMP methods are given below.
+
+The supplementary paired soil-sharing plot connects percentages for sediment
+and porewater at each of the 18 paired sites. Sharing is the percentage of reads belonging to ASVs
 detected in any of the 15 soils. Its two-sided test exchanges habitat labels
-within sites and tests the mean paired difference. This panel tests the habitat
+within sites and tests the mean paired difference. This plot tests the habitat
 contrast underlying the soil component of panels A–B; it is not independent
 corroboration of that inventory. Script 02 retains 1,000 three-soil draws with
 receiving communities fixed, plus drainage regressions on stream-segment means
 with a four-test BH correction; fitted lines require adjusted P <= 0.05.
 
-Panel D shows individual same-site Hellinger distances as thin gray lines and
-their mean as a single black line, from ASV through genus, family, order, class,
+The supplementary taxonomic-resolution plot shows individual same-site
+Hellinger distances as thin gray lines and their mean as a single black line,
+from ASV through genus, family, order, class,
 and phylum across the 18 pairs.
 The mean curve for comparisons to the other 17 sediments nearly overlaps the
 same-site curve at every rank and is omitted for clarity;
@@ -151,7 +169,8 @@ localization, direct interaction, production, consumption, or a metabolic guild.
 
 ## Supplementary sediment iCAMP maps and network comparisons
 
-Supporting script 12 summarizes the completed sediment-only iCAMP sensitivity
+`analysis/supporting/icamp/03_sediment_sensitivity_figures.R` summarizes the
+completed sediment-only iCAMP sensitivity
 (34 fixed-10K samples, 1,000 null randomizations). The 561 sample-pair assignments
 are relative process importance under the [iCAMP framework](https://doi.org/10.1038/s41467-020-18560-z).
 The residual category includes drift and other processes; these assignments
@@ -194,7 +213,8 @@ these figures carry no significance tests or confidence intervals.
 
 ## Reviewed-cohort regional-pool iCAMP sensitivity
 
-Supporting script 13 contains the completed pooled analysis of the reviewed 76-sample,
+`analysis/supporting/icamp/01_reviewed_pool.R` contains the completed pooled
+analysis of the reviewed 76-sample,
 33,974-ASV cohort: soil, hyporheic porewater, and sediment. It preserves the
 original fixed-10K counts and uses 1,000 randomizations (seed 2016), midpoint
 rooting after pruning, bMPD/Confidence, within-bin phylogenetic randomization,
@@ -212,7 +232,8 @@ All soils remain in the regional pool, including unresolved identity/GPS flags.
 
 Figures use only sediment-sediment or porewater-porewater assignments from
 the completed pooled run. Within each habitat, maps, segment-pair means, five-segment
-balanced draws, and all-within-position pair distributions follow script 12.
+balanced draws, and all-within-position pair distributions follow the
+sediment-only figure script.
 Map color scales vary by process and habitat; compare numerical legends rather
 than color alone. Sediment and porewater have different spatial coverage. A
 separate sensitivity retains their 18 shared sites (11 headwater, three
