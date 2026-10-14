@@ -10,7 +10,7 @@ library(permute)
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "sediment_characteristics")
 derived_dir <- here("data", "derived", "sediment_characteristics_2016")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "sediment_conditions")
 n_permutations <- 9999
 permutation_seed <- 20261010
 enzyme_axes <- 2

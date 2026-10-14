@@ -15,7 +15,7 @@ expected_asvs <- 38L
 expected_asv_patterns <- 37L
 expected_molecules <- 8L
 results_dir <- here("results", "fticr_2016", "stable_group_distribution")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "networks")
 network_dir <- here("results", "fticr_2016", "bipartite_networks")
 figure_prefix <- "2016_sediment_stable_group"
 plot_theme <- theme_bw(base_size = 11) +

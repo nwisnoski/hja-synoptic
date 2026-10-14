@@ -9,7 +9,7 @@ library(vegan)
 # 1. Settings and plotting theme ------------------------------------------------
 data_dir <- here("data", "derived", "microbial_diversity_2016")
 results_dir <- here("results", "diversity_2016", "tables")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "sediment_diversity")
 target_depth <- 10000
 figure_width <- 6
 figure_height <- 4.8

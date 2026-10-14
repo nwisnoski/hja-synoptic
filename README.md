@@ -25,20 +25,18 @@ They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
 Microbial abundance comparisons use Hellinger distance. Script 03 compares
 same-site resemblance across taxonomic ranks and audits classification coverage.
-The [sampling map](figures/supplement/2016_soil_porewater_sediment_sampling_map.pdf),
+The [sampling map](figures/supplement/habitat_diversity/2016_soil_porewater_sediment_sampling_map.pdf),
 individual panels, the fixed genus-classified sensitivity, additional same-site
-metrics, and the full 44-site molecular class figure remain in `figures/supplement/`.
+metrics, and the full 44-site molecular class figure are grouped by analysis in
+[figures/supplement](figures/supplement/README.md).
 
-[Supporting script 12](analysis/supporting/12_sediment_icamp_figures.R) maps the
-completed sediment iCAMP assignments and compares headwater, intermediate, and
-mainstem turnover. Start with the [network composition](figures/supplement/2016_sediment_icamp_network_composition.pdf)
-and [catchment maps](figures/supplement/2016_sediment_icamp_catchment_maps.pdf);
-the [balanced comparison](figures/supplement/2016_sediment_icamp_network_comparison.pdf)
-shows sampling sensitivity. It reads saved results without rerunning iCAMP.
-The [all-pair distributions](figures/supplement/2016_sediment_icamp_all_within_pairs.pdf)
-show every within-position sample pair, including same-segment pairs, with
-equal weight; their [composition view](figures/supplement/2016_sediment_icamp_all_within_pair_composition.pdf)
-shows arithmetic means.
+For exploratory iCAMP results, start with the five overview figures in
+[reviewed_pool](figures/supplement/icamp/README.md), produced by
+[supporting script 13](analysis/supporting/13_reviewed_pool_icamp.R): sediment
+and porewater composition, their maps, and the shared-site habitat comparison.
+The sediment-only run is retained as a regional-pool sensitivity in
+`figures/supplement/icamp/sediment_sensitivity/`. Each run has separate
+`panels/` and `diagnostics/` folders. Completed assignments are reused for plotting.
 
 ## Where things belong
 
@@ -48,15 +46,16 @@ shows arithmetic means.
 - `analysis/supporting/`: numbered molecular, chemistry, network, and sediment
   analyses. These supply the main workflow and additional figures.
 - `figures/manuscript/`: the four selected figures. `figures/supplement/`:
-  individual panels, diagnostics, and supporting analyses.
+  panels and supporting analyses in named subfolders; its guide lists entry points.
 - `data/`: original inputs; `data/derived/`: constructed inputs.
   `results/`: analysis tables, saved selections, checksums, and checkpoints.
 - `archive/`: legacy files and their recovery manifest. Older workflows and
   removed duplicate figures are also recoverable from Git history.
 
-Results retain current analyses and their required inputs. Retired workflows
-and redundant plot-data, settings, and summary exports have been removed;
-their earlier versions remain in Git history.
+Results retain completed analyses and their required inputs. Retired code and
+figures are recoverable from Git history; [cleanup manifests](archive/README.md)
+record moved and removed paths. Raw inputs, sequence outputs, and inference
+checkpoints are preserved.
 
 ## Sample set and interpretation
 
@@ -81,14 +80,14 @@ phylogenetic distance cache remains on the cluster. Its deployed script remains 
 The completed four-habitat catchment run is historical and includes excluded
 libraries. It does not represent the reviewed cohort.
 
-[Supporting script 13](analysis/supporting/13_reviewed_pool_icamp.R) defines a
-fresh iCAMP sensitivity using the reviewed soil, porewater, and sediment pool.
-It is built but has not been run. The [cluster launcher](analysis/cluster/run_icamp_reviewed_pool.sh)
-requests 16 CPUs, 192 GB, and a seven-day walltime limit; runtime is unknown.
-Results will go in `results/icamp_2016/reviewed_pool_castor/`. The same script
-will make separate sediment and porewater maps, network-position comparisons,
-and all-within-position pair distributions, plus an 18-shared-site comparison.
-Reopening a completed run reads its saved result and regenerates the figures.
+The reviewed soil–porewater–sediment iCAMP run is also complete; its result,
+input hashes, and run manifest are in `results/icamp_2016/reviewed_pool_castor/`.
+[The iCAMP result guide](results/icamp_2016/README.md) distinguishes this run,
+the sediment-only sensitivity, and the historical four-habitat run.
+Supporting script 13 validates the saved run identity before regenerating plots.
+If its completed result is absent, it can start expensive inference; the
+[cluster launcher](analysis/cluster/run_icamp_reviewed_pool.sh) requests 16 CPUs,
+192 GB, and a seven-day walltime limit. Future-run runtime is unknown.
 
 Do not submit, check, transfer, or change remote work without explicit approval
 of that action. Obtain approval of exact paths and message before committing;

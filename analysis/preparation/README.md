@@ -48,12 +48,15 @@ The numbered scripts in `analysis/supporting/` have this dependency order:
 - 03–04 add water optics and integrated chemistry; 05 examines full-site
   molecular dispersion and supplies the network-position audit.
 - 06–09 prepare, fit, assess stability, and describe the bipartite network.
-  They supply main figure 6. `check_bipartite_networks.R` checks the methods;
+  They supply main figure 4. `check_bipartite_networks.R` checks the methods;
   `bipartite_helpers.R` is shared by inference and its checks.
 - 10–11 analyze sediment conditions and microbial diversity.
   `soil_drainage_routing.py` reproduces optional drainage membership; its
   requirements are in `analysis/supporting/soil_routing_requirements.txt` and terrain
   provenance is [documented with the inputs](../../data/spatial/soil_routing/README.md).
+- 12 plots the completed sediment-only iCAMP sensitivity; 13 contains the
+  completed reviewed-pool inference and plots. Saved results are reused when
+  present. See the [figure guide](../../figures/supplement/icamp/README.md).
 
 Reuse completed results when plotting. Network inference and sequence processing
 are substantial computations. `analysis/cluster/` contains batch launchers;
@@ -63,4 +66,4 @@ A distance-cache descriptor is reusable only with matching input hashes, tip
 order, a completion record, and numerical validation. Resume checkpoints only
 within the same run with unchanged inputs, settings, and package version.
 The completed original catchment run used all four habitats and is historical;
-a reviewed three-habitat run has not been performed.
+the completed reviewed three-habitat run is the primary exploratory iCAMP view.

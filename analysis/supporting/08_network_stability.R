@@ -10,7 +10,7 @@ library(ggplot2)
 test_run <- FALSE
 minimum_support <- 0.8
 minimum_nodes_per_type <- 3L
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "networks")
 figure_prefix <- "2016_sediment_bipartite"
 display_group_rank <- 1L
 node_colors <- c(Acidobacteriota = "#009E73", Pseudomonadota = "#0072B2",

@@ -43,7 +43,7 @@ category_colors <- c("Soil" = "#D55E00", "Sediment" = "#009E73",
   "Hyporheic" = "#0072B2", "Sediment + Hyporheic" = "#CC79A7")
 results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
 manuscript_dir <- here("figures", "manuscript")
-supplement_dir <- here("figures", "supplement")
+supplement_dir <- here("figures", "supplement", "first_detection")
 habitat_results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
 plot_theme <- theme_bw(base_size = 11) +
   theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),

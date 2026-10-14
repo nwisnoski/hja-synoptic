@@ -11,7 +11,7 @@ library(patchwork)
 # 1. Settings and plotting theme -----------------------------------------------
 data_dir <- here("data", "derived", "soil_porewater_sediment_2016")
 results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "habitat_diversity")
 manuscript_dir <- here("figures", "manuscript")
 figure_prefix <- "2016_soil_porewater_sediment_"
 target_depth <- 10000L
@@ -434,11 +434,6 @@ plots$same_site_read_sharing <- ggplot(read_data, aes(comparison, read_percent, 
   geom_line(color = "gray70") + geom_point(size = point_size, alpha = point_alpha, color = "#0072B2") +
   scale_x_discrete(labels = c(same_site = "Same site", other_site_mean = "Other sites\n(mean)")) +
   labs(x = NULL, y = "Porewater reads detected in sediment (%)") + plot_theme
-plots$habitat_context <- (plots$hellinger_pca | plots$diversity_q1) + plot_layout(widths = c(1.4, 1)) +
-  plot_annotation(tag_levels = "A")
-plots$soil_sharing <- (plots$soil_read_percent / plots$soil_asv_percent) + plot_annotation(tag_levels = "A")
-plots$same_site_comparison <- (plots$same_site_distances / plots$same_site_read_sharing) +
-  plot_annotation(tag_levels = "A")
 figure_design <- tibble::tribble(
   ~panel, ~width, ~height,
   "sampling_map", 9, 9,
@@ -449,10 +444,7 @@ figure_design <- tibble::tribble(
   "soil_read_percent", 9, 4.5,
   "soil_asv_percent", 9, 4.5,
   "same_site_distances", 10, 4.5,
-  "same_site_read_sharing", 5.5, 4.5,
-  "habitat_context", 12, 5.5,
-  "soil_sharing", 9, 8,
-  "same_site_comparison", 10, 8
+  "same_site_read_sharing", 5.5, 4.5
 )
 for (i in seq_len(nrow(figure_design))) {
   ggsave(file.path(figures_dir, paste0(figure_prefix, figure_design$panel[i], ".pdf")),

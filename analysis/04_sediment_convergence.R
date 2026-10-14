@@ -11,7 +11,7 @@ library(patchwork)
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
 class_results_dir <- here("results", "fticr_2016", "river_composition")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "sediment_comparison")
 manuscript_dir <- here("figures", "manuscript")
 target_depth <- 10000
 target_features <- 391
@@ -77,7 +77,7 @@ input_paths <- c(
   here("results", "fticr_2016", "river_composition", "subsampling_summary.csv"))
 preserved_paths <- c(input_paths,
   list.files(here("results", "fticr_2016", "network_dispersion"), full.names = TRUE),
-  here("figures", "supplement", "2016_fticr_dispersion_equal_features.pdf"))
+  here("figures", "supplement", "molecular", "2016_fticr_dispersion_equal_features.pdf"))
 preserved_paths <- unique(preserved_paths[file.exists(preserved_paths)])
 checks <- tibble(path = preserved_paths, initial_md5 = unname(tools::md5sum(preserved_paths)))
 metadata <- read_csv(input_paths[1], col_types = cols(site_code = col_character())) %>%
@@ -295,7 +295,7 @@ class_input_paths <- c(
   here("results", "fticr_2016", "network_dispersion", "site_network_position_audit.csv"),
   here("data", "derived", "fticr_2016", "sediment_44_presence_absence.csv"),
   here("results", "fticr_2016", "tables", "primary_peak_properties.csv"),
-  file.path(figures_dir, "2016_fticr_site_class_composition.pdf")
+  here("figures", "supplement", "molecular", "2016_fticr_site_class_composition.pdf")
 )
 class_input_hashes <- unname(tools::md5sum(class_input_paths))
 stopifnot(!anyNA(class_input_hashes))

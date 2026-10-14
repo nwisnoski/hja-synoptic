@@ -11,7 +11,7 @@ library(permute)
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "integrated_chemistry")
 derived_dir <- here("data", "derived", "fticr_2016")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "chemistry")
 n_permutations <- 9999
 permutation_seed <- 20261006
 retained_axes <- 2

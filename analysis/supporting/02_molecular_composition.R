@@ -11,7 +11,7 @@ library(adespatial)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "river_composition")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "molecular")
 n_permutations <- 9999
 n_subsamples <- 1000
 subsample_seed <- 20261003

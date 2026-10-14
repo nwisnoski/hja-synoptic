@@ -24,7 +24,7 @@ quasiswap_thin <- 100L
 minimum_group_nodes <- 3L
 results_dir <- here("results", "fticr_2016", "bipartite_networks")
 figure_prefix <- "2016_sediment_bipartite"
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "networks")
 if (test_run) {
   n_null <- 9L
   results_dir <- here("results", "fticr_2016", "bipartite_network_pilot")

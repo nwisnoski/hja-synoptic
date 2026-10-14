@@ -11,7 +11,7 @@ library(vegan)
 input_dir <- here("data", "derived", "analysis_inputs")
 results_dir <- here("results", "fticr_2016", "tables")
 derived_dir <- here("data", "derived", "fticr_2016")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "molecular")
 presence_threshold <- 0
 pcoa_correction <- "lingoes"
 figure_width <- 6

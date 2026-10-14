@@ -12,7 +12,9 @@ library(patchwork)
 # 1. Settings and plotting theme ------------------------------------------------
 input_dir <- here("results", "icamp_2016", "sediment_castor")
 output_dir <- file.path(input_dir, "network_figures")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "icamp", "sediment_sensitivity")
+panels_dir <- file.path(figures_dir, "panels")
+diagnostics_dir <- file.path(figures_dir, "diagnostics")
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -48,6 +50,8 @@ plot_theme <- theme_bw(base_size = 11) +
 # 2. Check sample identities and completed pairwise assignments ------------------
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(panels_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(diagnostics_dir, recursive = TRUE, showWarnings = FALSE)
 input_paths <- c(
   file.path(input_dir, "pairwise_process_importance.csv"),
   file.path(input_dir, "sediment_samples.csv"),
@@ -259,7 +263,7 @@ for (i in seq_len(nrow(process_design))) {
     facet_wrap(~process, labeller = as_labeller(setNames(process_design$label, process_design$process))) +
     plot_theme
   maps[[i]] <- map
-  ggsave(file.path(figures_dir, paste0("2016_sediment_icamp_map_", process_design$code[i], ".pdf")),
+  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_map_", process_design$code[i], ".pdf")),
     map, width = map_width, height = map_height, bg = "white")
 
   # Each range is the middle 95% of balanced draws, with their median marked.
@@ -288,7 +292,7 @@ for (i in seq_len(nrow(process_design))) {
     facet_wrap(~process, labeller = as_labeller(setNames(process_design$label, process_design$process))) +
     plot_theme + theme(aspect.ratio = 0.8, axis.text.x = element_text(size = 9))
   comparisons[[i]] <- comparison
-  ggsave(file.path(figures_dir, paste0("2016_sediment_icamp_network_", process_design$code[i], ".pdf")),
+  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_network_", process_design$code[i], ".pdf")),
     comparison, width = comparison_width, height = comparison_height, bg = "white")
 }
 # The sixth map identifies the network positions used in the comparisons.
@@ -303,7 +307,7 @@ position_map <- ggplot(map_lines, aes(x, y, group = segment)) +
 ggsave(file.path(figures_dir, "2016_sediment_icamp_catchment_maps.pdf"),
   wrap_plots(c(maps, list(position_map)), ncol = 3),
   width = 15.6, height = 10.4, bg = "white")
-ggsave(file.path(figures_dir, "2016_sediment_icamp_network_comparison.pdf"),
+ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_network_comparison.pdf"),
   wrap_plots(comparisons, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
   width = 15.6, height = 9, bg = "white")
 
@@ -341,7 +345,7 @@ pair_plot <- ggplot(heatmap, aes(group1, group2, fill = 100 * segment_balanced_m
     labeller = as_labeller(setNames(process_design$label, process_design$process))) +
   coord_equal() + labs(x = NULL, y = NULL) + plot_theme +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave(file.path(figures_dir, "2016_sediment_icamp_network_pair_comparison.pdf"),
+ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_network_pair_comparison.pdf"),
   pair_plot, width = 13, height = 8.5, bg = "white")
 
 # 8. Show every within-position sample pair with equal weight ---------------------
@@ -388,11 +392,11 @@ for (i in seq_len(nrow(process_design))) {
       labeller = as_labeller(setNames(process_design$label, process_design$process))) +
     plot_theme + theme(aspect.ratio = 0.8, axis.text.x = element_text(size = 9))
   all_pair_panels[[i]] <- pair_distribution
-  ggsave(file.path(figures_dir, paste0("2016_sediment_icamp_all_within_pairs_",
+  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_all_within_pairs_",
     process_design$code[i], ".pdf")), pair_distribution,
     width = comparison_width, height = comparison_height, bg = "white")
 }
-ggsave(file.path(figures_dir, "2016_sediment_icamp_all_within_pairs.pdf"),
+ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pairs.pdf"),
   wrap_plots(all_pair_panels, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
   width = 15.6, height = 9, bg = "white")
 all_pair_composition <- within_summary %>%
@@ -408,7 +412,7 @@ all_pair_composition_plot <- ggplot(all_pair_composition,
   labs(x = NULL, y = "Mean within-group pairwise importance (%)") + plot_theme +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE)) +
   theme(axis.text.x = element_text(size = 9))
-ggsave(file.path(figures_dir, "2016_sediment_icamp_all_within_pair_composition.pdf"),
+ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pair_composition.pdf"),
   all_pair_composition_plot, width = 7.2, height = 5.5, bg = "white")
 
 # 9. Preserve completed inputs and record the plotting environment ----------------

@@ -12,7 +12,7 @@ core_id <- 2L
 expected_asvs <- 38L
 expected_molecules <- 8L
 results_dir <- here("results", "fticr_2016", "stable_group_distribution")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "networks")
 manuscript_dir <- here("figures", "manuscript")
 figure_file <- "2016_sediment_stable_group_colocation_map.pdf"
 labeled_figure_file <- "2016_sediment_stable_group_colocation_map_labeled.pdf"

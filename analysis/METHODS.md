@@ -151,7 +151,7 @@ localization, direct interaction, production, consumption, or a metabolic guild.
 
 ## Supplementary sediment iCAMP maps and network comparisons
 
-Supporting script 12 summarizes the completed sediment-only iCAMP run
+Supporting script 12 summarizes the completed sediment-only iCAMP sensitivity
 (34 fixed-10K samples, 1,000 null randomizations). The 561 sample-pair assignments
 are relative process importance under the [iCAMP framework](https://doi.org/10.1038/s41467-020-18560-z).
 The residual category includes drift and other processes; these assignments
@@ -194,13 +194,14 @@ these figures carry no significance tests or confidence intervals.
 
 ## Reviewed-cohort regional-pool iCAMP sensitivity
 
-Supporting script 13 defines a fresh pooled analysis of the reviewed 76-sample,
+Supporting script 13 contains the completed pooled analysis of the reviewed 76-sample,
 33,974-ASV cohort: soil, hyporheic porewater, and sediment. It preserves the
 original fixed-10K counts and uses 1,000 randomizations (seed 2016), midpoint
 rooting after pruning, bMPD/Confidence, within-bin phylogenetic randomization,
 across-all taxonomic randomization, minimum bin size 24, and ds = 0.2. It
 requires iCAMP 1.9.1 and a distinct, validated distance cache. This analysis
-has been prepared but not executed; it does not replace the sediment-only run.
+is the primary exploratory iCAMP view; the sediment-only run remains a sensitivity
+to the regional-pool definition. Saved assignments are reused when plotting.
 
 The regional abundance weights are mean relative abundances across all 76
 samples, following the iCAMP default; habitats receive weights proportional
@@ -210,7 +211,7 @@ not source attribution or a test of directional soil-to-stream dispersal.
 All soils remain in the regional pool, including unresolved identity/GPS flags.
 
 Figures use only sediment-sediment or porewater-porewater assignments from
-the fresh pooled run. Within each habitat, maps, segment-pair means, five-segment
+the completed pooled run. Within each habitat, maps, segment-pair means, five-segment
 balanced draws, and all-within-position pair distributions follow script 12.
 Map color scales vary by process and habitat; compare numerical legends rather
 than color alone. Sediment and porewater have different spatial coverage. A

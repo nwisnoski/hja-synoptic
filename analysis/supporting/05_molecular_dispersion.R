@@ -9,7 +9,7 @@ library(permute)
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "network_dispersion")
-figures_dir <- here("figures", "supplement")
+figures_dir <- here("figures", "supplement", "molecular")
 null_seed <- 20261007
 permutation_seed <- 20261008
 resampling_seed <- 20261009
