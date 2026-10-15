@@ -20,8 +20,8 @@ point_alpha <- 0.5
 panel_aspect <- 0.8
 figure_width <- 9
 single_row_height <- 4.8
-composite_width <- 11.5
-composite_height <- 10
+composite_width <- 7.2
+composite_height <- 7.6
 base_seed <- 20261005
 rank_seed <- 20261010L
 rank_permutations <- 9999L
@@ -57,10 +57,14 @@ manuscript_dir <- here("figures", "manuscript")
 supplement_dir <- here("figures", "supplement", "first_detection")
 habitat_results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
 icamp_results_dir <- here("results", "icamp_2016", "reviewed_pool_castor")
-plot_theme <- theme_bw(base_size = 11) +
+plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),
     strip.background = element_blank(), legend.position = "bottom",
-    legend.title = element_text(size = 10), legend.text = element_text(size = 10))
+    axis.text = element_text(size = 11), strip.text = element_text(size = 12),
+    legend.title = element_text(size = 11, face = "bold"),
+    legend.text = element_text(size = 11),
+    legend.key.size = grid::unit(0.5, "cm"),
+    plot.tag = element_text(size = 14, face = "bold"))
 theme_set(plot_theme)
 
 # 2. Align fixed-depth samples and retain every identity in an audit -------------
@@ -404,12 +408,12 @@ for (metric in c("richness_percent", "read_percent")) {
   plots[[metric]] <- ggplot(plot_data, aes(network_group, .data[[metric]], fill = category)) +
     geom_col(width = 0.72, position = position_stack(reverse = TRUE)) +
     geom_text(data = distinct(plot_data, habitat, network_group, samples),
-      aes(network_group, 104, label = paste0("n = ", samples)), inherit.aes = FALSE, size = 3) +
+      aes(network_group, 106, label = paste0("n = ", samples)), inherit.aes = FALSE, size = 3.5) +
     facet_wrap(~habitat, nrow = 1, labeller = as_labeller(habitat_labels)) +
     scale_fill_manual(values = category_colors, labels = category_display_labels,
       drop = FALSE, name = "First detection pool",
       guide = guide_legend(nrow = 1, byrow = TRUE)) +
-    scale_y_continuous(breaks = seq(0, 100, 25), limits = c(0, 108), expand = expansion(mult = c(0, 0))) +
+    scale_y_continuous(breaks = seq(0, 100, 25), limits = c(0, 114), expand = expansion(mult = c(0, 0))) +
     scale_x_discrete(labels = c("Headwater\n(order 1-2)", "Intermediate\n(order 3-4)", "Mainstem\n(order 5)")) +
     labs(x = NULL, y = y_label) + theme(aspect.ratio = panel_aspect)
   ggsave(file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")),
@@ -495,18 +499,26 @@ for (i in seq_len(nrow(icamp_processes))) {
       expand = expansion(mult = c(0.02, 0.04))) +
     facet_wrap(~process, labeller = as_labeller(setNames(icamp_processes$label, icamp_processes$process))) +
     labs(x = NULL, y = "Pairwise importance (%)") + plot_theme +
-    theme(aspect.ratio = panel_aspect, axis.text.x = element_text(size = 9))
+    theme(aspect.ratio = panel_aspect)
   ggsave(file.path(supplement_dir, paste0("2016_first_detection_", icamp_processes$panel[i], ".pdf")),
     plots[[icamp_processes$panel[i]]], width = icamp_panel_width, height = single_row_height, bg = "white")
 }
 inventory_panel <- plots$read_percent +
-  geom_text(data = tibble(habitat = factor(habitats, levels = habitats), tag = LETTERS[1:2]),
-    aes(x = -Inf, y = Inf, label = tag), inherit.aes = FALSE,
-    hjust = -0.5, vjust = 1.3, fontface = "bold", size = 4)
-icamp_panels <- ((plots$icamp_dispersal_limitation + labs(tag = "C")) |
-  (plots$icamp_homogeneous_selection + labs(tag = "D"))) + plot_layout(guides = "collect") &
-  theme(legend.position = "bottom")
-combined <- inventory_panel / icamp_panels
+  guides(fill = guide_legend(ncol = 2, byrow = TRUE, title.position = "top")) +
+  theme(aspect.ratio = NULL, axis.text.x = element_text(size = 10))
+# The faceted inventory is one panel; each iCAMP process is a separate panel.
+icamp_x_labels <- paste0(network_groups, "\n(n = ", icamp_group_sizes$sites, ")")
+icamp_panels <- ((plots$icamp_dispersal_limitation + labs(tag = "B") +
+    scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
+      labels = icamp_x_labels)) |
+  (plots$icamp_homogeneous_selection + labs(tag = "C") +
+    scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
+      labels = icamp_x_labels))) + plot_layout(guides = "collect") &
+  theme(axis.text.x = element_text(size = 10), legend.position = "bottom")
+inventory_panel <- wrap_elements(full = inventory_panel) + labs(tag = "A") +
+  theme(plot.tag = element_text(size = 14, face = "bold"),
+    plot.tag.position = c(0.01, 0.98))
+combined <- (inventory_panel / icamp_panels) + plot_layout(heights = c(1.15, 1))
 ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), combined,
   width = composite_width, height = composite_height, bg = "white")
 if (interactive()) {

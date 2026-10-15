@@ -22,17 +22,19 @@ marker_size_range <- c(2, 8)
 fraction_breaks <- c(0, 0.5, 1)
 fraction_labels <- c("0%", "50%", "100%")
 centerline_stride <- 10L
-figure_width <- 6.8
-figure_height <- 6.6
-plot_theme <- theme_bw(base_size = 11) +
+figure_width <- 7.2
+figure_height <- 4.3
+plot_theme <- theme_bw(base_size = 12) +
   theme(
     panel.grid = element_blank(),
     strip.background = element_blank(),
-    legend.position = "bottom",
-    legend.box = "horizontal",
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 9),
-    plot.margin = margin(8, 18, 8, 8)
+    legend.position = "right",
+    legend.box = "vertical",
+    axis.text = element_text(size = 11),
+    legend.title = element_text(size = 11, face = "bold"),
+    legend.text = element_text(size = 11),
+    legend.key.size = grid::unit(0.5, "cm"),
+    plot.margin = margin(8, 8, 8, 8)
   )
 
 # 2. Check that the completed site profiles still describe the current inputs.
@@ -108,11 +110,11 @@ map_lines <- geometry %>% group_by(segment) %>%
 # A minimum circle size keeps zero-ASV observations visible, including sites
 # with molecular detections but no ASVs. Crosses are missing measurements.
 # This overlay does not create a joint score or a module-presence threshold.
-map <- ggplot(map_lines, aes(x, y, group = segment)) +
+map <- ggplot(map_lines, aes(x / 1000, y / 1000, group = segment)) +
   geom_path(color = "#C0C0C0", linewidth = 0.35) +
   geom_point(
     data = paired,
-    aes(site_utm_x_m, site_utm_y_m,
+    aes(site_utm_x_m / 1000, site_utm_y_m / 1000,
       size = core_asv_fraction, fill = core_molecular_fraction),
     inherit.aes = FALSE,
     shape = 21,
@@ -121,7 +123,7 @@ map <- ggplot(map_lines, aes(x, y, group = segment)) +
   ) +
   geom_point(
     data = unpaired,
-    aes(site_utm_x_m, site_utm_y_m, shape = "One profile\nunavailable"),
+    aes(site_utm_x_m / 1000, site_utm_y_m / 1000, shape = "One profile\nunavailable"),
     inherit.aes = FALSE,
     color = "#777777",
     size = 2.5,
@@ -144,13 +146,14 @@ map <- ggplot(map_lines, aes(x, y, group = segment)) +
   ) +
   scale_shape_manual(values = c("One profile\nunavailable" = 4), name = NULL) +
   guides(
-    size = guide_legend(order = 1, direction = "horizontal", title.position = "top",
+    size = guide_legend(order = 1, direction = "vertical", title.position = "top",
       override.aes = list(fill = "grey75")),
-    fill = guide_colorbar(order = 2, direction = "horizontal", title.position = "top"),
+    fill = guide_colorbar(order = 2, direction = "vertical", title.position = "top",
+      barheight = grid::unit(2, "cm")),
     shape = guide_legend(order = 3)
   ) +
   coord_equal() +
-  labs(x = "UTM easting (m)", y = "UTM northing (m)") +
+  labs(x = "Easting (km, UTM zone 10N)", y = "Northing (km)") +
   plot_theme
 ggsave(file.path(manuscript_dir, figure_file), map,
   width = figure_width, height = figure_height, bg = "white")
@@ -160,7 +163,7 @@ ggsave(file.path(manuscript_dir, figure_file), map,
 labeled_map <- map +
   geom_text_repel(
     data = plot_data,
-    aes(site_utm_x_m, site_utm_y_m, label = site_code),
+    aes(site_utm_x_m / 1000, site_utm_y_m / 1000, label = site_code),
     inherit.aes = FALSE,
     seed = label_seed,
     size = label_size,

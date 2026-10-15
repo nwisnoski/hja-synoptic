@@ -28,8 +28,8 @@ alpha_figure_width <- 5.8
 alpha_figure_height <- 5.2
 ordination_figure_width <- 6.2
 ordination_figure_height <- 5.6
-habitat_figure_width <- 11.5
-habitat_figure_height <- 5.6
+habitat_figure_width <- 7.2
+habitat_figure_height <- 3.8
 habitat_levels <- c("soil", "sediment", "hyporheic")
 habitat_labels <- c(soil = "Soil", sediment = "Sediment", hyporheic = "Porewater")
 habitat_colors <- c(soil = "#D55E00", sediment = "#009E73", hyporheic = "#0072B2")
@@ -37,9 +37,14 @@ habitat_shapes <- c(soil = 17, sediment = 16, hyporheic = 15)
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 diversity_labels <- c(q0 = "ASV richness (q = 0)", q1 = "Hill diversity (q = 1; exp Shannon)",
   q2 = "Hill diversity (q = 2)")
-plot_theme <- theme_bw(base_size = 11) + theme(
+plot_theme <- theme_bw(base_size = 12) + theme(
   panel.grid.minor = element_blank(), panel.grid.major = element_blank(),
-  strip.background = element_blank(), legend.position = "bottom")
+  strip.background = element_blank(), legend.position = "bottom",
+  axis.text = element_text(size = 11), strip.text = element_text(size = 12),
+  legend.title = element_text(size = 11, face = "bold"),
+  legend.text = element_text(size = 11),
+  legend.key.size = grid::unit(0.5, "cm"),
+  plot.tag = element_text(size = 14, face = "bold"))
 habitat_design <- tibble::tribble(
   ~comparison, ~first, ~second, ~seed,
   "All three habitats", NA_character_, NA_character_, base_seed + 1L,
@@ -398,7 +403,8 @@ for (order in c("q0", "q1", "q2")) {
     plot_theme + theme(legend.position = "none")
 }
 # The manuscript uses exponential Shannon diversity; q = 0 and 2 remain supplementary.
-plots$alpha_diversity <- plots$diversity_q1 + theme(aspect.ratio = panel_aspect)
+plots$alpha_diversity <- plots$diversity_q1 +
+  labs(y = "Hill diversity (q = 1)") + theme(aspect.ratio = panel_aspect)
 # Show individual libraries; distribution tests retain the dispersion diagnostic.
 plots$weighted_unifrac <- ggplot(weighted_scores, aes(pcoa1, pcoa2, color = habitat, shape = habitat)) +
   geom_point(size = point_size, alpha = point_alpha) + coord_equal() +

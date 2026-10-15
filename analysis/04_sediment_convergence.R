@@ -1,4 +1,4 @@
-# Figure 3: sediment dispersion and molecular classes on identical sites.
+# Figure 3: molecular classes followed by sediment dispersion on identical sites.
 library(here)
 library(readr)
 library(dplyr)
@@ -26,7 +26,8 @@ point_alpha <- 0.5
 panel_aspect <- 0.8
 panel_width <- 5.8
 figure_height <- 5.2
-composite_height <- 11.5
+composite_width <- 7.2
+composite_height <- 7.2
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -43,7 +44,9 @@ test_design <- tribble(
 draw_design <- tibble(run = seq_len(n_balanced_draws), seed = resampling_seed + run)
 plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank(), legend.position = "none")
+    strip.background = element_blank(), legend.position = "none",
+    axis.text = element_text(size = 11), strip.text = element_text(size = 12),
+    plot.tag = element_text(size = 14, face = "bold"))
 
 site_panel_aspect <- 0.8
 site_figure_width <- 7.5
@@ -61,7 +64,12 @@ class_theme <- theme_bw(base_size = 12) +
     strip.background = element_blank(),
     strip.placement = "outside",
     strip.text.x = element_text(size = 12),
-    legend.position = "bottom"
+    axis.text = element_text(size = 11),
+    legend.position = "bottom",
+    legend.title = element_text(size = 11, face = "bold"),
+    legend.text = element_text(size = 11),
+    legend.key.size = grid::unit(0.45, "cm"),
+    plot.tag = element_text(size = 14, face = "bold")
   )
 
 # 2. Audit the intersection without translating or renaming sample identities -----
@@ -275,7 +283,8 @@ for (test in which(test_design$role == "primary")) {
   set.seed(plot_seed)
   p <- ggplot(panel, aes(network_group, distance, color = network_group)) +
     geom_boxplot(outlier.shape = NA, width = 0.5, linewidth = 0.5) +
-    geom_jitter(width = 0.1, height = 0, size = point_size, alpha = point_alpha) +
+    geom_point(position = position_jitter(width = 0.1, height = 0, seed = plot_seed),
+      size = point_size, alpha = point_alpha) +
     facet_wrap(~metric, labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
     scale_color_manual(values = group_colors) + scale_x_discrete(labels = x_labels) +
     labs(x = NULL, y = "Distance to group spatial median") +
@@ -409,11 +418,8 @@ for (group_name in c("All", "Matched", group_levels)) {
     labs(x = NULL, y = "Fraction of detected features", fill = NULL) +
     class_theme +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 8)) +
-    guides(fill = guide_legend(nrow = 3))
-  if (group_name %in% c("All", "Matched")) {
-    site_panels[[group_name]] <- site_panels[[group_name]] +
-      guides(fill = guide_legend(ncol = 2, byrow = TRUE))
-  } else {
+    guides(fill = guide_legend(ncol = 2, byrow = TRUE))
+  if (!group_name %in% c("All", "Matched")) {
     site_panels[[group_name]] <- site_panels[[group_name]] +
       theme(aspect.ratio = site_panel_aspect)
   }
@@ -431,13 +437,33 @@ for (group_name in c("All", "Matched", group_levels)) {
   ggsave(file.path(figures_dir, paste0("2016_fticr_site_class_composition_", file_suffix, ".pdf")),
     site_panels[[group_name]], width = class_panel_width, height = class_panel_height, bg = "white")
 }
-# The lower panel describes broad class fractions, not feature-level turnover.
+# The upper panel describes broad class fractions, not feature-level turnover.
 # All three panels use exactly the same 33 sites (18, 10, and 5 by network group).
-combined <- wrap_plots(panels[["molecular_equal_features"]], panels[["microbial_hellinger"]],
-  site_panels$Matched + guides(fill = guide_legend(nrow = 3, byrow = TRUE)),
-  design = "AB\nCC", heights = c(1, 1.25)) + plot_annotation(tag_levels = "A")
+class_panel <- site_panels$Matched + labs(y = "Detected features (%)") +
+  scale_fill_manual(values = class_colors, drop = FALSE,
+    labels = c("Lipid-like", "Protein-like", "Amino-sugar-like", "Carbohydrate-like",
+      "Lignin-like", "Tannin-like", "Condensed-\nhydrocarbon-like",
+      "Unsaturated-\nhydrocarbon-like", "Other")) +
+  guides(fill = guide_legend(ncol = 1)) +
+  theme(legend.position = "right", axis.text.x = element_text(size = 9),
+    strip.text.x = element_text(size = 11), strip.clip = "off")
+molecular_panel <- panels[["molecular_equal_features"]] + labs(tag = "B",
+    y = "Distance to group\nspatial median") +
+  facet_wrap(~metric, labeller = as_labeller(c(
+    molecular_equal_features = "FT-ICR features\n(equal-feature Jaccard)"))) +
+  theme(axis.text.x = element_text(size = 10))
+microbial_panel <- panels[["microbial_hellinger"]] + labs(tag = "C",
+    y = "Distance to group\nspatial median") +
+  facet_wrap(~metric, labeller = as_labeller(c(
+    microbial_hellinger = "Microbial communities\n(Hellinger)"))) +
+  theme(axis.text.x = element_text(size = 10))
+# Keep the class legend from reserving a column in the lower row.
+class_panel <- free(class_panel) + labs(tag = "A") +
+  theme(plot.tag = element_text(size = 14, face = "bold"))
+combined <- class_panel / (molecular_panel | microbial_panel) +
+  plot_layout(heights = c(1.15, 1))
 ggsave(file.path(manuscript_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
-  combined, width = 2 * panel_width, height = composite_height, bg = "white")
+  combined, width = composite_width, height = composite_height, bg = "white")
 stopifnot(identical(class_input_hashes, unname(tools::md5sum(class_input_paths))))
 
 # 11. Confirm that the reused inputs and full-site dispersion results are intact.

@@ -62,7 +62,7 @@ within-order permutations.
 A single read establishes detection. Soil detections have precedence; remaining
 ASVs are assigned at the first surveyed stream-order group containing them:
 orders 1–2, 3–4, then 5. Sediment and porewater pools are parallel; ties remain
-shared. Panels A–B show sediment and porewater, respectively; bars summarize
+shared. Panel A has sediment and porewater facets; bars summarize
 percentages of ASV reads per library. Percentages of detected ASVs remain
 supplementary.
 The 1,000 balanced draws select three libraries in each of six stream
@@ -72,7 +72,7 @@ This inventory does not establish contributing drainage, transport direction,
 source proportions, viability, or recruitment. It adapts the inventory framework
 of [Ruiz-Gonzalez et al. (2015)](https://doi.org/10.1111/ele.12499).
 
-Panels C–D show inferred dispersal limitation and homogeneous selection,
+Panels B–C show inferred dispersal limitation and homogeneous selection,
 respectively, from the completed reviewed soil–porewater–sediment iCAMP pool.
 Both habitats use the same 18 sites: 11 headwater, three intermediate, and four
 mainstem. Small translucent points show all unordered within-position site
@@ -93,7 +93,7 @@ The supplementary paired soil-sharing plot connects percentages for sediment
 and porewater at each of the 18 paired sites. Sharing is the percentage of reads belonging to ASVs
 detected in any of the 15 soils. Its two-sided test exchanges habitat labels
 within sites and tests the mean paired difference. This plot tests the habitat
-contrast underlying the soil component of panels A–B; it is not independent
+contrast underlying the soil component of panel A; it is not independent
 corroboration of that inventory. Script 02 retains 1,000 three-soil draws with
 receiving communities fixed, plus drainage regressions on stream-segment means
 with a four-test BH correction; fitted lines require adjusted P <= 0.05.
@@ -122,9 +122,17 @@ four metrics corrected separately per null. No detectable enhancement of
 same-site resemblance does not establish equivalence, temporal transience,
 or sediment retention of a local signal.
 
-## Figure 3: sediment dispersion and molecular classes
+## Figure 3: molecular classes and sediment dispersion
 
-Panels A–B show molecular equal-feature Jaccard and microbial Hellinger
+Panel A shows molecular class fractions at the same 33 sites used below, ordered
+by drainage within network groups. Bars use workbook classifications and
+fractions of binary detections. Broad class fractions provide chemical context;
+they do not directly measure convergence in individual formula detections.
+The full 44-site class figure and equally weighted group means remain
+supplementary. Formula classes are broad signatures, not identified structures
+or confirmed metabolites.
+
+Panels B–C show molecular equal-feature Jaccard and microbial Hellinger
 dispersion, respectively, refitted on the same 33 sites. The molecular
 sensitivity averages 1,000 draws of 391 detections per site. Complete molecular and binary microbial Jaccard are
 additional views. Network groups are orders 1–2, 3–4, and 5. Median-based
@@ -135,14 +143,6 @@ in significance does not itself test a difference between microbial and molecula
 responses. Lower molecular dispersion is supported in the equal-feature view;
 complete molecular Jaccard does not show a significant network-group dispersion
 difference. Network position is confounded with geography in this survey.
-
-Panel C shows molecular class fractions at these identical 33 sites, ordered
-by drainage within network groups. Bars use workbook classifications and
-fractions of binary detections. Broad class fractions provide chemical context;
-they do not directly measure convergence in individual formula detections.
-The full 44-site class figure and equally weighted group means remain
-supplementary. Formula classes are broad signatures, not identified structures
-or confirmed metabolites.
 
 ## Figure 4: exploratory association-group distribution
 

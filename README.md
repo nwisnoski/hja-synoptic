@@ -14,7 +14,7 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
 | [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1) and weighted UniFrac | [Habitat diversity](figures/manuscript/2016_habitat_diversity.pdf) |
 | [03_first_detection.R](analysis/03_first_detection.R) | 2. First detection and matched-habitat iCAMP contrasts | [Detection and assembly](figures/manuscript/2016_first_detection_flowpaths.pdf) |
-| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Dispersion and molecular classes on the same 33 sediment sites | [Dispersion and classes](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
+| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Molecular classes and dispersion on the same 33 sediment sites | [Classes and dispersion](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
 | [05_network_localization.R](analysis/05_network_localization.R) | 4. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
@@ -23,7 +23,7 @@ for 03; 04 refits dispersion and its balanced-sampling sensitivity, then reads
 completed molecular-class results; 05 reads completed network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
-Microbial abundance comparisons use Hellinger distance. Figure 2 C–D compare
+Microbial abundance comparisons use Hellinger distance. Figure 2 B–C compare
 dispersal limitation and homogeneous selection for sediment and porewater on
 the same 18 sites, reusing completed reviewed-pool iCAMP assignments.
 Paired soil sharing, same-site taxonomic resolution, and classification coverage
