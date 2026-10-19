@@ -45,9 +45,9 @@ The numbered scripts in `analysis/supporting/` have this dependency order:
 
 - 01–02 prepare sediment molecular profiles, class fractions, and the saved
   equal-feature Jaccard reference. These supply main figures 3–4.
-- 03–04 add water optics and integrated chemistry; 05 examines full-site
+- 03–04 add water optics and integrated chemistry; 03 examines full-site
   molecular dispersion and supplies the network-position audit.
-- 06–09 prepare, fit, assess stability, and describe the bipartite network.
+- 04–07 prepare, fit, assess stability, and describe the bipartite network.
   They supply main figure 4. `check_bipartite_networks.R` checks the methods;
   `bipartite_helpers.R` is shared by inference and its checks.
 - 10–11 analyze sediment conditions and microbial diversity.

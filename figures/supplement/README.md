@@ -10,9 +10,9 @@ Scripts write directly to these folders; retired plots are recorded in
 | [habitat_diversity](habitat_diversity) | Sampling map, diversity, ordinations, soil sharing, same-site metrics | `02_habitat_diversity.R` |
 | [first_detection](first_detection) | First-detection inventory, Figure 2 iCAMP panels, supplementary paired soil sharing and taxonomic resolution | `03_first_detection.R` |
 | [sediment_comparison](sediment_comparison) | Matched-site dispersion panels and molecular classes | `04_sediment_convergence.R` |
-| [networks](networks) | Association groups, null diagnostics, stability, distribution maps | `05_network_localization.R`; supporting 07–09 |
+| [networks](networks) | Association groups, null diagnostics, stability, distribution maps | `05_network_localization.R`; supporting 04–07 |
 | [icamp](icamp/README.md) | Reviewed-pool overviews and sediment-only sensitivity | `supporting/icamp/` |
-| [molecular](molecular) | Full-site molecular composition, detection QC, dispersion sensitivities | Supporting 01–02 and 05 |
+| [molecular](molecular) | Full-site molecular composition, detection QC, dispersion sensitivities | Supporting 01–03 |
 | [chemistry](chemistry) | Water optics and integrated chemistry | Supporting 03–04 |
 | [sediment_conditions](sediment_conditions) | Coverage and conditional associations with sediment properties | Supporting 10 |
 | [sediment_diversity](sediment_diversity) | Sediment-only microbial ordination and diversity | Supporting 11 |
