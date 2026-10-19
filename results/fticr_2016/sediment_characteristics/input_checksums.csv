@@ -1,8 +1,0 @@
-path,initial_md5,final_md5,unchanged
-/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/sample_metadata.csv,0aa9d2533bf5910bd965b64e4a11c928,0aa9d2533bf5910bd965b64e4a11c928,TRUE
-/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/asv_counts_10k.csv,d9121c9599889ba92cc330e258a4c569,d9121c9599889ba92cc330e258a4c569,TRUE
-/Users/nawis/GitHub/hja-synoptic/data/derived/fticr_2016/sediment_44_presence_absence.csv,82f2190c4feda683f39520f28d3f7bb3,82f2190c4feda683f39520f28d3f7bb3,TRUE
-/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/river_composition/mean_subsampled_jaccard.csv,b400277332b24c73e5d94af15c9b4891,b400277332b24c73e5d94af15c9b4891,TRUE
-/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/river_composition/subsampling_summary.csv,6555697519a2360ffe3d6e94dfe94ddf,6555697519a2360ffe3d6e94dfe94ddf,TRUE
-/Users/nawis/GitHub/hja-synoptic/data/derived/analysis_inputs/environment/sediment_44_environment.csv,7091c2021e3c7b25ebe32827cdfb5b8c,7091c2021e3c7b25ebe32827cdfb5b8c,TRUE
-/Users/nawis/GitHub/hja-synoptic/results/fticr_2016/integrated_chemistry/chemistry_site_scores.csv,4bb325f1d215dcb91b20831d8e05f912,4bb325f1d215dcb91b20831d8e05f912,TRUE

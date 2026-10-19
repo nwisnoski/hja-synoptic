@@ -67,6 +67,9 @@ the curated subset; hexose and amino acid residue equivalents are less frequent
 but broadly distributed. Sparse nutrient-bearing differences do not diagnose
 nutrient limitation or the absence of nutrient cycling. These inventories do not
 establish functional convergence or assign metabolism to the mapped ASV group.
+Enzyme associations, detection-conditioned gradients, and transformation
+network-context tests were retired; their methods and results are recoverable
+from [the cleanup archive](../archive/README.md).
 
 ## Supplementary sampling coverage
 

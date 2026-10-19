@@ -1,23 +1,24 @@
 # Supporting figures
 
-The four selected figures are in [../manuscript](../manuscript). These folders
-retain their individual panels, supporting analyses, and required diagnostics.
-Scripts write directly to these folders; retired plots are recorded in
-[the cleanup manifest](../../archive/cleanup_20261014.csv).
+Start with the four selected figures in [../manuscript](../manuscript).
+The retained supporting material provides sampling context, individual panels,
+and checks needed to interpret those results. Presence here does not select a
+figure for the manuscript supplement.
 
-| Folder | Content | Producer in `analysis/` |
+| Main result | Supporting material | Producer in `analysis/` |
 | --- | --- | --- |
-| [habitat_diversity](habitat_diversity) | Sampling map, diversity, ordinations, soil sharing, same-site metrics | `02_habitat_diversity.R` |
-| [first_detection](first_detection) | First-detection inventory, Figure 2 iCAMP panels, supplementary paired soil sharing and taxonomic resolution | `03_first_detection.R` |
-| [sediment_comparison](sediment_comparison) | Matched-site dispersion panels and molecular classes | `04_sediment_convergence.R` |
-| [networks](networks) | Association groups, null diagnostics, stability, distribution maps | `05_network_localization.R`; supporting 04–07 |
-| [icamp](icamp/README.md) | Reviewed-pool overviews and sediment-only sensitivity | `supporting/icamp/` |
-| [molecular](molecular) | Full-site molecular composition, detection QC, dispersion sensitivities | Supporting 01–03 |
-| [chemistry](chemistry) | Water optics and integrated chemistry | Supporting 03–04 |
-| [sediment_conditions](sediment_conditions) | Coverage and conditional associations with sediment properties | Supporting 10 |
-| [sediment_diversity](sediment_diversity) | Sediment-only microbial ordination and diversity | Supporting 11 |
-| [transformations](transformations) | Putative mass-difference profiles, ranked labels, assignment checks, and detection diagnostics | Supporting 08 and 09 |
+| Figure 1: habitat diversity | [Sampling map and habitat panels](habitat_diversity) | `02_habitat_diversity.R` |
+| Figure 2: first detection and assembly | [Individual panels and paired-habitat checks](first_detection) | `03_first_detection.R` |
+| Figure 3: sediment molecular classes and dispersion | [Matched-site panels and balancing checks](sediment_comparison) | `04_sediment_convergence.R` |
+| Figure 4: association-group distribution | [Group membership, stability, and null diagnostics](networks) | `05_network_localization.R`; supporting 04–07 |
+| Catchment transformation inventory | [Readable assignment summary](transformations/2016_transformation_assignment_summary.pdf) and [label-rank distribution](transformations/2016_transformation_label_rank_distribution.pdf) | Supporting 08 and 09 |
 
-Supporting figures include exploratory analyses; their presence does not select
-them for the manuscript. Definitions and interpretation limits are in
-[METHODS.md](../../analysis/METHODS.md).
+[molecular/](molecular) retains full-site composition and detection diagnostics
+used by the sediment comparison. [icamp/](icamp/README.md) retains completed-run
+views and diagnostics; the selected assembly contrasts are already in Figure 2.
+The additional transformation PCA is descriptive; its detection gradient does
+not identify a metabolic pathway.
+
+Retired chemistry, enzyme, sediment-side, and transformation-context figures are
+recoverable from [the archive](../../archive/README.md). Definitions and
+interpretation limits are in [METHODS.md](../../analysis/METHODS.md).

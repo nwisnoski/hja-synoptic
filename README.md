@@ -28,18 +28,10 @@ dispersal limitation and homogeneous selection for sediment and porewater on
 the same 18 sites, reusing completed reviewed-pool iCAMP assignments.
 Paired soil sharing, same-site taxonomic resolution, and classification coverage
 remain supporting analyses in script 03.
-The [sampling map](figures/supplement/habitat_diversity/2016_soil_porewater_sediment_sampling_map.pdf),
-individual panels, the fixed genus-classified sensitivity, additional same-site
-metrics, and the full 44-site molecular class figure are grouped by analysis in
-[figures/supplement](figures/supplement/README.md).
-
-For the full exploratory iCAMP context, start with the five overview figures in
-[reviewed_pool](figures/supplement/icamp/README.md), produced by
-[the reviewed-pool analysis](analysis/supporting/icamp/01_reviewed_pool.R): sediment
-and porewater composition, their maps, and the shared-site habitat comparison.
-The sediment-only run is retained as a regional-pool sensitivity in
-`figures/supplement/icamp/sediment_sensitivity/`. Each run has separate
-`panels/` and `diagnostics/` folders. Completed assignments are reused for plotting.
+The [supporting figure guide](figures/supplement/README.md) points to the sampling
+map, individual figure panels, and the retained bulk transformation summaries.
+The [methods guide](analysis/METHODS.md) defines the measurements and inference
+limits; numerical results remain in the saved tables.
 
 ## Bulk molecular transformations
 
@@ -57,9 +49,10 @@ Pair counts, formula checks, and site coverage are in
 - `analysis/preparation/`: sample mapping, completed sequence processing,
   microbial tables, phylogeny, and UniFrac. See its [preparation guide](analysis/preparation/README.md)
   only when inputs need rebuilding.
-- `analysis/supporting/`: numbered molecular, chemistry, network, and sediment
-  analyses. These supply the main workflow and additional figures. Its `icamp/`
-  subfolder groups the reviewed-pool analysis and sediment-only sensitivity.
+- `analysis/supporting/`: molecular inputs and dispersion (01–03), network
+  inference and stability (04–07), and bulk transformations (08–09). The `icamp/`
+  subfolder retains its separate 01–03 sequence for completed-run provenance and
+  plotting.
 - `analysis/cluster/`: batch launchers for sequence processing, phylogeny, and iCAMP.
 - `figures/manuscript/`: the four selected figures. `figures/supplement/`:
   panels and supporting analyses in named subfolders; its guide lists entry points.
@@ -68,10 +61,10 @@ Pair counts, formula checks, and site coverage are in
 - `archive/`: legacy files and their recovery manifest. Older workflows and
   removed duplicate figures are also recoverable from Git history.
 
-Results retain completed analyses and their required inputs. Retired code and
-figures are recoverable from Git history; [cleanup manifests](archive/README.md)
-record moved and removed paths. Raw inputs, sequence outputs, and inference
-checkpoints are preserved.
+Retired chemistry comparisons, sediment side analyses, enzyme associations, and
+transformation gradients are packaged in [the cleanup archive](archive/README.md),
+including their results and failed-run diagnostics. Raw inputs, completed
+sequence processing, the master phylogeny, and inference checkpoints are intact.
 
 ## Sample set and interpretation
 
@@ -86,27 +79,14 @@ matches; sediment site 43 has no molecular profile. Soils form a regional pool.
 needed for the figures. Numerical results and diagnostics belong in the saved
 tables rather than duplicated reports.
 
-## Cluster work
+## Completed iCAMP results
 
-Sediment iCAMP job **432228** completed October 11, 2026, with exit code `0:0`.
-Its small results are saved in `results/icamp_2016/sediment_castor/`; the
-phylogenetic distance cache remains on the cluster. The local inference script is
-`analysis/supporting/icamp/02_sediment_sensitivity.R`, with launcher
-`analysis/cluster/run_icamp_sediment.sh`. The script content is unchanged from
-the completed deployment; the local launcher uses its new path. This cleanup
-does not synchronize the remote checkout.
-The completed four-habitat catchment run is historical and includes excluded
-libraries. It does not represent the reviewed cohort.
+[The iCAMP result guide](results/icamp_2016/README.md) distinguishes the completed
+reviewed-pool run used by Figure 2, the sediment-only sensitivity, and the
+historical four-habitat run that includes excluded libraries. Reuse completed
+assignments when plotting. The reviewed-pool script can start expensive inference
+if its completed result is absent; do not rerun inference for this cleanup.
 
-The reviewed soil–porewater–sediment iCAMP run is also complete; its result,
-input hashes, and run manifest are in `results/icamp_2016/reviewed_pool_castor/`.
-[The iCAMP result guide](results/icamp_2016/README.md) distinguishes this run,
-the sediment-only sensitivity, and the historical four-habitat run.
-The reviewed-pool script validates the saved run identity before regenerating plots.
-If its completed result is absent, it can start expensive inference; the
-[cluster launcher](analysis/cluster/run_icamp_reviewed_pool.sh) requests 16 CPUs,
-192 GB, and a seven-day walltime limit. Future-run runtime is unknown.
-
-Do not submit, check, transfer, or change remote work without explicit approval
-of that action. Obtain approval of exact paths and message before committing;
-pushes require separate authorization.
+Remote work requires approval of each exact action; this cleanup is local.
+Obtain approval of exact paths and message before committing; pushes require
+separate authorization.
