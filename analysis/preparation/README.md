@@ -50,6 +50,8 @@ The numbered scripts in `analysis/supporting/` have this dependency order:
 - 04–07 prepare, fit, assess stability, and describe the bipartite network.
   They supply main figure 4. `check_bipartite_networks.R` checks the methods;
   `bipartite_helpers.R` is shared by inference and its checks.
+- 08 constructs putative molecular transformation profiles; 09 independently
+  checks the curated motifs and creates the bulk summaries.
 - 10–11 analyze sediment conditions and microbial diversity.
   `soil_drainage_routing.py` reproduces optional drainage membership; its
   requirements are in `analysis/supporting/soil_routing_requirements.txt` and terrain

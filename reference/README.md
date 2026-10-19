@@ -1,4 +1,11 @@
-# Taxonomy reference files
+# Reference files
+
+## Molecular transformations
+
+[danczak_2020](danczak_2020/README.md) holds the pinned, unmodified transformation
+database and per-sample R script used by `analysis/supporting/08_molecular_transformations.R`.
+
+## Taxonomy
 
 Place DADA2-formatted taxonomy training files here. 
 

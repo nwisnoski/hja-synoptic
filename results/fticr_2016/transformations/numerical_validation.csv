@@ -1,0 +1,7 @@
+check,passed,site_code,upstream_seconds,pooled_matching_seconds
+complete_sample_upstream_peak_pairs,TRUE,165,0.7169999999999996,2.555
+complete_sample_upstream_profiles,TRUE,165,NA,NA
+profile_totals_equal_pairs,TRUE,NA,NA,NA
+degree_totals_equal_twice_pairs,TRUE,NA,NA,NA
+overlapping_labels_and_inclusive_bounds,TRUE,NA,NA,NA
+sample_without_mass_matches,TRUE,NA,NA,NA

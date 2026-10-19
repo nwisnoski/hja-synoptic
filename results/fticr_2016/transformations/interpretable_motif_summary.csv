@@ -1,0 +1,13 @@
+motif,compatible_change,reference_label,mass,mass_matched_distinct_pairs,formula_compatible_distinct_pairs,compatible_single_candidate_pairs,compatible_multiple_candidate_pairs,mass_only_incompatible_pairs,sites_with_compatible_pairs,compatible_sample_pair_matches,mean_sample_pair_fraction
+H2,Hydrogen gain/loss,hydrogenation/dehydrogenation,2.015650074,530,528,398,130,2,44,11947,0.009946651744487951
+CH2,CH2 homologous-series difference,methanol (-H2O),14.01565007,518,518,381,137,0,44,10966,0.00927218849434275
+O,Oxygen gain/loss,hydroxylation (-H),15.99491464,486,486,347,139,0,44,10327,0.008608166630092154
+H2O,Water gain/loss,condensation/dehydration,18.01056471,415,415,284,131,0,44,8504,0.006963958637959829
+C2H2O,Acetyl-residue equivalent,acetylation (-H2O),42.01056471,388,388,246,142,0,44,7888,0.0064873250398793
+CO2,Carboxyl-group equivalent,Carboxylation,43.98982928,360,356,243,113,4,44,7285,0.005982290482476441
+C6H10O5,Hexose-residue equivalent,C6H10O5,162.0528236,106,105,22,83,1,44,2053,0.0015594814750936252
+Glycine residue,Glycine-residue equivalent,Glycine,57.02146376,103,103,81,22,0,44,990,7.255485412560868e-4
+Valine residue,Valine-residue equivalent,Valine,99.06841398,48,48,36,12,0,44,453,3.387692167843784e-4
+HPO3,Phosphate-group equivalent,phosphate,79.96633236,9,8,1,7,1,24,35,2.50322627780377e-5
+SO3,SO3 gain/loss,sulfate (-H2O),79.95681572,9,9,8,1,0,44,94,8.44929035903e-5
+NH2,Amino-group equivalent,primary amine,16.01872408,1,0,0,0,1,0,0,0

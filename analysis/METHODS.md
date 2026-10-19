@@ -21,10 +21,52 @@ intersection. Site 43 lacks a molecular profile. Missing profiles remain
 distinct from nondetections. Thirteen soils have resolved locations; soil 04
 lacks GPS and `hja2016_200` has unresolved identity. All 15 enter regional sharing.
 
+The [2016 preparation methods](https://doi.org/10.5194/essd-11-1567-2019)
+describe three sequential water extractions of 500 mg sediment, pooled to 5 mL,
+followed by PPL extraction and fixed acquisition settings. They do not report
+matching extracts to a common carbon concentration.
+
 FT-ICR ecology uses binary detections. The preparation filter retains assigned
 formulas with measured mass 200–900, C13 <= 0, and positive intensity in at
 least two of 60 profiles. Raw intensity is retained for QC. Detected-feature
 counts depend on detection and are not calibrated molecular richness.
+
+## Putative molecular transformations
+
+`supporting/08_molecular_transformations.R` applies the per-sample method and
+July 2020 database from [Danczak et al. (2020)](https://doi.org/10.1038/s41467-020-19989-y)
+to the existing sediment feature set. The [reference record](../reference/danczak_2020/README.md)
+pins the original source and database. Absolute differences between measured m/z
+values are matched within an inclusive 0.000010 mass-unit tolerance; both peaks
+must be detected in the sample. Each unordered pair counts once and receives the
+last matching database label in source order, reproducing the published code.
+All candidate labels are retained in the pair-assignment table. The optimized
+matching is checked against the unmodified upstream script on a complete sample.
+
+Transformation profiles count assigned peak pairs by label. Their descriptive
+PCA uses square roots of within-sample pair-count proportions (Hellinger), with
+no intensity weighting. Connected-peak degrees include zeros; match counts and
+possible-pair counts are retained as detection diagnostics. These connections
+do not establish molecular structures, reaction direction, realized activity,
+or biogeochemical rates. The database, inherited feature filter, measurement
+error, and label-order ambiguity condition the profiles. Environmental hypothesis
+tests and causal process assignments are not part of this descriptive analysis.
+
+`supporting/09_transformation_summary.R` ranks reference labels by their mean
+within-sample fraction and reports site coverage, distinct pairs, alternative
+labels, and mass error. Its curated subset of simple motifs additionally requires
+exact net elemental differences and the same measured-mass tolerance. Both
+endpoints having one reported formula candidate distinguishes less ambiguous
+assignments from pairs with multiple candidates; neither category identifies a
+molecular structure or establishes a reaction. Motif checks are calculated
+within this script from the completed pair assignments and molecular inventory.
+
+The bulk summaries describe chemical relationships across sampled sediments.
+Hydrogen, CH2, oxygen, water, acetyl-residue, and carboxyl-group equivalents lead
+the curated subset; hexose and amino acid residue equivalents are less frequent
+but broadly distributed. Sparse nutrient-bearing differences do not diagnose
+nutrient limitation or the absence of nutrient cycling. These inventories do not
+establish functional convergence or assign metabolism to the mapped ASV group.
 
 ## Supplementary sampling coverage
 

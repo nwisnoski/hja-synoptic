@@ -16,6 +16,7 @@ Scripts write directly to these folders; retired plots are recorded in
 | [chemistry](chemistry) | Water optics and integrated chemistry | Supporting 03–04 |
 | [sediment_conditions](sediment_conditions) | Coverage and conditional associations with sediment properties | Supporting 10 |
 | [sediment_diversity](sediment_diversity) | Sediment-only microbial ordination and diversity | Supporting 11 |
+| [transformations](transformations) | Putative mass-difference profiles, ranked labels, assignment checks, and detection diagnostics | Supporting 08 and 09 |
 
 Supporting figures include exploratory analyses; their presence does not select
 them for the manuscript. Definitions and interpretation limits are in

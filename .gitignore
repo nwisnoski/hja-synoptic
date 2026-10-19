@@ -57,6 +57,7 @@ logs/*.err
 # Keep taxonomy references local; retain the directory documentation.
 reference/*
 !reference/README.md
+!reference/danczak_2020/
 
 # Reproducible exploratory figures retained locally; selected figures are tracked.
 /figures/supplement/chemistry/2016_dom_fluorescence_index_drainage.pdf

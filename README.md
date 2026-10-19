@@ -41,6 +41,17 @@ The sediment-only run is retained as a regional-pool sensitivity in
 `figures/supplement/icamp/sediment_sensitivity/`. Each run has separate
 `panels/` and `diagnostics/` folders. Completed assignments are reused for plotting.
 
+## Bulk molecular transformations
+
+Run [supporting 08](analysis/supporting/08_molecular_transformations.R), then
+[supporting 09](analysis/supporting/09_transformation_summary.R), using the pinned
+[Danczak reference](reference/danczak_2020/README.md). These describe the catchment
+inventory of putative chemical relationships. Start with the
+[readable assignment summary](figures/supplement/transformations/2016_transformation_assignment_summary.pdf)
+and [label-rank distribution](figures/supplement/transformations/2016_transformation_label_rank_distribution.pdf).
+Pair counts, formula checks, and site coverage are in
+`results/fticr_2016/transformations/`; they do not measure realized reaction rates.
+
 ## Where things belong
 
 - `analysis/preparation/`: sample mapping, completed sequence processing,
