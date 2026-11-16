@@ -257,48 +257,38 @@ across pairs and relates the pairwise difference to each distance. Flow-connecte
 and unconnected pairs are tested as for Figure 3. Figures show watercourse
 distance only, with a line for a pair set only where adjusted P <= 0.05.
 
-## Figure 4: soil-shared and soil-absent sediment taxa
+## Figure 4: soil-shared taxa in sediment across the stream network
 
-`05_soil_affinity.R` classes every ASV by the number of the 15 reviewed soils it
-occurs in: soil-core ASVs occur in at least five, soil-absent ASVs in none. The
-classes use the soil samples only, so the sediment data they are tested on play
-no part in defining them. Each class's share of a sample's 10,000 reads is
-measured for all 34 sediment and 27 porewater samples. Occurrence in soil
-does not establish origin or movement; soil-core ASVs may be habitat generalists.
+`05_soil_affinity.R` calls an ASV soil-core when it occurs in at least five of
+the 15 reviewed soils. The class uses the soil samples only, so the sediment
+data it is tested on play no part in defining it. Its share of a sample's
+10,000 reads is measured for all 34 sediment and 27 porewater samples, counting
+every soil-core ASV. Occurrence in soil does not establish origin or movement;
+soil-core ASVs may be habitat generalists.
+
+Each soil-core ASV is also classed by whether its mean abundance is higher in
+sediment than in soil, and the share of soil-core sediment reads from ASVs more
+abundant in sediment is recorded. This split does not depend on which lineages
+panel C shows; selecting lineages by soil abundance makes most of them appear
+diluted in sediment by construction.
 
 Sediment and porewater shares are compared at the 18 paired sites by exchanging
 habitats within sites (9,999 sign flips). Spatial structure in the sediment
 share uses Moran's I with inverse watercourse-distance weights. Each sample is
 assigned to the north branch (above segment 134), the Lookout branch (above
 segment 39), or the channels below their fork, from the same stream graph as
-Figure 3. The KC tributary joins below the fork but also drains Lookout Mountain.
-Panel B maps the stable network group (see the supporting network analysis),
-labeled the sediment-specific group because its ASVs are almost never found in
-soil or porewater. Correlations between its ASV fraction and the class shares
-exclude the group's own ASVs from the shares.
+Figure 3. Drainage-area trends use Spearman correlations; the six site tests
+form one BH family.
 
-Panel D ranks the soil-core families by mean percentage of sediment reads. Each
-family sums its soil-core ASVs; ASVs without a family assignment are grouped as
-"Unclassified" at their lowest assigned rank. The same sums for soil and
-porewater samples are drawn on the log axis; a zero is not drawn.
-
-A supplementary panel asks whether each class's sediment composition is
-organized along the network. ASVs at 3 to 31 of the 34 sediment sites are eligible. In each of 199
-draws, the same number of ASVs is taken from each class at every sediment
-prevalence, so the classes cannot differ through prevalence. Binary Jaccard
-dissimilarity among sites is correlated with watercourse and straight-line
-distance. The null pools each draw's matched sets and reassigns class labels
-within each prevalence; its range is the gray band. The smallest attainable
-difference P value is 0.005. Sensitivities change the soil-core threshold to
-three or eight soils, allow soil-absent ASVs one soil, and replace Jaccard with
-Simpson dissimilarity, which keeps turnover and removes richness differences.
-Within-class Mantel tests (9,999 permutations) use every eligible ASV.
-
-Molecular dissimilarity on the 33 matched sites is recorded in the same tables
-but not plotted. Neither class's Jaccard composition tracks molecular Jaccard.
-Under Simpson turnover, both classes track molecular turnover, the soil-core class
-somewhat more; soil affinity therefore does not separate microbial–molecular
-association.
+Panel C shows the 25 soil-core lineages with the highest mean percentage of
+soil reads, so it shows the lineages that dominate soils rather than taxa rare
+in soil; together they hold 69% of soil-core reads in soil. Each lineage sums
+its ASVs' mean percentages in soil, sediment, and porewater, drawn on a log
+axis; a zero is not drawn. Rows are ordered by the ratio of soil to sediment
+abundance, from soil-dominant lineages at the top to lineages more abundant in
+sediment than in soil below the dashed line. A lineage is the family, or
+"Unclassified" at the lowest assigned rank; SILVA placeholder families are
+named by their order.
 
 ## Supporting analysis: sediment bipartite network and the stable group
 

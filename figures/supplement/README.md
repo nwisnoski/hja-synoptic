@@ -11,7 +11,7 @@ figure for the manuscript supplement.
 | Figure 2: first detection and assembly | [Individual panels and paired-habitat checks](first_detection) | `03_first_detection.R` |
 | Figure 3: sediment molecular richness and richness difference | [Individual panels, dispersion views, molecular classes, and balancing checks](sediment_comparison) | `04_sediment_convergence.R` |
 | Distance decay on the matched sediment sites | [Primary views](sediment_comparison/2016_matched_sediment_distance_decay_primary.pdf) against watercourse distance, by flow connection | Supporting 10 |
-| Figure 4: soil-shared and soil-absent sediment taxa | [Individual panels](soil_affinity) | `05_soil_affinity.R` |
+| Figure 4: soil-shared taxa in sediment | [Individual panels](soil_affinity) | `05_soil_affinity.R` |
 | Stable association group | [Group membership, stability, null diagnostics, and catchment maps](networks) | Supporting 04–07 |
 | Catchment transformation inventory | [Readable assignment summary](transformations/2016_transformation_assignment_summary.pdf) and [label-rank distribution](transformations/2016_transformation_label_rank_distribution.pdf) | Supporting 08 and 09 |
 

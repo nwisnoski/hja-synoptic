@@ -67,10 +67,23 @@ win. Check in briefly that these project instructions are visible and understood
   Lookout branch and KC tributary) and nearly absent from the north branch. It
   was selected by co-occurrence, so its microbial–molecular concordance is not
   an independent result; a metabolic guild has not been established.
-- Figure 4 (`05_soil_affinity.R`) classes ASVs by soil occurrence alone:
-  soil-core (5+ of 15 soils) and soil-absent (none). Say "shared with soil", not
-  "from soil". Soil affinity does not separate microbial–molecular association;
-  under turnover both classes track molecular turnover.
+- Figure 4 (`05_soil_affinity.R`) shows soil-core ASVs (5+ of 15 soils, defined
+  from soils alone) as a diffuse component of sediment across the catchment.
+  Say "shared with soil", not "from soil".
+- Solute tracer breakthrough curves are in `data/tracer_2016/`, gitignored and
+  redownloadable from the tracked `hydroshare_file_manifest.tsv`
+  ([HydroShare](https://doi.org/10.4211/hs.6cc9446b42b34c99935ca9647253ab4a),
+  CC BY 4.0). Field methods: [Ward et al. 2019 ESSD](https://doi.org/10.5194/essd-11-1567-2019);
+  exchange analysis: [Ward et al. 2019 HESS](https://doi.org/10.5194/hess-23-5199-2019).
+  About half the files are raw logger `.xlsx` exports (GMT-07:00), not CSV.
+  Slug metrics detect flow paths of about 0.35 m and at most 2.8 h (HESS), not
+  porewater at 50–65 cm. An exploratory check found no branch difference in
+  recovery, spread, or tailing (3 usable north-branch reaches; not in a script).
+- Stable isotopes: 12 of 119 water samples fall on an evaporation line
+  (d-excess < 5 per mil, including stream water at sites 74, 82, and 169).
+  Screen them before use. After screening, porewater matches stream water
+  (rho = 0.94), so the isotopes do not detect a distinct groundwater source at
+  sampling depth.
 
 ## Review of November 15, 2026
 
@@ -124,16 +137,23 @@ changes are pending.
   is unrelated to plate, depth, feature count, or sampling date. The network's
   association counts do not exceed either profile-shuffle null, so its overlay
   map was retired from the main text (November 16).
-- Figure 4 now shows where soil-shared taxa sit in the sediment network. At
-  matched sediment prevalence, soil-absent composition tracks watercourse and
-  straight-line distance and soil-core composition tracks neither. The
-  soil-core read share is higher in sediment than in paired porewater, does not
-  co-vary between the two habitats, and shows no drainage-area, branch, or clear
-  spatial trend: high values occur at small headwaters and at the lowest mainstem
-  sites. Stable-group sites have lower soil-core and higher soil-absent shares.
-  Figures call the stable group the sediment-specific group. Panel D ranks
-  soil-core families by sediment abundance; the class-distance contrast is a
-  supplementary panel.
+- Figure 4 (rebuilt November 16): map of the soil-core read share, the share
+  against drainage area in sediment and paired porewater, and the 25 soil-core
+  lineages most abundant in soil, ordered from soil-dominant to more abundant in
+  sediment. Most soil-core ASVs are more abundant in soil, but 63% of soil-core
+  sediment reads come from ASVs more abundant in sediment than in soil: frame the
+  figure as shared taxa, not soil input. The share is higher in sediment than in paired
+  porewater, does not co-vary between the two habitats, and shows no
+  drainage-area, branch, or clear spatial trend.
+- Tried and not carried forward (November 16; recoverable from commit
+  b9b5a4d and the conversation record, not in a script): a soil-core against
+  soil-absent distance-decay contrast (robust across definitions but modest and
+  developed during analysis); a sediment-only class (absent from soil and
+  porewater) and its association with cold, isotopically light stream water
+  (exploratory, about 40 tests); the 38-ASV group in Figure 4 and its
+  Gemmatimonadia enrichment; a separate taxonomic Figure 5. The 38-ASV group was
+  selected by co-occurrence with molecules; only 14 of its ASVs are absent from
+  both soil and porewater, so do not call it sediment-specific.
 - Exploratory, not in a script: in a selection-adjusted check, the network's
   largest module exceeded profile-shuffle expectation (P = 0.02 unrestricted,
   0.04 within order). Rerunning the network with a prevalence floor of 5 found a

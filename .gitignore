@@ -86,3 +86,7 @@ reference/*
 /results/icamp_2016/catchment_castor/*.iCAMP.TempSave.*.rda
 /results/icamp_2016/catchment_castor/hja2016_catchment.iCAMP.Confidence.detail.rda
 /results/icamp_2016/catchment_castor/hja2016_catchment.process.CbMPDiCBraya.csv
+
+# Solute tracer breakthrough curves from HydroShare (Ward et al. 2019 HESS and
+# ESSD); kept locally, redownloadable from the manifest beside them.
+/data/tracer_2016/Site_*/
