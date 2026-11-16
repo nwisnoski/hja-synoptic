@@ -9,7 +9,8 @@ figure for the manuscript supplement.
 | --- | --- | --- |
 | Figure 1: habitat diversity | [Sampling map and habitat panels](habitat_diversity) | `02_habitat_diversity.R` |
 | Figure 2: first detection and assembly | [Individual panels and paired-habitat checks](first_detection) | `03_first_detection.R` |
-| Figure 3: sediment molecular classes and dispersion | [Matched-site panels and balancing checks](sediment_comparison) | `04_sediment_convergence.R` |
+| Figure 3: sediment molecular richness and nestedness | [Individual panels, dispersion views, molecular classes, and balancing checks](sediment_comparison) | `04_sediment_convergence.R` |
+| Distance decay on the matched sediment sites | [Primary views](sediment_comparison/2016_matched_sediment_distance_decay_primary.pdf) and [nestedness](sediment_comparison/2016_matched_sediment_distance_decay_nestedness.pdf) against watercourse distance, by flow connection | Supporting 10 |
 | Figure 4: association-group distribution | [Group membership, stability, and null diagnostics](networks) | `05_network_localization.R`; supporting 04–07 |
 | Catchment transformation inventory | [Readable assignment summary](transformations/2016_transformation_assignment_summary.pdf) and [label-rank distribution](transformations/2016_transformation_label_rank_distribution.pdf) | Supporting 08 and 09 |
 

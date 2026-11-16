@@ -1,0 +1,19 @@
+metric,data_type,role,pair_set,site_pairs,pearson_r,intercept,slope_per_km,p_value,p_bh
+microbial_hellinger,microbial,primary,Flow-connected,120,0.21298453895425148,0.9453985159803208,0.006935347910492546,0.0566,0.07546666666666665
+microbial_hellinger,microbial,primary,Not flow-connected,408,0.14567137065689556,0.939431580611097,0.003683889484940391,0.0427,0.07546666666666665
+microbial_hellinger,microbial,primary,Slope difference,528,NA,NA,0.0032514584255521548,0.3417,0.3417
+molecular_jaccard,molecular,primary,Flow-connected,120,0.5780899155392261,0.4589113915119068,0.016471692848990256,1e-4,4e-4
+molecular_jaccard,molecular,primary,Not flow-connected,408,0.02319193261823522,0.5217053217323118,5.892742498433917e-4,0.82,0.82
+molecular_jaccard,molecular,primary,Slope difference,528,NA,NA,0.015882418599146863,0.0015,0.003
+microbial_turnover,microbial,turnover,Flow-connected,120,0.1726576419914938,0.7177735896940209,0.003473149039069565,0.1211,0.2422
+microbial_turnover,microbial,turnover,Not flow-connected,408,0.09159107237870533,0.7167232375079328,0.001405655324679956,0.1982,0.26426666666666665
+microbial_turnover,microbial,turnover,Slope difference,528,NA,NA,0.002067493714389609,0.3209,0.3209
+molecular_turnover,molecular,turnover,Flow-connected,120,-0.28668443029104085,0.2815162981116094,-0.006285082874425462,0.0251,0.1004
+molecular_turnover,molecular,turnover,Not flow-connected,408,0.023449826097005744,0.3084465094448169,5.049291548171733e-4,0.7992,0.7992
+molecular_turnover,molecular,turnover,Slope difference,528,NA,NA,-0.006790012029242635,0.0461,0.0922
+microbial_nestedness,microbial,nestedness,Flow-connected,120,0.0683832551123785,0.016978540657156125,2.799631510605997e-4,0.6113,0.8150666666666666
+microbial_nestedness,microbial,nestedness,Not flow-connected,408,0.1657046949417903,0.014127814413862206,6.83652351466884e-4,0.0816,0.1632
+microbial_nestedness,microbial,nestedness,Slope difference,528,NA,NA,-4.0368920040628433e-4,0.4897,0.4897
+molecular_nestedness,molecular,nestedness,Flow-connected,120,0.5601662111733692,0.17739509340029785,0.022756775723415727,1e-4,4e-4
+molecular_nestedness,molecular,nestedness,Not flow-connected,408,0.00244419474530131,0.21325881228749596,8.434509502620101e-5,0.9793,0.9793
+molecular_nestedness,molecular,nestedness,Slope difference,528,NA,NA,0.022672430628389525,4e-4,8e-4

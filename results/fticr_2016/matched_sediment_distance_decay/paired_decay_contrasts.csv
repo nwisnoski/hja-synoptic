@@ -1,0 +1,7 @@
+role,molecular_metric,microbial_metric,predictor,mantel_r,p_value,p_bh
+primary,molecular_jaccard,microbial_hellinger,watercourse_km,-0.01995163026875662,0.7939,0.7939
+primary,molecular_jaccard,microbial_hellinger,straight_line_km,0.026048917284359683,0.7033,0.7939
+turnover,molecular_turnover,microbial_turnover,watercourse_km,-0.05190149480291974,0.4293,0.4293
+turnover,molecular_turnover,microbial_turnover,straight_line_km,-0.0698667488713547,0.2498,0.4293
+nestedness,molecular_nestedness,microbial_nestedness,watercourse_km,-0.05810437544965801,0.4984,0.6685
+nestedness,molecular_nestedness,microbial_nestedness,straight_line_km,-0.03300409848578085,0.6685,0.6685

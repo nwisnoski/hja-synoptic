@@ -3,3 +3,5 @@ molecular_equal_features,0,0
 microbial_hellinger,9.178336692826684e-16,1.5543122344752192e-15
 molecular_jaccard,1.2484646647812782e-17,5.551115123125783e-17
 microbial_jaccard,0,0
+molecular_turnover,0.40785586051925604,0.8329560127479475
+microbial_turnover,0,0

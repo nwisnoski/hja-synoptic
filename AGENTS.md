@@ -66,6 +66,63 @@ win. Check in briefly that these project instructions are visible and understood
 - The mapped stable group's Lookout/Mack pattern is exploratory. Branch effects
   and a metabolic guild have not been established.
 
+## Review of November 15, 2026
+
+Checks against the saved tables. Figure 3 has been rebuilt; the other figure
+changes are pending.
+
+- Equal-feature Jaccard dispersion tracks detected feature count (Spearman
+  rho = 0.95 across the 33 sites). Thinning binary detections removes more of a
+  richer profile. It is retained in script 04 only as a diagnostic. No
+  complete-data view shows a network-group dispersion difference for molecules
+  or microbes. Raup–Crick was tried, saturated at zero, and removed.
+- Figure 3 now shows the supported pattern on the 33 matched sites: sediment
+  organic content declines with drainage area, feature count follows organic
+  content, and drainage area adds nothing once organic content is in the model.
+  Fixed sediment mass does not standardize carbon, so treat feature count as
+  detected features per unit sediment, not chemodiversity.
+- The direct feature-count decline with drainage area is the weakest link: it
+  passes on the 33 matched sites (P = 0.033) and not on all 44 (P = 0.063).
+- Molecular differences among network positions are nestedness, not turnover.
+  Five-site upstream pools hold about 90% of the mainstem pool, which holds 54%
+  of headwater and 71% of intermediate pools. Microbes show neither a richness
+  decline nor nesting. Lower-carbon extracts could produce the same nesting
+  through detection alone; this limit belongs in every statement of the result.
+- The microbial contrast is tested directly in script 04: the molecular minus
+  microbial difference in nestedness rises with the drainage-area ratio, and
+  the difference in turnover falls. Pool containment is reported as a result,
+  not drawn.
+- `supporting/10_distance_decay.R`: over all pairs, decay is weak for both data
+  types (Mantel r = 0.12–0.17) and sits at the adjustment threshold. Among the
+  120 flow-connected pairs, molecular Jaccard rises strongly with channel
+  distance (r = 0.58) and is flat among unconnected pairs; the rise is
+  nestedness (r = 0.56), while turnover falls. Microbes show no such difference.
+  Flow-connected pairs concentrate on the five mainstem sites.
+- New figures (Figure 3 and its panels, distance decay, richness dependence) are
+  built at printed size: 2.6 x 2.0 in panels, 9-point base, canvas measured
+  around the panels. Figures 1, 2, 4 and the older supplementary panels still
+  use canvas-based sizing and need the same restyle.
+- Open question: the final panel set of Figure 3. The flow-connected nestedness
+  panel (supporting 10) could replace or join the drainage-ratio nestedness
+  panel (D). Panel A, the direct richness decline, passes on the 33 matched
+  sites but not on all 44.
+- Planned, not started: rename `04_sediment_convergence.R`, and restyle the
+  scripts for readability.
+- The Figure 2B–C porewater–sediment iCAMP contrast does not vary with porewater
+  Hill diversity, pre-rarefaction depth, or plate.
+- The mapped group is present at 17 sediment sites and nearly absent at 17. This
+  is unrelated to plate, depth, feature count, or sampling date. The network's
+  association counts do not exceed either profile-shuffle null, so the figure is
+  a candidate for the supplement.
+- Network position returns no detectable effect in first detection, iCAMP,
+  microbial dispersion, porewater composition, or soil sharing. The supported
+  results are habitat contrasts on the 18 paired sites. Five mainstem sites
+  limit power; a null here does not establish equivalence.
+- Figure fixes pending: porewater shape differs between Figures 1 and 2; the
+  supplementary dispersion panels reuse the habitat colors for network groups;
+  Figure 1 plots weighted UniFrac but tests Hellinger; Figure 2A shows the full
+  inventory, whose soil share is effort-dependent.
+
 ## Cluster continuity and authorization
 
 Host: `niw7@lugh`. Checkout: `/mnt/home/niw7/scratch/GitHub/hja-synoptic`

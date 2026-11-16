@@ -1,4 +1,5 @@
-# Figure 3: molecular classes followed by sediment dispersion on identical sites.
+# Figure 3: downstream decline and nesting of sediment molecular features, with
+# dispersion and molecular class views of the same sites as supporting panels.
 library(here)
 library(readr)
 library(dplyr)
@@ -6,6 +7,7 @@ library(tidyr)
 library(ggplot2)
 library(vegan)
 library(permute)
+library(betapart)
 library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
@@ -19,6 +21,7 @@ n_feature_draws <- 1000
 n_permutations <- 9999
 n_balanced_draws <- 1000
 permutation_seed <- 20261015
+significance_threshold <- 0.05
 resampling_seed <- 20261016
 plot_seed <- 20261017
 point_size <- 3
@@ -26,27 +29,80 @@ point_alpha <- 0.5
 panel_aspect <- 0.8
 panel_width <- 5.8
 figure_height <- 5.2
-composite_width <- 7.2
-composite_height <- 7.2
+# The Figure 3 panels are built at printed size: each panel has a fixed size and
+# the canvas is measured around it. Dispersion and class panels keep the earlier
+# canvas-based sizes until the whole figure set is restyled together.
+print_panel_width <- 2.6
+print_panel_height <- 2.0
+facet_panel_width <- 2.1
+facet_panel_height <- 1.6
+print_base_size <- 9
+site_point_size <- 1.6
+pair_point_size <- 0.6
+pair_point_alpha <- 0.3
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
 mainstem_order <- 5
 contrast_names <- c("Headwater-Intermediate", "Headwater-Mainstem", "Intermediate-Mainstem")
 group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#0072B2")
+# Dispersion views. The primary views are the standard dissimilarity for each
+# data type on the complete data. Turnover removes the part of binary
+# dissimilarity that comes from richness differences. The equal-feature view is
+# kept only to document that thinning binary detections restates richness.
 test_design <- tribble(
   ~metric, ~role, ~label,
-  "molecular_equal_features", "primary", "Molecular signatures (equal-feature Jaccard)",
+  "molecular_equal_features", "thinning_diagnostic", "Molecular signatures (equal-feature Jaccard)",
   "microbial_hellinger", "primary", "Sediment microbes (Hellinger)",
-  "molecular_jaccard", "sensitivity", "Molecular signatures (complete Jaccard)",
-  "microbial_jaccard", "sensitivity", "Sediment microbes (binary Jaccard)") %>%
+  "molecular_jaccard", "primary", "Molecular signatures (complete Jaccard)",
+  "microbial_jaccard", "sensitivity", "Sediment microbes (binary Jaccard)",
+  "molecular_turnover", "turnover", "Molecular signatures (Jaccard turnover)",
+  "microbial_turnover", "turnover", "Sediment microbes (Jaccard turnover)") %>%
   mutate(seed = permutation_seed)
+# Each view is compared with the richness of its own data type.
+molecular_metrics <- c("molecular_equal_features", "molecular_jaccard", "molecular_turnover")
+# Site-level models of the downstream decline. All variables are log10, so
+# slopes are scaling exponents. The joint model asks whether drainage area
+# explains feature richness beyond sediment organic content.
+model_design <- tribble(
+  ~model, ~role, ~response, ~predictors,
+  "richness_drainage", "simple", "log10_features", "log10_drainage",
+  "organic_drainage", "simple", "log10_organic", "log10_drainage",
+  "richness_organic", "simple", "log10_features", "log10_organic",
+  "richness_joint", "joint", "log10_features", "log10_organic + log10_drainage",
+  "asv_richness_drainage", "microbial_contrast", "log10_asvs", "log10_drainage")
+# Components of binary Jaccard dissimilarity related to the drainage-area ratio.
+component_design <- tribble(
+  ~component, ~label,
+  "beta.jac", "Jaccard dissimilarity",
+  "beta.jtu", "Turnover",
+  "beta.jne", "Nestedness")
 draw_design <- tibble(run = seq_len(n_balanced_draws), seed = resampling_seed + run)
 plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
     strip.background = element_blank(), legend.position = "none",
     axis.text = element_text(size = 11), strip.text = element_text(size = 12),
     plot.tag = element_text(size = 14, face = "bold"))
+print_theme <- theme_bw(base_size = print_base_size) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    strip.background = element_blank(), legend.position = "none",
+    panel.widths = grid::unit(print_panel_width, "in"),
+    panel.heights = grid::unit(print_panel_height, "in"),
+    plot.tag = element_text(size = 11, face = "bold"))
+# Save a figure whose panels have fixed sizes on a canvas measured around them.
+# Measuring text needs an open graphics device, so a null device is opened.
+save_at_panel_size <- function(plot, path) {
+  pdf(NULL)
+  if (inherits(plot, "patchwork")) {
+    grob <- patchworkGrob(plot)
+  } else {
+    grob <- ggplotGrob(plot)
+  }
+  width <- grid::convertWidth(sum(grob$widths), "in", valueOnly = TRUE)
+  height <- grid::convertHeight(sum(grob$heights), "in", valueOnly = TRUE)
+  dev.off()
+  ggsave(path, plot, width = width, height = height, bg = "white")
+}
 
 site_panel_aspect <- 0.8
 site_figure_width <- 7.5
@@ -82,7 +138,8 @@ input_paths <- c(
   here("data", "derived", "fticr_2016", "sediment_44_presence_absence.csv"),
   here("results", "fticr_2016", "network_dispersion", "site_network_position_audit.csv"),
   here("results", "fticr_2016", "river_composition", "mean_subsampled_jaccard.csv"),
-  here("results", "fticr_2016", "river_composition", "subsampling_summary.csv"))
+  here("results", "fticr_2016", "river_composition", "subsampling_summary.csv"),
+  here("data", "derived", "analysis_inputs", "environment", "sediment_44_environment.csv"))
 preserved_paths <- c(input_paths,
   list.files(here("results", "fticr_2016", "network_dispersion"), full.names = TRUE),
   here("figures", "supplement", "molecular", "2016_fticr_dispersion_equal_features.pdf"))
@@ -119,6 +176,13 @@ stopifnot(!anyNA(site), identical(reference$site_code, site$site_code),
 site$detected_molecular_features <- reference$detected_primary_features
 site$basin_outlet_stream_distance_m <- reference$basin_outlet_stream_distance_m
 write_csv(site, file.path(results_dir, "matched_site_manifest.csv"))
+# Drainage area and sediment organic content for all 44 molecular sites.
+environment <- read_csv(input_paths[7], col_types = cols(site_code = col_character())) %>%
+  select(site_code, site_drainage_area_ha, sediment_organic_content_percent)
+stopifnot(!anyDuplicated(environment$site_code), setequal(environment$site_code, network$site_code),
+  all(is.finite(environment$site_drainage_area_ha)), all(environment$site_drainage_area_ha > 0),
+  all(is.finite(environment$sediment_organic_content_percent)),
+  all(environment$sediment_organic_content_percent > 0))
 
 # 3. Retain preparation settings and construct distances on the shared sites -------
 count_table <- read_csv(input_paths[2], show_col_types = FALSE)
@@ -142,10 +206,21 @@ stopifnot(!anyDuplicated(thinned$site_code), all(site$site_code %in% thinned$sit
 # Reuse the completed mean pairwise distances at the unchanged 391-feature target.
 equal_features <- as.matrix(thinned[match(site$site_code, thinned$site_code), site$site_code])
 rownames(equal_features) <- site$site_code
+# Binary Jaccard dissimilarity divides into turnover, where features are
+# replaced, and nestedness, where the poorer site holds a subset of the richer
+# one (Baselga 2010). Both use the complete binary data, with no thinning.
+community_pa <- (community > 0) * 1
+site$detected_asvs <- as.integer(rowSums(community_pa))
+partitions <- list(molecular = beta.pair(pa, index.family = "jaccard"),
+  microbial = beta.pair(community_pa, index.family = "jaccard"))
 distances <- list(molecular_equal_features = equal_features,
   microbial_hellinger = as.matrix(dist(decostand(community, method = "hellinger"))),
   molecular_jaccard = as.matrix(vegdist(pa, method = "jaccard", binary = TRUE)),
-  microbial_jaccard = as.matrix(vegdist(community, method = "jaccard", binary = TRUE)))
+  microbial_jaccard = as.matrix(vegdist(community, method = "jaccard", binary = TRUE)),
+  molecular_turnover = as.matrix(partitions$molecular$beta.jtu),
+  microbial_turnover = as.matrix(partitions$microbial$beta.jtu))
+stopifnot(identical(names(distances), test_design$metric),
+  max(abs(as.matrix(partitions$molecular$beta.jac) - distances$molecular_jaccard)) < 1e-12)
 
 # 4. Refit spatial medians and use the same residual permutations for each view ----
 set.seed(permutation_seed)
@@ -251,7 +326,7 @@ for (run in seq_len(n_balanced_draws)) {
       headwater_intermediate_ratio = means["Headwater"] / means["Intermediate"])
   }
   if (run == 1) {
-    message("Representative four-view balanced draw: ", round(proc.time()[["elapsed"]] - start_time, 3), " s")
+    message("Representative balanced draw across all views: ", round(proc.time()[["elapsed"]] - start_time, 3), " s")
   }
 }
 balanced_runtime_seconds <- proc.time()[["elapsed"]] - start_time
@@ -273,9 +348,228 @@ balanced_summary <- balanced %>% group_by(metric) %>%
     fraction_headwater_greater_intermediate = mean(headwater_intermediate_ratio[succeeded] > 1), .groups = "drop")
 write_csv(balanced_summary, file.path(results_dir, "balanced_segment_summary.csv"))
 
-# 6. Save primary panels and their combination without altering full-site figures --
+# 6. Relate each site's distance to its richness -----------------------------------
+# A measure suited to comparing dispersion among groups should not rank sites by
+# the number of features or ASVs detected in them. Correlations near one mean
+# that the view mostly restates richness.
+richness_rows <- list()
+for (test in seq_len(nrow(test_design))) {
+  metric <- test_design$metric[test]
+  current <- dispersion %>% filter(.data$metric == .env$metric)
+  richness_measure <- "detected_asvs"
+  if (metric %in% molecular_metrics) {
+    richness_measure <- "detected_molecular_features"
+  }
+  current$richness <- current[[richness_measure]]
+  within_group <- current %>% group_by(network_group) %>%
+    summarize(rho = cor(distance, richness, method = "spearman"), .groups = "drop")
+  richness_rows[[test]] <- tibble(metric, role = test_design$role[test], richness_measure,
+    spearman_all_sites = cor(current$distance, current$richness, method = "spearman"),
+    spearman_headwater = within_group$rho[within_group$network_group == "Headwater"],
+    spearman_intermediate = within_group$rho[within_group$network_group == "Intermediate"],
+    spearman_mainstem = within_group$rho[within_group$network_group == "Mainstem"])
+}
+richness_dependence <- bind_rows(richness_rows)
+write_csv(richness_dependence, file.path(results_dir, "richness_dependence.csv"))
+richness_panel <- dispersion %>% filter(metric %in% molecular_metrics) %>%
+  mutate(metric = factor(metric, levels = molecular_metrics))
+richness_plot <- ggplot(richness_panel, aes(detected_molecular_features, distance, color = network_group)) +
+  geom_point(size = site_point_size, alpha = 0.7) +
+  facet_wrap(~metric, scales = "free_y", ncol = 3,
+    labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
+  scale_color_manual(values = group_colors) +
+  labs(x = "Detected FT-ICR features", y = "Distance to group median", color = NULL) +
+  print_theme + theme(legend.position = "bottom",
+    panel.widths = grid::unit(rep(facet_panel_width, length(molecular_metrics)), "in"),
+    panel.heights = grid::unit(facet_panel_height, "in"))
+save_at_panel_size(richness_plot,
+  file.path(figures_dir, "2016_matched_sediment_dispersion_richness_dependence.pdf"))
+
+# 7. Model the downstream decline in molecular richness ----------------------------
+# Three simple regressions describe the chain from network position to sediment
+# organic content to detected features. The joint model then asks whether
+# drainage area still matters once organic content is known. Extracts used a
+# fixed sediment mass, so detected features are counted per unit sediment.
+# The matched 33 sites are the primary set; all 44 molecular sites are a check.
+# ASV richness at equal sequencing depth is the microbial contrast.
+site_sets <- list(
+  matched_33 = site %>% select(site_code, detected_molecular_features, detected_asvs),
+  molecular_44 = network %>% transmute(site_code, detected_molecular_features = detected_primary_features,
+    detected_asvs = NA_integer_))
+model_rows <- list()
+model_data <- list()
+for (site_set in names(site_sets)) {
+  current <- site_sets[[site_set]] %>% left_join(environment, by = "site_code") %>%
+    mutate(log10_features = log10(detected_molecular_features), log10_asvs = log10(detected_asvs),
+      log10_drainage = log10(site_drainage_area_ha), log10_organic = log10(sediment_organic_content_percent))
+  stopifnot(!anyNA(current$log10_features), !anyNA(current$log10_drainage), !anyNA(current$log10_organic))
+  model_data[[site_set]] <- current
+  for (i in seq_len(nrow(model_design))) {
+    if (model_design$response[i] == "log10_asvs" && site_set != "matched_33") {
+      next
+    }
+    fit <- lm(as.formula(paste(model_design$response[i], "~", model_design$predictors[i])), data = current)
+    coefficients <- summary(fit)$coefficients
+    model_rows[[length(model_rows) + 1]] <- tibble(site_set, model = model_design$model[i],
+      role = model_design$role[i], response = model_design$response[i], term = rownames(coefficients),
+      estimate = coefficients[, "Estimate"], std_error = coefficients[, "Std. Error"],
+      statistic = coefficients[, "t value"], p_value = coefficients[, "Pr(>|t|)"],
+      sites = nrow(current), r_squared = summary(fit)$r.squared)
+  }
+}
+# Intercepts are kept for drawing lines; only slopes enter the BH families.
+richness_models <- bind_rows(model_rows) %>% group_by(site_set, role) %>%
+  mutate(p_bh = if_else(term == "(Intercept)", NA_real_,
+    p.adjust(if_else(term == "(Intercept)", NA_real_, p_value), method = "BH"))) %>% ungroup()
+write_csv(richness_models, file.path(results_dir, "molecular_richness_models.csv"))
+
+# 8. Relate turnover and nestedness to differences in network position ------------
+# For every pair of sites, the drainage-area ratio measures how far apart they
+# sit along the network. Mantel tests permute whole sites with the permutations
+# used for dispersion and are two-sided, because either component could rise or
+# fall. The slope is the least-squares line through the site pairs.
+drainage <- model_data$matched_33$site_drainage_area_ha
+names(drainage) <- model_data$matched_33$site_code
+stopifnot(identical(names(drainage), site$site_code))
+log10_ratio <- abs(outer(log10(drainage), log10(drainage), "-"))
+lower <- which(lower.tri(log10_ratio), arr.ind = TRUE)
+pairs <- tibble(site_a = site$site_code[lower[, "col"]], site_b = site$site_code[lower[, "row"]],
+  drainage_ratio = 10^log10_ratio[lower])
+component_rows <- list()
+for (data_type in names(partitions)) {
+  for (i in seq_len(nrow(component_design))) {
+    component <- component_design$component[i]
+    current <- as.matrix(partitions[[data_type]][[component]])
+    stopifnot(identical(rownames(current), site$site_code))
+    pairs[[paste(data_type, component, sep = "_")]] <- current[lower]
+    fit <- mantel(as.dist(log10_ratio), as.dist(current), method = "pearson", permutations = permutations)
+    line <- lm(current[lower] ~ log10_ratio[lower])
+    component_rows[[length(component_rows) + 1]] <- tibble(data_type, component,
+      label = component_design$label[i], sites = nrow(site), site_pairs = nrow(pairs),
+      mantel_r = fit$statistic, intercept = coef(line)[[1]], slope_per_log10_ratio = coef(line)[[2]],
+      p_value = (sum(abs(fit$perm) >= abs(fit$statistic)) + 1) / (length(fit$perm) + 1))
+  }
+}
+# Contrast the two data types on the same site pairs. Each component is
+# standardized across the pairs, and the molecular minus microbial difference is
+# related to the drainage-area ratio. A positive association means the molecular
+# component rises faster with the ratio than the microbial one.
+for (i in seq_len(nrow(component_design))) {
+  component <- component_design$component[i]
+  molecular_component <- as.matrix(partitions$molecular[[component]])
+  microbial_component <- as.matrix(partitions$microbial[[component]])
+  difference <- (molecular_component - mean(molecular_component[lower])) / sd(molecular_component[lower]) -
+    (microbial_component - mean(microbial_component[lower])) / sd(microbial_component[lower])
+  diag(difference) <- 0
+  fit <- mantel(as.dist(log10_ratio), as.dist(difference), method = "pearson", permutations = permutations)
+  component_rows[[length(component_rows) + 1]] <- tibble(data_type = "molecular minus microbial",
+    component, label = component_design$label[i], sites = nrow(site), site_pairs = nrow(pairs),
+    mantel_r = fit$statistic, intercept = NA_real_, slope_per_log10_ratio = NA_real_,
+    p_value = (sum(abs(fit$perm) >= abs(fit$statistic)) + 1) / (length(fit$perm) + 1))
+}
+component_tests <- bind_rows(component_rows) %>% group_by(data_type) %>%
+  mutate(p_bh = p.adjust(p_value, method = "BH")) %>% ungroup()
+write_csv(component_tests, file.path(results_dir, "drainage_ratio_component_tests.csv"))
+write_csv(pairs, file.path(results_dir, "site_pair_components.csv"))
+
+# 9. Compare feature pools between network positions with equal site numbers ------
+# A pool is every feature detected in a set of sites. Pools from more sites hold
+# more features, so each upstream group is compared with the five mainstem sites
+# using the five-site, one-per-segment selections of the balanced draws above.
+mainstem_pool <- colSums(pa[mainstem_indices, , drop = FALSE]) > 0
+pool_rows <- list()
+for (run in seq_len(n_balanced_draws)) {
+  current <- selections[selections$run == run, ]
+  for (group in c("Headwater", "Intermediate")) {
+    chosen <- match(current$site_code[current$network_group == group], site$site_code)
+    stopifnot(length(chosen) == balanced_n)
+    upstream_pool <- colSums(pa[chosen, , drop = FALSE]) > 0
+    pool_rows[[length(pool_rows) + 1]] <- tibble(run, seed = draw_design$seed[run],
+      upstream_group = group, sites_per_pool = balanced_n,
+      upstream_pool_features = sum(upstream_pool), mainstem_pool_features = sum(mainstem_pool),
+      mainstem_pool_in_upstream_pool = mean(upstream_pool[mainstem_pool]),
+      upstream_pool_in_mainstem_pool = mean(mainstem_pool[upstream_pool]))
+  }
+}
+pool_draws <- bind_rows(pool_rows)
+write_csv(pool_draws, file.path(results_dir, "pool_containment_draws.csv"))
+# Draw medians and middle 95% ranges describe sensitivity to which sites are
+# drawn; they are not confidence intervals. The mainstem pool is the same in
+# every draw.
+pool_summary <- pool_draws %>%
+  pivot_longer(c(mainstem_pool_in_upstream_pool, upstream_pool_in_mainstem_pool),
+    names_to = "direction", values_to = "share") %>%
+  group_by(upstream_group, direction) %>%
+  summarize(draws = n(), median_share = median(share), share_p025 = quantile(share, 0.025),
+    share_p975 = quantile(share, 0.975), .groups = "drop")
+
+# 10. Draw the manuscript figure: decline, organic content, and nesting ------------
+# Lines are drawn only for slopes whose adjusted test passes the threshold.
+# Pool containment from section 9 is reported as a result, not drawn.
+matched <- model_data$matched_33
+simple <- richness_models %>% filter(site_set == "matched_33", role == "simple")
+molecular_components <- component_tests %>% filter(data_type == "molecular")
+figure_panels <- list()
+site_panel_design <- tribble(
+  ~panel, ~x, ~y, ~x_label, ~y_label,
+  "richness_drainage", "site_drainage_area_ha", "detected_molecular_features",
+    "Drainage area (ha)", "Detected FT-ICR features",
+  "organic_drainage", "site_drainage_area_ha", "sediment_organic_content_percent",
+    "Drainage area (ha)", "Sediment organic content (%)",
+  "richness_organic", "sediment_organic_content_percent", "detected_molecular_features",
+    "Sediment organic content (%)", "Detected FT-ICR features")
+for (i in seq_len(nrow(site_panel_design))) {
+  design <- site_panel_design[i, ]
+  fitted <- simple %>% filter(model == design$panel)
+  slope <- fitted %>% filter(term != "(Intercept)")
+  p <- ggplot(matched, aes(.data[[design$x]], .data[[design$y]])) +
+    geom_point(size = site_point_size, alpha = 0.7) +
+    labs(x = design$x_label, y = design$y_label) + print_theme
+  # Drainage area spans three orders of magnitude and is labeled in powers of
+  # ten. Feature count and organic content span less than one, so their log
+  # axes carry plain numbers.
+  if (design$x == "site_drainage_area_ha") {
+    p <- p + scale_x_log10(limits = c(10, 10^4), breaks = 10^(1:4), labels = scales::label_log())
+  } else {
+    p <- p + scale_x_log10(breaks = c(3, 5, 10, 15))
+  }
+  if (design$y == "detected_molecular_features") {
+    p <- p + scale_y_log10(breaks = c(500, 1000, 2000))
+  } else {
+    p <- p + scale_y_log10(breaks = c(3, 5, 10, 15))
+  }
+  if (slope$p_bh <= significance_threshold) {
+    p <- p + geom_abline(intercept = fitted$estimate[fitted$term == "(Intercept)"],
+      slope = slope$estimate, linewidth = 0.6)
+  }
+  figure_panels[[design$panel]] <- p
+  save_at_panel_size(p, file.path(figures_dir, paste0("2016_sediment_molecular_", design$panel, ".pdf")))
+}
+# Turnover and nestedness are the two components of binary Jaccard
+# dissimilarity. They share one y-axis range so their sizes can be compared.
+component_range <- range(pairs$molecular_beta.jtu, pairs$molecular_beta.jne)
+for (component in c("beta.jtu", "beta.jne")) {
+  tested <- molecular_components %>% filter(.data$component == .env$component)
+  p <- ggplot(pairs, aes(drainage_ratio, .data[[paste0("molecular_", component)]])) +
+    geom_point(size = pair_point_size, alpha = pair_point_alpha) +
+    scale_x_log10(labels = scales::label_log()) +
+    scale_y_continuous(limits = component_range) +
+    labs(x = "Drainage area ratio", y = paste("Jaccard", tolower(tested$label), "between sites")) +
+    print_theme
+  if (tested$p_bh <= significance_threshold) {
+    p <- p + geom_abline(intercept = tested$intercept, slope = tested$slope_per_log10_ratio, linewidth = 0.6)
+  }
+  figure_panels[[component]] <- p
+  save_at_panel_size(p, file.path(figures_dir,
+    paste0("2016_sediment_molecular_", tolower(tested$label), "_drainage_ratio.pdf")))
+}
+figure <- wrap_plots(figure_panels[c("richness_drainage", "organic_drainage", "richness_organic", "beta.jne")],
+  ncol = 2) + plot_annotation(tag_levels = "A")
+save_at_panel_size(figure, file.path(manuscript_dir, "2016_sediment_molecular_nestedness.pdf"))
+
+# 11. Save dispersion panels for every view ----------------------------------------
 panels <- list()
-for (test in which(test_design$role == "primary")) {
+for (test in seq_len(nrow(test_design))) {
   metric <- test_design$metric[test]
   panel <- dispersion %>% filter(.data$metric == .env$metric)
   sizes <- table(panel$network_group)
@@ -287,16 +581,22 @@ for (test in which(test_design$role == "primary")) {
       size = point_size, alpha = point_alpha) +
     facet_wrap(~metric, labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
     scale_color_manual(values = group_colors) + scale_x_discrete(labels = x_labels) +
-    labs(x = NULL, y = "Distance to group spatial median") +
+    labs(x = NULL, y = "Distance to group median") +
     plot_theme + theme(aspect.ratio = panel_aspect)
   panels[[metric]] <- p
   ggsave(file.path(figures_dir, paste0("2016_matched_sediment_dispersion_", metric, ".pdf")),
     p, width = panel_width, height = figure_height, bg = "white")
 }
 ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
-  wrap_plots(panels, ncol = 2) + plot_annotation(tag_levels = "A"),
+  wrap_plots(panels[c("molecular_jaccard", "microbial_hellinger")], ncol = 2) +
+    plot_annotation(tag_levels = "A"),
   width = 2 * panel_width, height = figure_height, bg = "white")
-# 7. Align the existing class fractions to the audited 44-site network groups.
+ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_turnover_comparison.pdf"),
+  wrap_plots(panels[c("molecular_turnover", "microbial_turnover")], ncol = 2) +
+    plot_annotation(tag_levels = "A"),
+  width = 2 * panel_width, height = figure_height, bg = "white")
+
+# 12. Align the existing class fractions to the audited 44-site network groups.
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 class_input_paths <- c(
@@ -341,7 +641,7 @@ class_table$network_group <- factor(class_reference$network_group, levels = grou
 class_table$class_label <- factor(class_table$source_class, levels = class_order, labels = class_labels)
 class_table$site_code <- factor(class_table$site_code, levels = class_site_order$site_code)
 
-# 8. Verify that the saved fractions agree with current binary detections.
+# 13. Verify that the saved fractions agree with current binary detections.
 # Keep workbook classifications and detection rules unchanged.
 class_pa <- as.matrix(class_incidence[, -1])
 class_properties <- class_properties[match(colnames(class_pa), class_properties$peak_id), ]
@@ -362,7 +662,7 @@ site_sums <- class_table %>% group_by(site_code) %>%
   summarize(fraction_sum = sum(fraction_detected), .groups = "drop")
 stopifnot(all(abs(site_sums$fraction_sum - 1) < 1e-12))
 
-# 9. Average site fractions within groups, giving every site equal weight.
+# 14. Average site fractions within groups, giving every site equal weight.
 # Pooling raw feature counts would give feature-rich sites greater weight.
 class_group_summary <- class_table %>% group_by(network_group, source_class, class_label) %>%
   summarize(
@@ -378,7 +678,7 @@ class_group_counts <- table(factor(class_network$network_group, levels = group_l
 class_group_labels <- paste0(group_levels, "\n(n = ", as.integer(class_group_counts), ")")
 names(class_group_labels) <- group_levels
 
-# 10. Retain full-site class panels and match the manuscript to dispersion.
+# 15. Retain class panels for all sites and for the matched sites.
 group_plot <- ggplot(class_group_summary, aes(network_group, mean_fraction, fill = class_label)) +
   geom_col(width = 0.65) +
   scale_fill_manual(values = class_colors, drop = FALSE) +
@@ -437,36 +737,9 @@ for (group_name in c("All", "Matched", group_levels)) {
   ggsave(file.path(figures_dir, paste0("2016_fticr_site_class_composition_", file_suffix, ".pdf")),
     site_panels[[group_name]], width = class_panel_width, height = class_panel_height, bg = "white")
 }
-# The upper panel describes broad class fractions, not feature-level turnover.
-# All three panels use exactly the same 33 sites (18, 10, and 5 by network group).
-class_panel <- site_panels$Matched + labs(y = "Detected features (%)") +
-  scale_fill_manual(values = class_colors, drop = FALSE,
-    labels = c("Lipid-like", "Protein-like", "Amino-sugar-like", "Carbohydrate-like",
-      "Lignin-like", "Tannin-like", "Condensed-\nhydrocarbon-like",
-      "Unsaturated-\nhydrocarbon-like", "Other")) +
-  guides(fill = guide_legend(ncol = 1)) +
-  theme(legend.position = "right", axis.text.x = element_text(size = 9),
-    strip.text.x = element_text(size = 11), strip.clip = "off")
-molecular_panel <- panels[["molecular_equal_features"]] + labs(tag = "B",
-    y = "Distance to group\nspatial median") +
-  facet_wrap(~metric, labeller = as_labeller(c(
-    molecular_equal_features = "FT-ICR features\n(equal-feature Jaccard)"))) +
-  theme(axis.text.x = element_text(size = 10))
-microbial_panel <- panels[["microbial_hellinger"]] + labs(tag = "C",
-    y = "Distance to group\nspatial median") +
-  facet_wrap(~metric, labeller = as_labeller(c(
-    microbial_hellinger = "Microbial communities\n(Hellinger)"))) +
-  theme(axis.text.x = element_text(size = 10))
-# Keep the class legend from reserving a column in the lower row.
-class_panel <- free(class_panel) + labs(tag = "A") +
-  theme(plot.tag = element_text(size = 14, face = "bold"))
-combined <- class_panel / (molecular_panel | microbial_panel) +
-  plot_layout(heights = c(1.15, 1))
-ggsave(file.path(manuscript_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
-  combined, width = composite_width, height = composite_height, bg = "white")
 stopifnot(identical(class_input_hashes, unname(tools::md5sum(class_input_paths))))
 
-# 11. Confirm that the reused inputs and full-site dispersion results are intact.
+# 16. Confirm that the reused inputs and full-site dispersion results are intact.
 checks$final_md5 <- unname(tools::md5sum(checks$path))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))
@@ -477,3 +750,7 @@ write_csv(tibble(n_permutations, n_balanced_draws, target_depth, target_features
 writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(results_dir, "session_info.txt"))
 print(tests)
 print(balanced_summary)
+print(richness_dependence)
+print(richness_models, n = Inf)
+print(component_tests)
+print(pool_summary)

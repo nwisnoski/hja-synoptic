@@ -1,0 +1,2 @@
+centerline_points,segments,confluences,components,segments_not_reaching_outlet,points_not_reaching_outlet,max_outlet_distance_error_m,flow_connected_pairs,site_pairs,max_site_match_error_m
+205322,686,342,2,135,310,3.2847747206687927e-6,120,528,1.0268332935497139e-8

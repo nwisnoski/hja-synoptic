@@ -14,12 +14,13 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
 | [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1) and weighted UniFrac | [Habitat diversity](figures/manuscript/2016_habitat_diversity.pdf) |
 | [03_first_detection.R](analysis/03_first_detection.R) | 2. First detection and matched-habitat iCAMP contrasts | [Detection and assembly](figures/manuscript/2016_first_detection_flowpaths.pdf) |
-| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Molecular classes and dispersion on the same 33 sediment sites | [Classes and dispersion](figures/manuscript/2016_matched_sediment_dispersion_comparison.pdf) |
+| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Downstream decline and nesting of sediment molecular features on the 33 matched sites | [Richness and nestedness](figures/manuscript/2016_sediment_molecular_nestedness.pdf) |
 | [05_network_localization.R](analysis/05_network_localization.R) | 4. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
 scripts. Script 02 uses saved UniFrac distances and supplies the paired tests
-for 03; 04 refits dispersion and its balanced-sampling sensitivity, then reads
+for 03; 04 fits the molecular richness models, the turnover and nestedness
+tests, and dispersion with its balanced-sampling sensitivity, then reads
 completed molecular-class results; 05 reads completed network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
@@ -50,7 +51,8 @@ Pair counts, formula checks, and site coverage are in
   microbial tables, phylogeny, and UniFrac. See its [preparation guide](analysis/preparation/README.md)
   only when inputs need rebuilding.
 - `analysis/supporting/`: molecular inputs and dispersion (01–03), network
-  inference and stability (04–07), and bulk transformations (08–09). The `icamp/`
+  inference and stability (04–07), bulk transformations (08–09), and distance
+  decay on the matched sediment sites (10, run after script 04). The `icamp/`
   subfolder retains its separate 01–03 sequence for completed-run provenance and
   plotting.
 - `analysis/cluster/`: batch launchers for sequence processing, phylogeny, and iCAMP.

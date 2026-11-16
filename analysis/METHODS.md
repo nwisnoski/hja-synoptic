@@ -167,27 +167,93 @@ four metrics corrected separately per null. No detectable enhancement of
 same-site resemblance does not establish equivalence, temporal transience,
 or sediment retention of a local signal.
 
-## Figure 3: molecular classes and sediment dispersion
+## Figure 3: downstream decline and nesting of sediment molecular features
 
-Panel A shows molecular class fractions at the same 33 sites used below, ordered
-by drainage within network groups. Bars use workbook classifications and
-fractions of binary detections. Broad class fractions provide chemical context;
-they do not directly measure convergence in individual formula detections.
-The full 44-site class figure and equally weighted group means remain
-supplementary. Formula classes are broad signatures, not identified structures
-or confirmed metabolites.
+All panels use the 33 matched sediment sites and the complete binary FT-ICR
+data. Each panel has a fixed printed size and the canvas is measured around the
+panels. Panels A–C relate detected feature count, sediment organic content, and
+drainage area by least-squares regression of log10 variables; slopes are scaling
+exponents. Three simple regressions form one BH family. A joint model of feature
+count on organic content and drainage area asks whether network position
+explains richness beyond organic content. The same models on all 44 molecular
+sites are a check, and ASV richness at equal sequencing depth is the microbial
+contrast. Sites are treated as independent, although some share stream segments.
 
-Panels B–C show molecular equal-feature Jaccard and microbial Hellinger
-dispersion, respectively, refitted on the same 33 sites. The molecular
-sensitivity averages 1,000 draws of 391 detections per site. Complete molecular and binary microbial Jaccard are
-additional views. Network groups are orders 1–2, 3–4, and 5. Median-based
-dispersion tests use 9,999 permutations; the two primary views form one BH
-family. The 1,000 segment-balanced draws use identical site selections across
-all views. Their frequencies are descriptive, not independent tests. A difference
-in significance does not itself test a difference between microbial and molecular
-responses. Lower molecular dispersion is supported in the equal-feature view;
-complete molecular Jaccard does not show a significant network-group dispersion
-difference. Network position is confounded with geography in this survey.
+Extracts used a fixed sediment mass, not a common carbon concentration, and
+feature count tracks total signal intensity. Feature count is therefore detected
+features per unit sediment, not calibrated molecular richness. More organic
+sediment may yield more features through detection alone.
+
+Panel D uses presence and absence only. Binary Jaccard dissimilarity between
+every pair of sites (528 pairs) divides into turnover, where features are
+replaced, and nestedness, where the poorer site holds a subset of the richer one
+([Baselga, 2010](https://doi.org/10.1111/j.1466-8238.2009.00490.x)). Each
+component is related to the ratio of the two sites' drainage areas with a
+two-sided Pearson Mantel test that permutes whole sites (9,999 permutations).
+The three molecular components form one BH family and the microbial components
+another. Panel D shows molecular nestedness; turnover is supplementary. A third
+family contrasts the data types directly: each component is standardized across
+the pairs, and the molecular minus microbial difference is related to the
+drainage-area ratio. Fitted lines are drawn only for adjusted P <= 0.05.
+
+Feature pools are compared with equal site numbers and reported as a result,
+not drawn. A pool is every feature detected in five sites. Each of the 1,000
+segment-balanced selections used for dispersion supplies five headwater and
+five intermediate sites; the five mainstem sites are fixed. The share of one
+pool found in the other is summarized by draw medians and middle 95% ranges,
+which describe sensitivity to site selection, not confidence intervals.
+
+Nestedness follows from richness differences, so the same detection limit
+applies: lower-carbon extracts could lose rare features without any change in
+the underlying molecular pool. The pattern is consistent with downstream loss of
+site-specific terrestrial features ([Creed et al., 2015](https://doi.org/10.1139/cjfas-2014-0400))
+but does not establish it.
+
+Dispersion among network groups is supplementary. Median-based tests use 9,999
+permutations on Lingoes-corrected distances. Primary views are microbial
+Hellinger and complete molecular Jaccard; the Jaccard turnover views form a
+second family. Network groups are orders 1–2, 3–4, and 5. The 1,000
+segment-balanced draws use identical site selections across all views; their
+frequencies are descriptive. Turnover is not Euclidean, so its Lingoes constant
+is large; the saved raw matrices allow correction-free checks. The equal-feature
+view, which thins every site to 391 detections, is retained only as a
+diagnostic: thinning binary detections removes more of a richer profile, so a
+site's distance rises with its feature count (`richness_dependence.csv`).
+Network position is confounded with geography in this survey.
+
+Molecular class fractions at the matched sites and at all 44 sites are
+supplementary. Bars use workbook classifications and fractions of binary
+detections. Formula classes are broad signatures, not identified structures or
+confirmed metabolites.
+
+## Supporting analysis: distance decay on the matched sediment sites
+
+`supporting/10_distance_decay.R` relates the dissimilarity of every pair of the
+33 matched sites (528 pairs) to watercourse and straight-line distance. It reads
+the complete-data matrices saved by script 04. Primary views are microbial
+Hellinger and molecular Jaccard; Jaccard turnover and nestedness of each data
+type form two further families. The stream network is built from the surveyed
+centerline, joining consecutive points within segments and segments at shared
+confluence points. Graph distances to the outlet reproduce the centerline's own
+values; one unsampled first-order segment (135) does not reach the outlet.
+
+Pearson Mantel tests permute whole sites, share 9,999 permutations, and are
+two-sided. The microbial–molecular contrast standardizes each dissimilarity
+across pairs and relates the pairwise difference to each distance.
+
+Pairs are flow-connected when their watercourse distance equals the difference
+of their outlet distances, so water passes from one site to the other (120 of
+528 pairs). The correlation with watercourse distance is computed separately
+for flow-connected and unconnected pairs, and the two slopes are compared. Null
+distributions permute whole sites in the dissimilarity matrix while distances
+and flow connections stay in place. Slopes within pair sets and slope
+differences are separate BH families. Figures show watercourse distance only,
+with a line for a pair set only where adjusted P <= 0.05.
+
+Flow-connected pairs are not independent: each mainstem site is connected to
+13–29 others, and channel distance between connected sites rises with their
+drainage-area ratio. The flow-connected molecular decay is nestedness, so the
+detection limit described for Figure 3 applies to it as well.
 
 ## Figure 4: exploratory association-group distribution
 
