@@ -257,7 +257,50 @@ across pairs and relates the pairwise difference to each distance. Flow-connecte
 and unconnected pairs are tested as for Figure 3. Figures show watercourse
 distance only, with a line for a pair set only where adjusted P <= 0.05.
 
-## Figure 4: exploratory association-group distribution
+## Figure 4: soil-shared and soil-absent sediment taxa
+
+`05_soil_affinity.R` classes every ASV by the number of the 15 reviewed soils it
+occurs in: soil-core ASVs occur in at least five, soil-absent ASVs in none. The
+classes use the soil samples only, so the sediment data they are tested on play
+no part in defining them. Each class's share of a sample's 10,000 reads is
+measured for all 34 sediment and 27 porewater samples. Occurrence in soil
+does not establish origin or movement; soil-core ASVs may be habitat generalists.
+
+Sediment and porewater shares are compared at the 18 paired sites by exchanging
+habitats within sites (9,999 sign flips). Spatial structure in the sediment
+share uses Moran's I with inverse watercourse-distance weights. Each sample is
+assigned to the north branch (above segment 134), the Lookout branch (above
+segment 39), or the channels below their fork, from the same stream graph as
+Figure 3. The KC tributary joins below the fork but also drains Lookout Mountain.
+Panel B maps the stable network group (see the supporting network analysis),
+labeled the sediment-specific group because its ASVs are almost never found in
+soil or porewater. Correlations between its ASV fraction and the class shares
+exclude the group's own ASVs from the shares.
+
+Panel D ranks the soil-core families by mean percentage of sediment reads. Each
+family sums its soil-core ASVs; ASVs without a family assignment are grouped as
+"Unclassified" at their lowest assigned rank. The same sums for soil and
+porewater samples are drawn on the log axis; a zero is not drawn.
+
+A supplementary panel asks whether each class's sediment composition is
+organized along the network. ASVs at 3 to 31 of the 34 sediment sites are eligible. In each of 199
+draws, the same number of ASVs is taken from each class at every sediment
+prevalence, so the classes cannot differ through prevalence. Binary Jaccard
+dissimilarity among sites is correlated with watercourse and straight-line
+distance. The null pools each draw's matched sets and reassigns class labels
+within each prevalence; its range is the gray band. The smallest attainable
+difference P value is 0.005. Sensitivities change the soil-core threshold to
+three or eight soils, allow soil-absent ASVs one soil, and replace Jaccard with
+Simpson dissimilarity, which keeps turnover and removes richness differences.
+Within-class Mantel tests (9,999 permutations) use every eligible ASV.
+
+Molecular dissimilarity on the 33 matched sites is recorded in the same tables
+but not plotted. Neither class's Jaccard composition tracks molecular Jaccard.
+Under Simpson turnover, both classes track molecular turnover, the soil-core class
+somewhat more; soil affinity therefore does not separate microbial–molecular
+association.
+
+## Supporting analysis: sediment bipartite network and the stable group
 
 The sediment bipartite network retains features present and absent in at least
 10 of 33 sites, collapses identical detection patterns, and selects phi >= 0.6
@@ -276,9 +319,13 @@ Association-count and modularity tests use separate BH families. Segment-removal
 refits assess stability. The 80% link/co-membership screen, with positive partial
 phi after detection-count/drainage adjustment, identifies candidate connected
 groups rather than uniformly stable blocks. The mapped group has 38 ASVs and
-eight molecular features. Its apparent upper Lookout/Mack concentration is an
-exploratory map-based hypothesis; no selection-adjusted branch test establishes
-localization, direct interaction, production, consumption, or a metabolic guild.
+eight molecular features. Most of its ASVs never occur in soil. It is
+concentrated on channels draining Lookout Mountain (the Lookout branch and the
+KC tributary) and nearly absent from the north branch. The group was selected
+from a network whose association counts do not exceed the profile-shuffle nulls,
+so its microbial–molecular concordance is not an independent result, and no
+selection-adjusted test establishes direct interaction, production,
+consumption, or a metabolic guild.
 
 ## Supplementary sediment iCAMP maps and network comparisons
 

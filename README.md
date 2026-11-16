@@ -15,13 +15,14 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1) and weighted UniFrac | [Habitat diversity](figures/manuscript/2016_habitat_diversity.pdf) |
 | [03_first_detection.R](analysis/03_first_detection.R) | 2. First detection and matched-habitat iCAMP contrasts | [Detection and assembly](figures/manuscript/2016_first_detection_flowpaths.pdf) |
 | [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Sediment molecular richness and richness differences along flow paths on the 33 matched sites | [Richness and richness difference](figures/manuscript/2016_sediment_richness_difference.pdf) |
-| [05_network_localization.R](analysis/05_network_localization.R) | 4. Exploratory microbial–molecular group distribution | [Catchment map](figures/manuscript/2016_sediment_stable_group_colocation_map.pdf) |
+| [05_soil_affinity.R](analysis/05_soil_affinity.R) | 4. Soil-shared and soil-absent sediment taxa across the stream network | [Soil affinity](figures/manuscript/2016_sediment_soil_affinity.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
 scripts. Script 02 uses saved UniFrac distances and supplies the paired tests
 for 03; 04 fits the molecular richness models, builds the stream network, tests
 replacement and richness difference along flow paths, and runs dispersion with its balanced-sampling sensitivity, then reads
-completed molecular-class results; 05 reads completed network results.
+completed molecular-class results; 05 classes ASVs by soil occurrence and
+reads the stable group from the completed network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
 All figures share the text sizes, panel sizes, and exporter in

@@ -1,0 +1,9 @@
+test,n,estimate,p_value,p_bh
+Soil-core share in sediment minus porewater at paired sites,18,0.20525555555555555,1e-4,8e-4
+Soil-core share in sediment vs porewater at paired sites,18,0.08359133126934984,0.7415774315720882,0.847517064653815
+Moran's I of sediment soil-core share (inverse watercourse distance),34,0.08707781050433812,0.0875,0.175
+Sediment soil-core share vs drainage area,34,0.0033616013544513117,0.9849462621553431,0.9849462621553431
+Porewater soil-core share vs drainage area,27,-0.1330891330891331,0.508111007700559,0.8129776123208944
+Sediment soil-core share among branches (Kruskal-Wallis chi-squared),34,0.5983525719390643,0.7414286944375011,0.847517064653815
+Stable-group ASV fraction vs sediment soil-core share (group ASVs removed),34,-0.43032744998574357,0.011073726511283468,0.02952993736342258
+Stable-group ASV fraction vs sediment soil-absent share (group ASVs removed),34,0.5544519286307481,6.674133963821137e-4,0.002669653585528455

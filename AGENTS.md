@@ -63,8 +63,14 @@ win. Check in briefly that these project instructions are visible and understood
 - Soils are a regional pool. Soil 04 lacks GPS and `hja2016_200` is unresolved.
   First detection does not establish movement or source fractions. Align exact
   sites and balancing selections before comparing microbial and molecular results.
-- The mapped stable group's Lookout/Mack pattern is exploratory. Branch effects
-  and a metabolic guild have not been established.
+- The stable group is concentrated on channels draining Lookout Mountain (the
+  Lookout branch and KC tributary) and nearly absent from the north branch. It
+  was selected by co-occurrence, so its microbial–molecular concordance is not
+  an independent result; a metabolic guild has not been established.
+- Figure 4 (`05_soil_affinity.R`) classes ASVs by soil occurrence alone:
+  soil-core (5+ of 15 soils) and soil-absent (none). Say "shared with soil", not
+  "from soil". Soil affinity does not separate microbial–molecular association;
+  under turnover both classes track molecular turnover.
 
 ## Review of November 15, 2026
 
@@ -116,8 +122,23 @@ changes are pending.
   Hill diversity, pre-rarefaction depth, or plate.
 - The mapped group is present at 17 sediment sites and nearly absent at 17. This
   is unrelated to plate, depth, feature count, or sampling date. The network's
-  association counts do not exceed either profile-shuffle null, so the figure is
-  a candidate for the supplement.
+  association counts do not exceed either profile-shuffle null, so its overlay
+  map was retired from the main text (November 16).
+- Figure 4 now shows where soil-shared taxa sit in the sediment network. At
+  matched sediment prevalence, soil-absent composition tracks watercourse and
+  straight-line distance and soil-core composition tracks neither. The
+  soil-core read share is higher in sediment than in paired porewater, does not
+  co-vary between the two habitats, and shows no drainage-area, branch, or clear
+  spatial trend: high values occur at small headwaters and at the lowest mainstem
+  sites. Stable-group sites have lower soil-core and higher soil-absent shares.
+  Figures call the stable group the sediment-specific group. Panel D ranks
+  soil-core families by sediment abundance; the class-distance contrast is a
+  supplementary panel.
+- Exploratory, not in a script: in a selection-adjusted check, the network's
+  largest module exceeded profile-shuffle expectation (P = 0.02 unrestricted,
+  0.04 within order). Rerunning the network with a prevalence floor of 5 found a
+  complementary, soil-shared module at the eight sites with the highest
+  soil-core share; it is seed-dependent and unscreened.
 - Network position returns no detectable effect in first detection, iCAMP,
   microbial dispersion, porewater composition, or soil sharing. The supported
   results are habitat contrasts on the 18 paired sites. Five mainstem sites
