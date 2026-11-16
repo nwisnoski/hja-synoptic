@@ -6,6 +6,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 input_dir <- here("data", "derived", "analysis_inputs")
@@ -17,16 +18,8 @@ display_transformations <- 20L
 upstream_commit <- "434e28bd471c83e1eb616f4203d6ada584520d2e"
 reference_md5 <- c("26c1733353bfd0e076b5fe048ca1d486",
   "9955caaf9f539785608552336cb9a5a5")
-figure_width <- 6
-figure_height <- 4.8
-ordination_width <- 7
-ordination_height <- 3.8
-
-plot_theme <- theme_bw(base_size = 12) +
-  theme(
-    panel.grid = element_blank(),
-    strip.background = element_blank()
-  )
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme + theme(legend.position = "right")
 
 # 2. Check input identity and retain the existing sediment feature filter --------
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
@@ -277,14 +270,12 @@ loadings <- bind_cols(database,
 write_csv(loadings, file.path(results_dir, "profile_pca_loadings.csv"))
 ordination_plot <- ggplot(scores,
   aes(pc1, pc2, color = log10(site_drainage_area_ha))) +
-  geom_point(size = 2.8) +
+  geom_point(size = figure_point_size) +
   scale_color_viridis_c(name = "Drainage area\n(log10 ha)") +
   coord_equal() +
-  labs(x = sprintf("Transformation PC1 (%.1f%%)", variance[1]),
-    y = sprintf("Transformation PC2 (%.1f%%)", variance[2])) +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_transformation_profile_pca.pdf"),
-  ordination_plot, width = ordination_width, height = ordination_height, bg = "white")
+  labs(x = sprintf("PC1 (%.1f%%)", variance[1]), y = sprintf("PC2 (%.1f%%)", variance[2])) +
+  plot_theme + fixed_equal_panels(scores$pc1, scores$pc2, width = figure_large_panel_width)
+save_figure(ordination_plot, file.path(figures_dir, "2016_transformation_profile_pca.pdf"))
 
 top_labels <- names(sort(colMeans(profiles / rowSums(profiles)),
   decreasing = TRUE))[seq_len(min(display_transformations, ncol(profiles)))]
@@ -293,22 +284,20 @@ top_profiles <- as_tibble(profiles[, top_labels, drop = FALSE] / rowSums(profile
   pivot_longer(-site_code, names_to = "transformation", values_to = "pair_fraction") %>%
   mutate(transformation = factor(transformation, levels = rev(top_labels)))
 profile_plot <- ggplot(top_profiles, aes(pair_fraction, transformation)) +
-  geom_boxplot(fill = "#56B4E9", width = 0.65, outlier.size = 1) +
+  geom_boxplot(fill = "#56B4E9", width = 0.65, linewidth = 0.3, outlier.size = 0.5) +
   scale_x_continuous(labels = scales::label_percent()) +
   labs(x = "Fraction of matched peak pairs", y = NULL) +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_transformation_common_labels.pdf"),
-  profile_plot, width = 7, height = 6.5, bg = "white")
+  plot_theme + fixed_panels(figure_large_panel_width, 0.15 * length(top_labels))
+save_figure(profile_plot, file.path(figures_dir, "2016_transformation_common_labels.pdf"))
 
 diagnostic_plot <- ggplot(site_summary,
   aes(possible_peak_pairs, matched_peak_pairs)) +
-  geom_point(size = 2.8, color = "#0072B2") +
+  geom_point(size = figure_point_size, color = "#0072B2") +
   scale_x_log10(breaks = 10^seq(4, 7, by = 0.5), labels = scales::label_log()) +
   scale_y_log10(breaks = 10^seq(3, 5, by = 0.5), labels = scales::label_log()) +
   labs(x = "Possible detected peak pairs", y = "Matched peak pairs") +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_transformation_detection_diagnostic.pdf"),
-  diagnostic_plot, width = figure_width, height = figure_height, bg = "white")
+  plot_theme + fixed_panels()
+save_figure(diagnostic_plot, file.path(figures_dir, "2016_transformation_detection_diagnostic.pdf"))
 
 # 7. Record provenance and confirm that inputs remained unchanged ---------------
 integrity <- tibble(

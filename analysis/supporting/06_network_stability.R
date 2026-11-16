@@ -5,6 +5,7 @@ library(dplyr)
 library(tidyr)
 library(igraph)
 library(ggplot2)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings ------------------------------------------------------------------
 test_run <- FALSE
@@ -15,7 +16,14 @@ figure_prefix <- "2016_sediment_bipartite"
 display_group_rank <- 1L
 node_colors <- c(Acidobacteriota = "#009E73", Pseudomonadota = "#0072B2",
   Gemmatimonadota = "#E69F00", "Other phyla" = "#999999", "Molecular feature" = "#333333")
-plot_theme <- theme_void(base_size = 11) + theme(legend.position = "bottom")
+# The network drawing has no axes. Text sizes, the vertical spacing of nodes,
+# and the exporter come from figure_style.R and the settings here.
+plot_theme <- theme_void(base_size = figure_text_size) +
+  theme(text = element_text(color = "black"), legend.position = "bottom",
+    legend.text = element_text(size = figure_small_text_size),
+    plot.margin = margin(4, 6, 4, 4))
+network_width <- 4.5
+node_spacing <- 0.13
 results_dir <- here("results", "fticr_2016", "bipartite_networks")
 if (test_run) {
   results_dir <- here("results", "fticr_2016", "bipartite_network_pilot")
@@ -135,13 +143,15 @@ if (nrow(display_groups) >= display_group_rank) {
   core_plot <- ggplot() +
     geom_segment(data = displayed_edges, aes(x = 0, xend = 1, y = y_start, yend = y_end),
       color = "#0072B2", alpha = 0.25, linewidth = 0.35) +
-    geom_point(data = displayed_nodes, aes(x, y, color = color_group, shape = node_type), size = 2.7) +
-    geom_text(data = asv_nodes, aes(x = -0.025, y, label = label), hjust = 1, size = 2.6) +
-    geom_text(data = molecular_nodes, aes(x = 1.025, y, label = label), hjust = 0, size = 2.9) +
+    geom_point(data = displayed_nodes, aes(x, y, color = color_group, shape = node_type),
+      size = figure_point_size) +
+    geom_text(data = asv_nodes, aes(x = -0.025, y, label = label), hjust = 1, size = figure_label_size) +
+    geom_text(data = molecular_nodes, aes(x = 1.025, y, label = label), hjust = 0,
+      size = figure_label_size) +
     scale_color_manual(values = node_colors, name = NULL) +
     scale_shape_manual(values = c(ASV = 16, Molecular = 15), guide = "none") +
-    coord_cartesian(xlim = c(-0.55, 1.5), ylim = c(0, nrow(asv_nodes) + 1)) + plot_theme
-  ggsave(file.path(figures_dir, paste0(figure_prefix, "_stable_group.pdf")), core_plot,
-    width = 9.2, height = 9.5, bg = "white")
+    coord_cartesian(xlim = c(-0.55, 1.5), ylim = c(0, nrow(asv_nodes) + 1)) + plot_theme +
+    fixed_panels(network_width, node_spacing * (nrow(asv_nodes) + 1))
+  save_figure(core_plot, file.path(figures_dir, paste0(figure_prefix, "_stable_group.pdf")))
   write_csv(displayed_nodes, file.path(results_dir, "stable_group_figure_nodes.csv"))
 }

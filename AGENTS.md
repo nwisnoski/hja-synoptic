@@ -102,10 +102,12 @@ changes are pending.
   decay is weak (Mantel r = 0.12–0.17); among flow-connected pairs molecular
   Jaccard rises with channel distance (r = 0.58). Flow-connected pairs
   concentrate on the five mainstem sites.
-- New figures (Figure 3 and its panels, distance decay, richness dependence) are
-  built at printed size: 2.6 x 2.0 in panels, 9-point base, canvas measured
-  around the panels. Figures 1, 2, 4 and the older supplementary panels still
-  use canvas-based sizing and need the same restyle.
+- Every figure is built at printed size from `analysis/figure_style.R` (November
+  16): black plain text, 9-point titles and 8-point tick and legend labels,
+  2.1 x 1.6 in standard panels, 2.6 x 2.0 in panels for overlays, map and
+  ordination heights from the data ranges, canvas measured around the panels.
+  Composites use flat `wrap_plots(design = ...)` layouts; nested patchworks hide
+  fixed panel sizes from the measurement.
 - Open question: whether the four-panel Figure 3 is final. The direct
   feature-count decline with drainage area is a supplementary panel.
 - Planned, not started: rename `04_sediment_convergence.R`, and restyle the
@@ -120,7 +122,8 @@ changes are pending.
   microbial dispersion, porewater composition, or soil sharing. The supported
   results are habitat contrasts on the 18 paired sites. Five mainstem sites
   limit power; a null here does not establish equivalence.
-- Figure fixes pending: porewater shape differs between Figures 1 and 2; the
+- Porewater now uses the same square marker and blue in Figures 1 and 2 and the
+  matched-habitat iCAMP panels. Figure fixes pending: the
   supplementary dispersion panels reuse the habitat colors for network groups;
   Figure 1 plots weighted UniFrac but tests Hellinger; Figure 2A shows the full
   inventory, whose soil share is effort-dependent.

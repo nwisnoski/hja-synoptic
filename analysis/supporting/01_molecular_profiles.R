@@ -5,6 +5,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(vegan)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 # The primary feature filter is in preparation/environment/config.R.
@@ -14,17 +15,9 @@ derived_dir <- here("data", "derived", "fticr_2016")
 figures_dir <- here("figures", "supplement", "molecular")
 presence_threshold <- 0
 pcoa_correction <- "lingoes"
-figure_width <- 6
-figure_height <- 4.8
-raster_dpi <- 600
-
-plot_theme <- theme_bw(base_size = 12) +
-  theme(
-    panel.grid.minor = element_blank(),
-    panel.grid.major = element_blank(),
-    strip.background = element_blank(),
-    legend.position = "right"
-  )
+# Text sizes, panel sizes, and the exporter come from figure_style.R. The Van
+# Krevelen diagram has thousands of points and is saved as a 600-dpi raster.
+plot_theme <- figure_theme + theme(legend.position = "right")
 
 # 2. Read prepared inputs and check their provenance ----------------------------
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -151,32 +144,29 @@ write_csv(signal_diagnostic, file.path(results_dir, "richness_signal_diagnostic.
 
 # 4. Save individual figures ----------------------------------------------------
 pa_plot <- ggplot(pa_scores, aes(pcoa1, pcoa2, color = log10(site_drainage_area_ha))) +
-  geom_point(size = 2.8) +
+  geom_point(size = figure_point_size) +
   scale_color_viridis_c(name = "Drainage area\n(log10 ha)") +
   coord_equal() +
   labs(x = sprintf("Jaccard PCoA1 (%.1f%%)", pa_percent[1]),
     y = sprintf("Jaccard PCoA2 (%.1f%%)", pa_percent[2])) +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_sediment_jaccard_pcoa.pdf"),
-  pa_plot, width = figure_width, height = figure_height, bg = "white")
+  plot_theme + fixed_equal_panels(pa_scores$pcoa1, pa_scores$pcoa2, width = figure_large_panel_width)
+save_figure(pa_plot, file.path(figures_dir, "2016_fticr_sediment_jaccard_pcoa.pdf"))
 
 richness_plot <- ggplot(site_summary, aes(site_drainage_area_ha, detected_primary_features)) +
-  geom_point(size = 2.8, color = "#0072B2") +
-  scale_x_log10() +
-  labs(x = "Drainage area (ha)", y = "Detected primary molecular features") +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_sediment_richness_drainage.pdf"),
-  richness_plot, width = figure_width, height = figure_height, bg = "white")
+  geom_point(size = figure_point_size, color = "#0072B2") +
+  scale_x_log10(labels = scales::label_log()) +
+  labs(x = "Drainage area (ha)", y = "Detected primary\nmolecular features") +
+  plot_theme + fixed_panels()
+save_figure(richness_plot, file.path(figures_dir, "2016_fticr_sediment_richness_drainage.pdf"))
 
 # Keep all detected ratios, without assigning structural or metabolite identities.
 vk_plot <- ggplot(filter(peaks, detected_sites_44 > 0),
   aes(oxygen_carbon_ratio, hydrogen_carbon_ratio, color = prevalence_44)) +
-  geom_point(size = 0.7, alpha = 0.65) +
+  geom_point(size = 0.3, alpha = 0.65) +
   scale_color_viridis_c(name = "Proportion of\n44 sites", limits = c(0, 1)) +
   labs(x = "O:C atomic ratio", y = "H:C atomic ratio") +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_sediment_van_krevelen.png"),
-  vk_plot, width = figure_width, height = figure_height, dpi = raster_dpi, bg = "white")
+  plot_theme + fixed_panels(figure_large_panel_width, figure_large_panel_height)
+save_figure(vk_plot, file.path(figures_dir, "2016_fticr_sediment_van_krevelen.png"))
 
 # 5. Record the run -------------------------------------------------------------
 session_lines <- capture.output(sessionInfo())

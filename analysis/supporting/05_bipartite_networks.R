@@ -6,6 +6,7 @@ library(tidyr)
 library(ggplot2)
 library(vegan)
 library(igraph)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 test_run <- FALSE
@@ -35,8 +36,8 @@ null_design <- expand_grid(
   run = seq_len(n_null)) %>%
   mutate(seed = null_seed + match(scheme, unique(scheme)) * 10000L + run,
     module_seed = seed + 100000L)
-plot_theme <- theme_bw(base_size = 11) +
-  theme(panel.grid.minor = element_blank(), strip.background = element_blank())
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme + theme(legend.position = "right")
 source(here("analysis", "supporting", "bipartite_helpers.R"))
 
 # 2. Read and audit the paired inputs -------------------------------------------
@@ -362,15 +363,14 @@ edge_plot <- ggplot(nulls %>% filter(scheme != "graph_fixed_degrees", successful
   geom_vline(xintercept = observed$statistics$positive_edges, color = "#D55E00", linewidth = 0.7) +
   facet_wrap(~scheme, scales = "free", ncol = 1, labeller = as_labeller(labels)) +
   labs(x = "Positive cross-type links (phi >= 0.6)", y = "Null draws") + plot_theme +
-  theme(plot.margin = margin(5.5, 20, 5.5, 5.5))
-ggsave(file.path(figures_dir, paste0(figure_prefix, "_association_nulls.pdf")), edge_plot,
-  width = 6.2, height = 7.2, bg = "white")
+  fixed_panels(figure_large_panel_width, figure_panel_height, n_row = 3)
+save_figure(edge_plot, file.path(figures_dir, paste0(figure_prefix, "_association_nulls.pdf")))
 module_plot <- ggplot(nulls %>% filter(scheme == "graph_fixed_degrees", successful), aes(modularity)) +
   geom_histogram(bins = 30, fill = "#0072B2", color = "white") +
   geom_vline(xintercept = observed$statistics$modularity, color = "#D55E00", linewidth = 0.7) +
-  labs(x = "Optimized bipartite modularity", y = "Fixed-degree null draws") + plot_theme
-ggsave(file.path(figures_dir, paste0(figure_prefix, "_module_null.pdf")), module_plot,
-  width = 6, height = 4.6, bg = "white")
+  labs(x = "Optimized bipartite modularity", y = "Fixed-degree null draws") + plot_theme +
+  fixed_panels()
+save_figure(module_plot, file.path(figures_dir, paste0(figure_prefix, "_module_null.pdf")))
 group_plot_data <- module_summary %>% filter(substantive_group) %>%
   mutate(label = paste0(module, " (", asv_patterns, " / ", molecular_patterns, ")"),
     label = factor(label, levels = rev(label)))
@@ -379,12 +379,12 @@ summary_plot <- ggplot(group_plot_data,
   geom_point(alpha = 0.9) +
   scale_color_gradient2(low = "#D55E00", mid = "white", high = "#0072B2", midpoint = 0,
     limits = c(-1, 1), name = "Mean partial phi") +
-  scale_size_continuous(name = "Within-module links", range = c(3, 9)) +
+  scale_size_continuous(name = "Within-module links", range = c(1, 4)) +
   scale_x_continuous(limits = c(0, 1)) +
-  labs(x = "Mean co-membership after stream-segment removal",
-    y = "Module (ASV / molecular patterns)") + plot_theme
-ggsave(file.path(figures_dir, paste0(figure_prefix, "_groups.pdf")), summary_plot,
-  width = 7.8, height = 7.2, bg = "white")
+  labs(x = "Mean co-membership after\nstream-segment removal",
+    y = "Module (ASV / molecular patterns)") + plot_theme +
+  fixed_panels(figure_large_panel_width, 0.15 * nrow(group_plot_data))
+save_figure(summary_plot, file.path(figures_dir, paste0(figure_prefix, "_groups.pdf")))
 # The matrix has tens of thousands of cells; raster avoids a cumbersome PDF.
 row_order <- active_rows[order(observed$fit$row[active_rows], -rowSums(web)[active_rows])]
 column_order <- active_columns[order(observed$fit$column[active_columns], -colSums(web)[active_columns])]
@@ -396,9 +396,8 @@ heat_plot <- ggplot(heat, aes(column, row, fill = phi)) + geom_raster() +
     limits = c(-1, 1), name = "Phi") +
   scale_x_continuous(expand = c(0, 0)) + scale_y_reverse(expand = c(0, 0)) +
   labs(x = "Molecular patterns ordered by module", y = "ASV patterns ordered by module") +
-  plot_theme + theme(panel.grid = element_blank())
-ggsave(file.path(figures_dir, paste0(figure_prefix, "_association_matrix.png")), heat_plot,
-  width = 7.2, height = 6.4, dpi = 600, bg = "white")
+  plot_theme + fixed_panels(figure_map_width, figure_map_width * length(row_order) / length(column_order))
+save_figure(heat_plot, file.path(figures_dir, paste0(figure_prefix, "_association_matrix.png")))
 
 # 9. Verify input integrity and retain settings and software ----------------------
 settings <- tibble(target_depth, minimum_present_and_absent, edge_threshold, n_null,

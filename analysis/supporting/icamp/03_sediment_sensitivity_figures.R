@@ -8,6 +8,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 input_dir <- here("results", "icamp_2016", "sediment_castor")
@@ -23,10 +24,6 @@ n_balanced_draws <- 1000L
 segments_per_group <- 5L
 base_seed <- 20261012L
 centerline_stride <- 10L
-map_width <- 6.8
-map_height <- 5.6
-comparison_width <- 5.4
-comparison_height <- 4.5
 process_design <- tribble(
   ~process, ~code, ~label,
   "Heterogeneous.Selection", "HeS", "Heterogeneous selection",
@@ -38,14 +35,9 @@ process_design <- tribble(
 group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#0072B2")
 process_colors <- c(HeS = "#D55E00", HoS = "#009E73", DL = "#0072B2",
   HD = "#CC79A7", DR = "#999999")
-plot_theme <- theme_bw(base_size = 11) +
-  theme(
-    panel.grid = element_blank(),
-    strip.background = element_blank(),
-    legend.position = "bottom",
-    axis.title = element_text(size = 10),
-    plot.margin = margin(8, 20, 8, 8)
-  )
+# Text sizes, panel sizes, and the exporter come from figure_style.R. Maps use
+# the standard panel width so six fit in three columns.
+plot_theme <- figure_theme
 
 # 2. Check sample identities and completed pairwise assignments ------------------
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
@@ -242,6 +234,7 @@ stopifnot(nrow(problems(geometry)) == 0L,
   all(is.finite(geometry$x)), all(is.finite(geometry$y)))
 map_lines <- geometry %>% group_by(segment) %>%
   filter(row_number() %% centerline_stride == 1L | row_number() == n()) %>% ungroup()
+map_panels <- fixed_equal_panels(map_lines$x, map_lines$y, width = figure_panel_width)
 maps <- vector("list", nrow(process_design))
 comparisons <- vector("list", nrow(process_design))
 size_reference <- sizes[match(group_levels, sizes$network_group), ]
@@ -254,17 +247,18 @@ for (i in seq_len(nrow(process_design))) {
     geom_path(color = "#BBBBBB", linewidth = 0.3) +
     geom_point(data = mapped,
       aes(site_utm_x_m, site_utm_y_m, fill = 100 * segment_balanced_mean),
-      inherit.aes = FALSE, shape = 21, size = 3.1, color = "black", stroke = 0.35) +
+      inherit.aes = FALSE, shape = 21, size = figure_point_size, color = "black", stroke = 0.3) +
     # Each process has its own color range to reveal spatial differences;
     # its numerical legend remains in percentages for direct interpretation.
     scale_fill_viridis_c(option = "C",
-      labels = function(x) sprintf("%.1f", x), name = "Mean pairwise importance (%)") +
-    coord_equal() + labs(x = "UTM easting (m)", y = "UTM northing (m)") +
+      labels = function(x) sprintf("%.1f", x), name = "Mean pairwise importance (%)",
+      guide = guide_colorbar(barwidth = grid::unit(3, "cm"))) +
+    coord_equal() + utm_km_scales +
     facet_wrap(~process, labeller = as_labeller(setNames(process_design$label, process_design$process))) +
-    plot_theme
+    plot_theme + map_panels
   maps[[i]] <- map
-  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_map_", process_design$code[i], ".pdf")),
-    map, width = map_width, height = map_height, bg = "white")
+  save_figure(map,
+    file.path(panels_dir, paste0("2016_sediment_icamp_map_", process_design$code[i], ".pdf")))
 
   # Each range is the middle 95% of balanced draws, with their median marked.
   # Hollow diamonds retain the mean using every observed segment pair.
@@ -276,40 +270,38 @@ for (i in seq_len(nrow(process_design))) {
     mutate(network_group = factor(group1, levels = group_levels))
   comparison <- ggplot(panel,
     aes(group_low - 0.06, 100 * median, color = network_group)) +
-    geom_linerange(aes(ymin = 100 * lower, ymax = 100 * upper), linewidth = 1) +
-    geom_point(aes(shape = "Balanced draws: median"), size = 2.8) +
+    geom_linerange(aes(ymin = 100 * lower, ymax = 100 * upper), linewidth = 0.6) +
+    geom_point(aes(shape = "Balanced draws: median"), size = 1.5 * figure_point_size) +
     geom_point(data = full,
       aes(x = group_low + 0.06, y = 100 * segment_balanced_mean,
         shape = "All segment pairs: mean"),
-      fill = "white", size = 2.8, stroke = 0.8) +
+      fill = "white", size = 1.5 * figure_point_size, stroke = 0.5) +
     scale_color_manual(values = group_colors, guide = "none") +
     scale_shape_manual(values = c("Balanced draws: median" = 16,
       "All segment pairs: mean" = 23), name = NULL) +
     scale_x_continuous(breaks = seq_along(group_levels), labels = group_labels,
       limits = c(0.5, 3.5)) +
     scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0.04, 0.08))) +
-    labs(x = NULL, y = "Within-group pairwise importance (%)") +
+    labs(x = NULL, y = "Within-group pairwise\nimportance (%)") +
     facet_wrap(~process, labeller = as_labeller(setNames(process_design$label, process_design$process))) +
-    plot_theme + theme(aspect.ratio = 0.8, axis.text.x = element_text(size = 9))
+    plot_theme + fixed_panels()
   comparisons[[i]] <- comparison
-  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_network_", process_design$code[i], ".pdf")),
-    comparison, width = comparison_width, height = comparison_height, bg = "white")
+  save_figure(comparison,
+    file.path(panels_dir, paste0("2016_sediment_icamp_network_", process_design$code[i], ".pdf")))
 }
 # The sixth map identifies the network positions used in the comparisons.
 position_map <- ggplot(map_lines, aes(x, y, group = segment)) +
   geom_path(color = "#BBBBBB", linewidth = 0.3) +
   geom_point(data = site %>% mutate(process = "Network position"),
     aes(site_utm_x_m, site_utm_y_m, fill = factor(network_group, levels = group_levels)),
-    inherit.aes = FALSE, shape = 21, size = 3.1, color = "black", stroke = 0.35) +
+    inherit.aes = FALSE, shape = 21, size = figure_point_size, color = "black", stroke = 0.3) +
   scale_fill_manual(values = group_colors, name = NULL) +
-  coord_equal() + labs(x = "UTM easting (m)", y = "UTM northing (m)") +
-  facet_wrap(~process) + plot_theme
-ggsave(file.path(figures_dir, "2016_sediment_icamp_catchment_maps.pdf"),
-  wrap_plots(c(maps, list(position_map)), ncol = 3),
-  width = 15.6, height = 10.4, bg = "white")
-ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_network_comparison.pdf"),
-  wrap_plots(comparisons, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
-  width = 15.6, height = 9, bg = "white")
+  coord_equal() + utm_km_scales +
+  facet_wrap(~process) + plot_theme + map_panels
+save_figure(wrap_plots(c(maps, list(position_map)), ncol = 3),
+  file.path(figures_dir, "2016_sediment_icamp_catchment_maps.pdf"))
+save_figure(wrap_plots(comparisons, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
+  file.path(diagnostics_dir, "2016_sediment_icamp_network_comparison.pdf"))
 
 # A compact composition view keeps all processes on the common 0-100% scale.
 composition <- group_profiles %>% filter(group_low == group_high) %>%
@@ -323,11 +315,11 @@ composition_plot <- ggplot(composition,
     labels = setNames(process_design$label, process_design$code), name = NULL) +
   scale_x_discrete(labels = group_labels) +
   scale_y_continuous(breaks = seq(0, 100, 25), expand = expansion(mult = c(0, 0.02))) +
-  labs(x = NULL, y = "Within-group pairwise importance (%)") + plot_theme +
+  labs(x = NULL, y = "Within-group pairwise\nimportance (%)") + plot_theme +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE)) +
-  theme(axis.text.x = element_text(size = 9))
-ggsave(file.path(figures_dir, "2016_sediment_icamp_network_composition.pdf"),
-  composition_plot, width = 7.2, height = 5.5, bg = "white")
+  fixed_panels(figure_large_panel_width, figure_large_panel_height)
+save_figure(composition_plot,
+  file.path(figures_dir, "2016_sediment_icamp_network_composition.pdf"))
 
 # 7. Distinguish within-position and between-position comparisons -----------------
 heatmap <- group_profiles %>%
@@ -337,16 +329,17 @@ heatmap <- group_profiles %>%
     label = sprintf("%.1f", 100 * segment_balanced_mean))
 pair_plot <- ggplot(heatmap, aes(group1, group2, fill = 100 * segment_balanced_mean)) +
   geom_tile(color = "white", linewidth = 0.8) +
-  geom_text(aes(label = label, color = segment_balanced_mean < 0.5), size = 3.6) +
+  geom_text(aes(label = label, color = segment_balanced_mean < 0.5), size = figure_label_size) +
   scale_color_manual(values = c("TRUE" = "white", "FALSE" = "black"), guide = "none") +
   scale_fill_viridis_c(option = "C", limits = c(0, 100),
     breaks = c(0, 25, 50, 75, 100), name = "Mean pairwise importance (%)") +
   facet_wrap(~process, ncol = 3,
     labeller = as_labeller(setNames(process_design$label, process_design$process))) +
   coord_equal() + labs(x = NULL, y = NULL) + plot_theme +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_network_pair_comparison.pdf"),
-  pair_plot, width = 13, height = 8.5, bg = "white")
+  theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+  fixed_panels(1.6, 1.6, n_col = 3, n_row = 2)
+save_figure(pair_plot,
+  file.path(diagnostics_dir, "2016_sediment_icamp_network_pair_comparison.pdf"))
 
 # 8. Show every within-position sample pair with equal weight ---------------------
 # Include same-segment pairs here, marking them separately. The comparison is
@@ -375,12 +368,12 @@ for (i in seq_len(nrow(process_design))) {
   summary <- within_summary %>% filter(process == current_process)
   pair_distribution <- ggplot(panel,
     aes(network_group, 100 * importance, color = network_group)) +
-    geom_boxplot(outlier.shape = NA, width = 0.55, linewidth = 0.6) +
+    geom_boxplot(outlier.shape = NA, width = 0.55, linewidth = 0.4) +
     geom_point(aes(shape = pair_type),
       position = position_jitter(width = 0.12, height = 0, seed = base_seed),
-      alpha = 0.5, size = 1.4) +
+      alpha = 0.5, size = figure_small_point_size) +
     geom_point(data = summary, aes(y = 100 * mean, shape = "Group mean"),
-      fill = "white", color = "black", size = 2.8, stroke = 0.8) +
+      fill = "white", color = "black", size = 1.5 * figure_point_size, stroke = 0.5) +
     scale_color_manual(values = group_colors, guide = "none") +
     scale_shape_manual(values = c("Different segments" = 16,
       "Same segment" = 4, "Group mean" = 23), name = NULL) +
@@ -390,15 +383,14 @@ for (i in seq_len(nrow(process_design))) {
     labs(x = NULL, y = "Pairwise importance (%)") +
     facet_wrap(~process,
       labeller = as_labeller(setNames(process_design$label, process_design$process))) +
-    plot_theme + theme(aspect.ratio = 0.8, axis.text.x = element_text(size = 9))
+    plot_theme + fixed_panels()
   all_pair_panels[[i]] <- pair_distribution
-  ggsave(file.path(panels_dir, paste0("2016_sediment_icamp_all_within_pairs_",
-    process_design$code[i], ".pdf")), pair_distribution,
-    width = comparison_width, height = comparison_height, bg = "white")
+  save_figure(pair_distribution,
+    file.path(panels_dir, paste0("2016_sediment_icamp_all_within_pairs_",
+    process_design$code[i], ".pdf")))
 }
-ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pairs.pdf"),
-  wrap_plots(all_pair_panels, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
-  width = 15.6, height = 9, bg = "white")
+save_figure(wrap_plots(all_pair_panels, ncol = 3, guides = "collect") & theme(legend.position = "bottom"),
+  file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pairs.pdf"))
 all_pair_composition <- within_summary %>%
   mutate(code = factor(process_design$code[match(process, process_design$process)],
     levels = process_design$code))
@@ -409,11 +401,11 @@ all_pair_composition_plot <- ggplot(all_pair_composition,
     labels = setNames(process_design$label, process_design$code), name = NULL) +
   scale_x_discrete(labels = within_labels) +
   scale_y_continuous(breaks = seq(0, 100, 25), expand = expansion(mult = c(0, 0.02))) +
-  labs(x = NULL, y = "Mean within-group pairwise importance (%)") + plot_theme +
+  labs(x = NULL, y = "Mean within-group\npairwise importance (%)") + plot_theme +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE)) +
-  theme(axis.text.x = element_text(size = 9))
-ggsave(file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pair_composition.pdf"),
-  all_pair_composition_plot, width = 7.2, height = 5.5, bg = "white")
+  fixed_panels(figure_large_panel_width, figure_large_panel_height)
+save_figure(all_pair_composition_plot,
+  file.path(diagnostics_dir, "2016_sediment_icamp_all_within_pair_composition.pdf"))
 
 # 9. Preserve completed inputs and record the plotting environment ----------------
 checks$final_md5 <- unname(tools::md5sum(input_paths))

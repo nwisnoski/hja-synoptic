@@ -6,6 +6,7 @@ library(tidyr)
 library(ggplot2)
 library(vegan)
 library(permute)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "network_dispersion")
@@ -27,9 +28,8 @@ group_levels <- c("Headwater", "Intermediate", "Mainstem")
 group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#0072B2")
 metric_labels <- c(jaccard = "Binary Jaccard", replacement = "Jaccard replacement",
   equal_features = "Equal-feature Jaccard", chemical_properties = "Formula properties")
-plot_theme <- theme_bw(base_size = 12) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank(), legend.position = "bottom")
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme
 
 # 2. Match site identities and derive audited network positions ------------------
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -345,33 +345,31 @@ map_lines <- geometry %>% group_by(segment) %>%
 p_map <- ggplot(map_lines, aes(x, y, group = segment)) +
   geom_path(color = "#B0B0B0", linewidth = 0.35) +
   geom_point(data = site, aes(site_utm_x_m, site_utm_y_m, color = network_group),
-    inherit.aes = FALSE, size = 2.2) +
+    inherit.aes = FALSE, size = figure_point_size) +
   scale_color_manual(values = group_colors, name = NULL) + coord_equal() +
-  labs(x = "UTM easting (m)", y = "UTM northing (m)") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_network_groups.pdf"), p_map,
-  width = 8, height = 6, bg = "white")
+  utm_km_scales + plot_theme +
+  fixed_equal_panels(c(map_lines$x, site$site_utm_x_m), c(map_lines$y, site$site_utm_y_m))
+save_figure(p_map, file.path(figures_dir, "2016_fticr_network_groups.pdf"))
 set.seed(plot_seed)
 for (metric in c("jaccard", "equal_features", "chemical_properties")) {
   panel <- filter(dispersion, .data$metric == .env$metric)
   p <- ggplot(panel, aes(network_group, distance, color = network_group)) +
     geom_boxplot(outlier.shape = NA, width = 0.5, linewidth = 0.5) +
-    geom_jitter(width = 0.1, height = 0, size = 2, alpha = 0.85) +
+    geom_jitter(width = 0.1, height = 0, size = figure_point_size, alpha = 0.85) +
     scale_color_manual(values = group_colors, guide = "none") +
-    labs(x = NULL, y = "Distance to group spatial median") + plot_theme
-  ggsave(file.path(figures_dir, paste0("2016_fticr_dispersion_", metric, ".pdf")),
-    p, width = 6, height = 4.5, bg = "white")
+    labs(x = NULL, y = "Distance to group\nspatial median") + plot_theme + fixed_panels()
+  save_figure(p, file.path(figures_dir, paste0("2016_fticr_dispersion_", metric, ".pdf")))
 }
 within_pairs <- pairwise %>% filter(!is.na(within_group)) %>%
   mutate(within_group = factor(within_group, levels = group_levels))
 p_rc <- ggplot(within_pairs, aes(within_group, rc_signed, color = within_group)) +
   geom_hline(yintercept = 0, linewidth = 0.4, linetype = "dashed", color = "#777777") +
   geom_boxplot(outlier.shape = NA, width = 0.5) +
-  geom_jitter(width = 0.15, height = 0, size = 1, alpha = 0.4) +
+  geom_jitter(width = 0.15, height = 0, size = figure_small_point_size, alpha = 0.4) +
   scale_color_manual(values = group_colors, guide = "none") +
   scale_y_continuous(limits = c(-1, 1)) +
-  labs(x = NULL, y = "Within-group Raup-Crick (signed)") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_network_raup_crick.pdf"), p_rc,
-  width = 6, height = 4.5, bg = "white")
+  labs(x = NULL, y = "Within-group\nRaup-Crick (signed)") + plot_theme + fixed_panels()
+save_figure(p_rc, file.path(figures_dir, "2016_fticr_network_raup_crick.pdf"))
 balanced_plot <- balanced %>% filter(metric != "raup_crick") %>%
   select(run, metric, ratio, intermediate_mainstem_ratio, headwater_intermediate_ratio) %>%
   pivot_longer(c(ratio, intermediate_mainstem_ratio, headwater_intermediate_ratio),
@@ -382,12 +380,12 @@ balanced_plot <- balanced %>% filter(metric != "raup_crick") %>%
 p_balanced <- ggplot(balanced_plot, aes(factor(metric,
   levels = names(metric_labels)), ratio_value, fill = comparison)) +
   geom_hline(yintercept = 1, color = "#777777", linetype = "dashed") +
-  geom_boxplot(outlier.size = 0.3, width = 0.7, position = position_dodge(width = 0.8)) +
+  geom_boxplot(outlier.size = 0.3, width = 0.7, linewidth = 0.3, position = position_dodge(width = 0.8)) +
   scale_fill_manual(values = c("#0072B2", "#E69F00", "#009E73"), name = NULL) +
   scale_x_discrete(labels = metric_labels) + coord_flip() +
-  labs(x = NULL, y = "Dispersion ratio (6 sites per group)") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_balanced_dispersion.pdf"), p_balanced,
-  width = 8, height = 5.5, bg = "white")
+  labs(x = NULL, y = "Dispersion ratio (6 sites per group)") + plot_theme +
+  fixed_panels(figure_large_panel_width, figure_large_panel_height)
+save_figure(p_balanced, file.path(figures_dir, "2016_fticr_balanced_dispersion.pdf"))
 capture.output(sessionInfo(), file = file.path(results_dir, "session_info.txt"))
 print(tests)
 print(read_csv(file.path(results_dir, "balanced_segment_summary.csv"), show_col_types = FALSE))

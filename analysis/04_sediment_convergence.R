@@ -12,6 +12,7 @@ library(permute)
 library(adespatial)
 library(igraph)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
@@ -27,22 +28,14 @@ permutation_seed <- 20261015
 significance_threshold <- 0.05
 resampling_seed <- 20261016
 plot_seed <- 20261017
-point_size <- 3
+# Text sizes, panel sizes, and the exporter come from figure_style.R. Figure 3
+# uses large panels; the supporting dispersion and class panels use standard ones.
 point_alpha <- 0.5
-panel_aspect <- 0.8
-panel_width <- 5.8
-figure_height <- 5.2
-# The Figure 3 panels are built at printed size: each panel has a fixed size and
-# the canvas is measured around it. Dispersion and class panels keep the earlier
-# canvas-based sizes until the whole figure set is restyled together.
-print_panel_width <- 2.6
-print_panel_height <- 2.0
-facet_panel_width <- 2.1
-facet_panel_height <- 1.6
-print_base_size <- 9
 site_point_size <- 1.6
-pair_point_size <- 0.8
+pair_point_size <- figure_small_point_size
 pair_point_alpha <- 0.5
+# Width of one site's bar in the site-level class composition panels.
+class_bar_width <- 0.12
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -55,12 +48,12 @@ group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#
 # kept only to document that thinning binary detections restates richness.
 test_design <- tribble(
   ~metric, ~role, ~label,
-  "molecular_equal_features", "thinning_diagnostic", "Molecular signatures (equal-feature Jaccard)",
-  "microbial_hellinger", "primary", "Sediment microbes (Hellinger)",
-  "molecular_jaccard", "primary", "Molecular signatures (complete Jaccard)",
-  "microbial_jaccard", "sensitivity", "Sediment microbes (binary Jaccard)",
-  "molecular_replacement", "replacement", "Molecular signatures (Jaccard replacement)",
-  "microbial_replacement", "replacement", "Sediment microbes (Jaccard replacement)") %>%
+  "molecular_equal_features", "thinning_diagnostic", "Molecular signatures\n(equal-feature Jaccard)",
+  "microbial_hellinger", "primary", "Sediment microbes\n(Hellinger)",
+  "molecular_jaccard", "primary", "Molecular signatures\n(complete Jaccard)",
+  "microbial_jaccard", "sensitivity", "Sediment microbes\n(binary Jaccard)",
+  "molecular_replacement", "replacement", "Molecular signatures\n(Jaccard replacement)",
+  "microbial_replacement", "replacement", "Sediment microbes\n(Jaccard replacement)") %>%
   mutate(seed = permutation_seed)
 # Each view is compared with the richness of its own data type.
 molecular_metrics <- c("molecular_equal_features", "molecular_jaccard", "molecular_replacement")
@@ -98,55 +91,14 @@ connection_line_colors <- c("Flow-connected" = "#000000", "Not flow-connected" =
 # Tolerance for matching graph distances to the centerline's own outlet distances.
 distance_tolerance_m <- 0.01
 draw_design <- tibble(run = seq_len(n_balanced_draws), seed = resampling_seed + run)
-plot_theme <- theme_bw(base_size = 12) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank(), legend.position = "none",
-    axis.text = element_text(size = 11), strip.text = element_text(size = 12),
-    plot.tag = element_text(size = 14, face = "bold"))
-print_theme <- theme_bw(base_size = print_base_size) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank(), legend.position = "none",
-    panel.widths = grid::unit(print_panel_width, "in"),
-    panel.heights = grid::unit(print_panel_height, "in"),
-    plot.tag = element_text(size = 11, face = "bold"))
-# Save a figure whose panels have fixed sizes on a canvas measured around them.
-# Measuring text needs an open graphics device, so a null device is opened.
-save_at_panel_size <- function(plot, path) {
-  pdf(NULL)
-  if (inherits(plot, "patchwork")) {
-    grob <- patchworkGrob(plot)
-  } else {
-    grob <- ggplotGrob(plot)
-  }
-  width <- grid::convertWidth(sum(grob$widths), "in", valueOnly = TRUE)
-  height <- grid::convertHeight(sum(grob$heights), "in", valueOnly = TRUE)
-  dev.off()
-  ggsave(path, plot, width = width, height = height, bg = "white")
-}
-
-site_panel_aspect <- 0.8
-site_figure_width <- 7.5
-site_figure_height <- 5.8
+plot_theme <- figure_theme + theme(legend.position = "none")
 class_order <- c("Lipid", "Protein", "AminoSugar", "Carb", "Lignin", "Tannin", "ConHC", "UnsatHC", "Other")
 class_labels <- c("Lipid-like", "Protein-like", "Amino-sugar-like", "Carbohydrate-like",
   "Lignin-like", "Tannin-like", "Condensed-hydrocarbon-like", "Unsaturated-hydrocarbon-like", "Other")
 class_colors <- c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77",
   "#CC6677", "#882255", "#AA4499")
 names(class_colors) <- class_labels
-class_theme <- theme_bw(base_size = 12) +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    strip.background = element_blank(),
-    strip.placement = "outside",
-    strip.text.x = element_text(size = 12),
-    axis.text = element_text(size = 11),
-    legend.position = "bottom",
-    legend.title = element_text(size = 11, face = "bold"),
-    legend.text = element_text(size = 11),
-    legend.key.size = grid::unit(0.45, "cm"),
-    plot.tag = element_text(size = 14, face = "bold")
-  )
+class_theme <- figure_theme + theme(strip.placement = "outside")
 
 # 2. Audit the intersection without translating or renaming sample identities -----
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -406,10 +358,8 @@ richness_plot <- ggplot(richness_panel, aes(detected_molecular_features, distanc
     labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
   scale_color_manual(values = group_colors) +
   labs(x = "Detected FT-ICR features", y = "Distance to group median", color = NULL) +
-  print_theme + theme(legend.position = "bottom",
-    panel.widths = grid::unit(rep(facet_panel_width, length(molecular_metrics)), "in"),
-    panel.heights = grid::unit(facet_panel_height, "in"))
-save_at_panel_size(richness_plot,
+  plot_theme + theme(legend.position = "bottom") + fixed_panels(n_col = length(molecular_metrics))
+save_figure(richness_plot,
   file.path(figures_dir, "2016_matched_sediment_dispersion_richness_dependence.pdf"))
 
 # 7. Model the downstream decline in molecular richness ----------------------------
@@ -634,7 +584,8 @@ for (i in seq_len(nrow(site_panel_design))) {
   slope <- fitted %>% filter(term != "(Intercept)")
   p <- ggplot(matched, aes(.data[[design$x]], .data[[design$y]])) +
     geom_point(size = site_point_size, alpha = 0.7) +
-    labs(x = design$x_label, y = design$y_label) + print_theme
+    labs(x = design$x_label, y = design$y_label) + plot_theme +
+    fixed_panels(figure_large_panel_width, figure_large_panel_height)
   # Drainage area spans three orders of magnitude and is labeled in powers of
   # ten. Feature count and organic content span less than one, so their log
   # axes carry plain numbers.
@@ -653,7 +604,7 @@ for (i in seq_len(nrow(site_panel_design))) {
       slope = slope$estimate, linewidth = 0.6)
   }
   figure_panels[[design$panel]] <- p
-  save_at_panel_size(p, file.path(figures_dir, paste0("2016_sediment_molecular_", design$panel, ".pdf")))
+  save_figure(p, file.path(figures_dir, paste0("2016_sediment_molecular_", design$panel, ".pdf")))
 }
 # The richness-difference share of each pair against watercourse distance, with
 # the same axes for both data types so their levels can be compared directly.
@@ -670,7 +621,9 @@ for (data_type in names(partitions)) {
     scale_color_manual(values = connection_colors) +
     coord_cartesian(ylim = c(0, 1)) +
     labs(x = "Watercourse distance (km)", y = "Richness-difference share of Jaccard", color = NULL) +
-    print_theme + theme(legend.position = "bottom")
+    guides(color = guide_legend(override.aes = list(size = figure_point_size, alpha = 1))) +
+    plot_theme + theme(legend.position = "bottom") +
+    fixed_panels(figure_large_panel_width, figure_large_panel_height)
   # Every fitted slope is drawn so the four can be compared: solid where the
   # adjusted test passes the threshold, dashed where it does not. Each line spans
   # only the distances of the pairs it was fitted to. Unconnected pairs are drawn
@@ -685,11 +638,11 @@ for (data_type in names(partitions)) {
       color = connection_line_colors[[pair_set]], linetype = line_type, linewidth = 0.6)
   }
   figure_panels[[data_type]] <- p
-  save_at_panel_size(p, file.path(figures_dir, paste0("2016_sediment_", data_type, "_richness_share_distance.pdf")))
+  save_figure(p, file.path(figures_dir, paste0("2016_sediment_", data_type, "_richness_share_distance.pdf")))
 }
 figure <- wrap_plots(figure_panels[c("organic_drainage", "richness_organic", "molecular", "microbial")],
   ncol = 2, guides = "collect") + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
-save_at_panel_size(figure, file.path(manuscript_dir, "2016_sediment_richness_difference.pdf"))
+save_figure(figure, file.path(manuscript_dir, "2016_sediment_richness_difference.pdf"))
 
 # 12. Save dispersion panels for every view ----------------------------------------
 panels <- list()
@@ -702,23 +655,20 @@ for (test in seq_len(nrow(test_design))) {
   p <- ggplot(panel, aes(network_group, distance, color = network_group)) +
     geom_boxplot(outlier.shape = NA, width = 0.5, linewidth = 0.5) +
     geom_point(position = position_jitter(width = 0.1, height = 0, seed = plot_seed),
-      size = point_size, alpha = point_alpha) +
+      size = figure_point_size, alpha = point_alpha) +
     facet_wrap(~metric, labeller = as_labeller(setNames(test_design$label, test_design$metric))) +
     scale_color_manual(values = group_colors) + scale_x_discrete(labels = x_labels) +
     labs(x = NULL, y = "Distance to group median") +
-    plot_theme + theme(aspect.ratio = panel_aspect)
+    plot_theme + fixed_panels()
   panels[[metric]] <- p
-  ggsave(file.path(figures_dir, paste0("2016_matched_sediment_dispersion_", metric, ".pdf")),
-    p, width = panel_width, height = figure_height, bg = "white")
+  save_figure(p, file.path(figures_dir, paste0("2016_matched_sediment_dispersion_", metric, ".pdf")))
 }
-ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_comparison.pdf"),
-  wrap_plots(panels[c("molecular_jaccard", "microbial_hellinger")], ncol = 2) +
+save_figure(wrap_plots(panels[c("molecular_jaccard", "microbial_hellinger")], ncol = 2) +
     plot_annotation(tag_levels = "A"),
-  width = 2 * panel_width, height = figure_height, bg = "white")
-ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_replacement_comparison.pdf"),
-  wrap_plots(panels[c("molecular_replacement", "microbial_replacement")], ncol = 2) +
+  file.path(figures_dir, "2016_matched_sediment_dispersion_comparison.pdf"))
+save_figure(wrap_plots(panels[c("molecular_replacement", "microbial_replacement")], ncol = 2) +
     plot_annotation(tag_levels = "A"),
-  width = 2 * panel_width, height = figure_height, bg = "white")
+  file.path(figures_dir, "2016_matched_sediment_dispersion_replacement_comparison.pdf"))
 
 # 13. Align the existing class fractions to the audited 44-site network groups.
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -809,10 +759,9 @@ group_plot <- ggplot(class_group_summary, aes(network_group, mean_fraction, fill
   scale_x_discrete(labels = class_group_labels) +
   scale_y_continuous(labels = scales::label_percent(), breaks = seq(0, 1, 0.25)) +
   labs(x = NULL, y = "Mean fraction of detected features", fill = NULL) +
-  class_theme +
-  guides(fill = guide_legend(nrow = 3))
-ggsave(file.path(figures_dir, "2016_fticr_network_group_class_means.pdf"),
-  group_plot, width = 9, height = 5.5, bg = "white")
+  class_theme + fixed_panels(figure_large_panel_width, figure_large_panel_height) +
+  guides(fill = guide_legend(ncol = 2))
+save_figure(group_plot, file.path(figures_dir, "2016_fticr_network_group_class_means.pdf"))
 
 # Retain the original site bars, ordered by drainage area inside each group.
 # Bottom facet labels serve as the group labels on the x axis.
@@ -841,25 +790,18 @@ for (group_name in c("All", "Matched", group_levels)) {
       labeller = labeller(network_group = current_labels)) +
     labs(x = NULL, y = "Fraction of detected features", fill = NULL) +
     class_theme +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 8)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
     guides(fill = guide_legend(ncol = 2, byrow = TRUE))
-  if (!group_name %in% c("All", "Matched")) {
-    site_panels[[group_name]] <- site_panels[[group_name]] +
-      theme(aspect.ratio = site_panel_aspect)
-  }
+  site_panels[[group_name]] <- site_panels[[group_name]] +
+    fixed_panels(class_bar_width * current_sizes$n, figure_panel_height)
   file_suffix <- "by_network_group"
-  class_panel_width <- site_figure_width
-  class_panel_height <- site_figure_height
   if (group_name == "Matched") {
     file_suffix <- "matched_sites"
-    class_panel_width <- 2 * panel_width
   } else if (group_name != "All") {
     file_suffix <- tolower(group_name)
-    class_panel_width <- 5.8
-    class_panel_height <- 5.2
   }
-  ggsave(file.path(figures_dir, paste0("2016_fticr_site_class_composition_", file_suffix, ".pdf")),
-    site_panels[[group_name]], width = class_panel_width, height = class_panel_height, bg = "white")
+  save_figure(site_panels[[group_name]],
+    file.path(figures_dir, paste0("2016_fticr_site_class_composition_", file_suffix, ".pdf")))
 }
 stopifnot(identical(class_input_hashes, unname(tools::md5sum(class_input_paths))))
 

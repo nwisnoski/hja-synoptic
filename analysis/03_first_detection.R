@@ -9,25 +9,19 @@ library(vegan)
 library(permute)
 library(ggplot2)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 target_depth <- 10000
 detection_threshold <- 1
 balanced_draws <- 1000
 balanced_samples_per_cell <- 3
-point_size <- 3
 point_alpha <- 0.5
-panel_aspect <- 0.8
-figure_width <- 9
-single_row_height <- 4.8
-composite_width <- 7.2
-composite_height <- 7.6
 base_seed <- 20261005
 rank_seed <- 20261010L
 rank_permutations <- 9999L
 icamp_axis_max <- 60
-icamp_panel_width <- 5.8
-icamp_pair_point_size <- 1.6
+icamp_pair_point_size <- figure_small_point_size
 icamp_pair_point_alpha <- 0.35
 icamp_jitter_width <- 0.16
 icamp_point_seed <- 20261014L
@@ -57,14 +51,8 @@ manuscript_dir <- here("figures", "manuscript")
 supplement_dir <- here("figures", "supplement", "first_detection")
 habitat_results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
 icamp_results_dir <- here("results", "icamp_2016", "reviewed_pool_castor")
-plot_theme <- theme_bw(base_size = 12) +
-  theme(panel.grid.minor = element_blank(), panel.grid.major.x = element_blank(),
-    strip.background = element_blank(), legend.position = "bottom",
-    axis.text = element_text(size = 11), strip.text = element_text(size = 12),
-    legend.title = element_text(size = 11, face = "bold"),
-    legend.text = element_text(size = 11),
-    legend.key.size = grid::unit(0.5, "cm"),
-    plot.tag = element_text(size = 14, face = "bold"))
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme
 theme_set(plot_theme)
 
 # 2. Align fixed-depth samples and retain every identity in an audit -------------
@@ -408,16 +396,16 @@ for (metric in c("richness_percent", "read_percent")) {
   plots[[metric]] <- ggplot(plot_data, aes(network_group, .data[[metric]], fill = category)) +
     geom_col(width = 0.72, position = position_stack(reverse = TRUE)) +
     geom_text(data = distinct(plot_data, habitat, network_group, samples),
-      aes(network_group, 106, label = paste0("n = ", samples)), inherit.aes = FALSE, size = 3.5) +
+      aes(network_group, 106, label = paste0("n = ", samples)), inherit.aes = FALSE,
+      size = figure_label_size) +
     facet_wrap(~habitat, nrow = 1, labeller = as_labeller(habitat_labels)) +
     scale_fill_manual(values = category_colors, labels = category_display_labels,
       drop = FALSE, name = "First detection pool",
       guide = guide_legend(nrow = 1, byrow = TRUE)) +
     scale_y_continuous(breaks = seq(0, 100, 25), limits = c(0, 114), expand = expansion(mult = c(0, 0))) +
     scale_x_discrete(labels = c("Headwater\n(order 1-2)", "Intermediate\n(order 3-4)", "Mainstem\n(order 5)")) +
-    labs(x = NULL, y = y_label) + theme(aspect.ratio = panel_aspect)
-  ggsave(file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")),
-    plots[[metric]], width = figure_width, height = single_row_height, bg = "white")
+    labs(x = NULL, y = y_label) + fixed_panels(n_col = 2)
+  save_figure(plots[[metric]], file.path(supplement_dir, paste0("2016_first_detection_", metric, ".pdf")))
 }
 # Reuse script 02's formal paired soil-sharing test and verify it from counts.
 sharing <- read_csv(input_paths[4], col_types = cols(site_code = col_character()))
@@ -437,12 +425,12 @@ paired_sharing <- paired_sharing %>%
   mutate(habitat = factor(habitat, levels = habitats))
 plots$paired_soil_sharing <- ggplot(paired_sharing, aes(habitat, read_percent, group = site_code)) +
   geom_line(color = "gray70", linewidth = 0.4) +
-  geom_point(aes(color = habitat), size = point_size, alpha = point_alpha) +
+  geom_point(aes(color = habitat), size = figure_point_size, alpha = point_alpha) +
   scale_color_manual(values = c(sediment = "#009E73", hyporheic = "#0072B2")) +
   scale_x_discrete(labels = habitat_labels) +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 25)) +
-  labs(x = NULL, y = "Reads shared with soil inventory (%)") +
-  plot_theme + theme(legend.position = "none", aspect.ratio = panel_aspect)
+  labs(x = NULL, y = "Reads shared with\nsoil inventory (%)") +
+  plot_theme + theme(legend.position = "none") + fixed_panels()
 rank_plot_data <- rank_samples %>%
   pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "distance") %>%
   mutate(rank = factor(rank, levels = rank_levels), scope = factor(scope, levels = rank_scopes),
@@ -466,20 +454,21 @@ for (view in c("taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
     scale_linetype_manual(values = c(same_site = "solid", other_site_mean = "dashed"),
       labels = comparison_labels, name = NULL) +
     scale_y_continuous(limits = c(0, sqrt(2)), breaks = c(0, 0.4, 0.8, 1.2)) +
-    labs(x = "Taxonomic resolution", y = "Sediment-porewater Hellinger distance") +
-    plot_theme + theme(aspect.ratio = panel_aspect, legend.text = element_text(size = 9),
-      legend.key.width = grid::unit(1.2, "lines"))
+    labs(x = "Taxonomic resolution", y = "Sediment-porewater\nHellinger distance") +
+    plot_theme + theme(legend.key.width = grid::unit(1.2, "lines"))
   if (view == "taxonomic_resolution") {
-    plots[[view]] <- plots[[view]] + theme(legend.position = "none")
+    plots[[view]] <- plots[[view]] + theme(legend.position = "none") +
+      fixed_panels(figure_large_panel_width, figure_large_panel_height)
   } else {
-    plots[[view]] <- plots[[view]] + facet_wrap(~scope)
+    plots[[view]] <- plots[[view]] + facet_wrap(~scope, nrow = 1) +
+      fixed_panels(figure_large_panel_width, figure_large_panel_height, n_col = 2)
   }
 }
 for (panel in c("paired_soil_sharing", "taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
-  ggsave(file.path(supplement_dir, paste0("2016_", panel, ".pdf")), plots[[panel]],
-    width = ifelse(panel == "taxonomic_resolution_sensitivity", 11.5, 5.8),
-    height = single_row_height, bg = "white")
+  save_figure(plots[[panel]], file.path(supplement_dir, paste0("2016_", panel, ".pdf")))
 }
+# Porewater keeps the square marker it has in Figure 1.
+icamp_x_labels <- paste0(network_groups, "\n(n = ", icamp_group_sizes$sites, ")")
 for (i in seq_len(nrow(icamp_processes))) {
   panel <- icamp_plot_data %>% filter(process == icamp_processes$process[i])
   pair_points <- icamp_pair_points %>% filter(process == icamp_processes$process[i])
@@ -488,39 +477,36 @@ for (i in seq_len(nrow(icamp_processes))) {
     aes(plot_x, 100 * importance, color = habitat, shape = habitat, group = habitat)) +
     geom_point(data = pair_points, size = icamp_pair_point_size,
       alpha = icamp_pair_point_alpha, show.legend = FALSE) +
-    geom_line(linewidth = 0.6) + geom_point(size = point_size) +
+    geom_line(linewidth = 0.6) + geom_point(size = 1.5 * figure_point_size) +
     scale_color_manual(values = setNames(category_colors[c("Sediment", "Hyporheic")], habitats),
       labels = habitat_labels, name = "Habitat") +
-    scale_shape_manual(values = c(sediment = 16, hyporheic = 17),
+    scale_shape_manual(values = c(sediment = 16, hyporheic = 15),
       labels = habitat_labels, name = "Habitat") +
     scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
-      labels = paste0(network_groups, "\n", icamp_group_sizes$sites, " paired sites")) +
+      labels = icamp_x_labels) +
     scale_y_continuous(limits = c(0, icamp_axis_max), breaks = seq(0, icamp_axis_max, 20),
       expand = expansion(mult = c(0.02, 0.04))) +
     facet_wrap(~process, labeller = as_labeller(setNames(icamp_processes$label, icamp_processes$process))) +
-    labs(x = NULL, y = "Pairwise importance (%)") + plot_theme +
-    theme(aspect.ratio = panel_aspect)
-  ggsave(file.path(supplement_dir, paste0("2016_first_detection_", icamp_processes$panel[i], ".pdf")),
-    plots[[icamp_processes$panel[i]]], width = icamp_panel_width, height = single_row_height, bg = "white")
+    labs(x = NULL, y = "Pairwise importance (%)") + plot_theme + fixed_panels()
+  save_figure(plots[[icamp_processes$panel[i]]],
+    file.path(supplement_dir, paste0("2016_first_detection_", icamp_processes$panel[i], ".pdf")))
 }
+# The faceted inventory spans the top row; each iCAMP process is a panel below.
+# Each legend sits to the right of the panels it describes, so the pool legend
+# and the habitat legend share a narrow right-hand column. The layout is flat
+# so the canvas can be measured around the fixed panels.
 inventory_panel <- plots$read_percent +
-  guides(fill = guide_legend(ncol = 2, byrow = TRUE, title.position = "top")) +
-  theme(aspect.ratio = NULL, axis.text.x = element_text(size = 10))
-# The faceted inventory is one panel; each iCAMP process is a separate panel.
-icamp_x_labels <- paste0(network_groups, "\n(n = ", icamp_group_sizes$sites, ")")
-icamp_panels <- ((plots$icamp_dispersal_limitation + labs(tag = "B") +
-    scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
-      labels = icamp_x_labels)) |
-  (plots$icamp_homogeneous_selection + labs(tag = "C") +
-    scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
-      labels = icamp_x_labels))) + plot_layout(guides = "collect") &
-  theme(axis.text.x = element_text(size = 10), legend.position = "bottom")
-inventory_panel <- wrap_elements(full = inventory_panel) + labs(tag = "A") +
-  theme(plot.tag = element_text(size = 14, face = "bold"),
-    plot.tag.position = c(0.01, 0.98))
-combined <- (inventory_panel / icamp_panels) + plot_layout(heights = c(1.15, 1))
-ggsave(file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"), combined,
-  width = composite_width, height = composite_height, bg = "white")
+  guides(fill = guide_legend(ncol = 1, title.position = "top")) +
+  theme(legend.position = "right", legend.justification = "left")
+dispersal_panel <- plots$icamp_dispersal_limitation + theme(legend.position = "none")
+selection_panel <- plots$icamp_homogeneous_selection +
+  guides(color = guide_legend(ncol = 1, title.position = "top"),
+    shape = guide_legend(ncol = 1, title.position = "top")) +
+  theme(legend.position = "right", legend.justification = "left")
+combined <- wrap_plots(A = inventory_panel, B = dispersal_panel, C = selection_panel,
+    design = "AA\nBC") +
+  plot_annotation(tag_levels = "A")
+save_figure(combined, file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"))
 if (interactive()) {
   print(combined)
 }

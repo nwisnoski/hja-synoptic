@@ -7,6 +7,7 @@ library(ggplot2)
 library(vegan)
 library(permute)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 dispersion_dir <- here("results", "fticr_2016", "matched_sediment_dispersion")
@@ -15,12 +16,8 @@ figures_dir <- here("figures", "supplement", "sediment_comparison")
 n_permutations <- 9999
 permutation_seed <- 20261116
 significance_threshold <- 0.05
-# Figures are built at printed size: each panel has a fixed size and the canvas
-# is measured around it.
-panel_width <- 2.6
-panel_height <- 2.0
-base_size <- 9
-point_size <- 0.8
+# Text sizes, panel sizes, and the exporter come from figure_style.R. These
+# panels overlay two sets of pairs, so they use the large panel size.
 point_alpha <- 0.5
 # The standard dissimilarity for each data type. Its replacement and
 # richness-difference components are tested in 04_sediment_convergence.R.
@@ -36,25 +33,7 @@ predictor_design <- tribble(
   "straight_line_km", "Straight-line distance (km)")
 connection_levels <- c("Flow-connected", "Not flow-connected")
 connection_colors <- c("Flow-connected" = "#000000", "Not flow-connected" = "#999999")
-plot_theme <- theme_bw(base_size = base_size) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank(), legend.position = "bottom",
-    panel.widths = grid::unit(panel_width, "in"), panel.heights = grid::unit(panel_height, "in"),
-    plot.tag = element_text(size = 11, face = "bold"))
-# Save a figure whose panels have fixed sizes on a canvas measured around them.
-# Measuring text needs an open graphics device, so a null device is opened.
-save_at_panel_size <- function(plot, path) {
-  pdf(NULL)
-  if (inherits(plot, "patchwork")) {
-    grob <- patchworkGrob(plot)
-  } else {
-    grob <- ggplotGrob(plot)
-  }
-  width <- grid::convertWidth(sum(grob$widths), "in", valueOnly = TRUE)
-  height <- grid::convertHeight(sum(grob$heights), "in", valueOnly = TRUE)
-  dev.off()
-  ggsave(path, plot, width = width, height = height, bg = "white")
-}
+plot_theme <- figure_theme + fixed_panels(figure_large_panel_width, figure_large_panel_height)
 
 # 2. Read the matched sites, their dissimilarities, and their separations ----------
 # 04_sediment_convergence.R saves the complete-data matrices and one row per pair
@@ -198,10 +177,11 @@ for (view in seq_len(nrow(view_design))) {
     connection = pairs$connection, metric)
   # Unconnected pairs are drawn first so the fewer flow-connected pairs stay visible.
   p <- ggplot(panel %>% arrange(desc(connection)), aes(separation, dissimilarity, color = connection)) +
-    geom_point(size = point_size, alpha = point_alpha) +
+    geom_point(size = figure_small_point_size, alpha = point_alpha) +
     facet_wrap(~metric, labeller = as_labeller(setNames(view_design$label, view_design$metric))) +
     scale_color_manual(values = connection_colors, drop = FALSE) +
     labs(x = "Watercourse distance (km)", y = "Dissimilarity between sites", color = NULL) +
+    guides(color = guide_legend(override.aes = list(size = figure_point_size, alpha = 1))) +
     plot_theme
   for (pair_set in connection_levels) {
     tested <- flow_tests %>% filter(.data$metric == .env$metric, .data$pair_set == .env$pair_set)
@@ -211,11 +191,11 @@ for (view in seq_len(nrow(view_design))) {
     }
   }
   panels[[metric]] <- p
-  save_at_panel_size(p, file.path(figures_dir, paste0("2016_matched_sediment_distance_decay_", metric, ".pdf")))
+  save_figure(p, file.path(figures_dir, paste0("2016_matched_sediment_distance_decay_", metric, ".pdf")))
 }
 combined <- wrap_plots(panels[view_design$metric], ncol = 2, guides = "collect") +
   plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
-save_at_panel_size(combined, file.path(figures_dir, "2016_matched_sediment_distance_decay_primary.pdf"))
+save_figure(combined, file.path(figures_dir, "2016_matched_sediment_distance_decay_primary.pdf"))
 
 writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(results_dir, "session_info.txt"))
 print(mantel_tests, n = Inf)

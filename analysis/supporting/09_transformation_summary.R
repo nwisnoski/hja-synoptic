@@ -6,6 +6,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and readable descriptions -----------------------------------------
 results_dir <- here("results", "fticr_2016", "transformations")
@@ -47,8 +48,8 @@ support_colors <- c(
   "Compatible; multiple formula candidates" = "#E69F00",
   "Mass match; incompatible assigned formulas" = "#D9D9D9"
 )
-plot_theme <- theme_bw(base_size = 12) +
-  theme(panel.grid = element_blank(), strip.background = element_blank())
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme
 
 # 2. Align completed pair assignments with the sediment inventory and formulas ---
 input_paths <- c(
@@ -176,21 +177,18 @@ support_plot <- ggplot(support_distribution,
   scale_y_discrete(labels = support_labels) +
   scale_fill_manual(values = support_colors, name = NULL) +
   labs(x = "Distinct mass-matched peak pairs across 44 profiles", y = NULL) +
-  plot_theme + theme(legend.position = "bottom",
-    legend.text = element_text(size = 10), legend.key.height = grid::unit(0.35, "cm")) +
+  plot_theme + fixed_panels(figure_large_panel_width, 0.2 * nrow(motif_summary)) +
   guides(fill = guide_legend(ncol = 1))
-ggsave(file.path(figures_dir, "2016_transformation_assignment_summary.pdf"),
-  support_plot, width = 11.5, height = 6.5, bg = "white")
+save_figure(support_plot, file.path(figures_dir, "2016_transformation_assignment_summary.pdf"))
 
 rank_plot <- ggplot(filter(catalogue, sample_pair_matches > 0),
   aes(rank, mean_sample_pair_fraction)) +
-  geom_point(size = 1.4, color = "#0072B2", alpha = 0.7) +
-  scale_x_log10() +
+  geom_point(size = figure_small_point_size, color = "#0072B2", alpha = 0.7) +
+  scale_x_log10(labels = scales::label_log()) +
   scale_y_log10(labels = scales::label_percent()) +
-  labs(x = "Published transformation-label rank", y = "Mean fraction of matched pairs") +
-  plot_theme
-ggsave(file.path(figures_dir, "2016_transformation_label_rank_distribution.pdf"),
-  rank_plot, width = 6, height = 4.8, bg = "white")
+  labs(x = "Published transformation-label rank", y = "Mean fraction\nof matched pairs") +
+  plot_theme + fixed_panels()
+save_figure(rank_plot, file.path(figures_dir, "2016_transformation_label_rank_distribution.pdf"))
 
 # 7. Preserve source identity ---------------------------------------------------
 integrity <- tibble(path = substring(input_paths, nchar(here()) + 2L),

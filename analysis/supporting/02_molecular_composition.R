@@ -8,6 +8,7 @@ library(ggplot2)
 library(vegan)
 library(permute)
 library(adespatial)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 results_dir <- here("results", "fticr_2016", "river_composition")
@@ -23,9 +24,10 @@ class_labels <- c("Lipid-like", "Protein-like", "Amino-sugar-like", "Carbohydrat
 class_colors <- c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77",
   "#CC6677", "#882255", "#AA4499")
 names(class_colors) <- class_labels
-plot_theme <- theme_bw(base_size = 12) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-    strip.background = element_blank())
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme + theme(legend.position = "right")
+# Width of one site's bar in the site-level class composition panel.
+class_bar_width <- 0.12
 
 # 2. Align incidence, formula metadata, and environment -------------------------
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -305,11 +307,11 @@ class_plot <- ggplot(class_table, aes(site_code, fraction_detected, fill = class
   scale_y_continuous(labels = scales::label_percent()) +
   labs(x = "Sites ordered by increasing drainage area", y = "Fraction of detected features", fill = NULL) +
   plot_theme +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 8),
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
     legend.position = "bottom") +
+  fixed_panels(class_bar_width * nrow(pa), figure_panel_height) +
   guides(fill = guide_legend(nrow = 3))
-ggsave(file.path(figures_dir, "2016_fticr_site_class_composition.pdf"),
-  class_plot, width = 11, height = 5.2, bg = "white")
+save_figure(class_plot, file.path(figures_dir, "2016_fticr_site_class_composition.pdf"))
 
 # Correlation vectors cross-reference the same 44-site ordination, without changing it.
 vector_fit <- envfit(as.data.frame(site[c("pcoa1", "pcoa2")]),
@@ -325,41 +327,45 @@ overlay_plot <- ggplot(site, aes(pcoa1, pcoa2)) +
   geom_segment(data = vectors, aes(x = 0, y = 0, xend = axis1, yend = axis2),
     inherit.aes = FALSE, arrow = grid::arrow(length = grid::unit(0.12, "inches"))) +
   geom_text(data = vectors, aes(axis1, axis2, label = label, vjust = label_vjust),
-    inherit.aes = FALSE, size = 3.5) +
+    inherit.aes = FALSE, size = figure_label_size) +
   expand_limits(y = c(min(vectors$axis2) - 0.045, max(vectors$axis2) + 0.045)) +
   scale_color_viridis_c(name = "Drainage area\n(log10 ha)") +
-  scale_size_continuous(name = "Detected\nfeatures", range = c(1.5, 4.5)) +
+  scale_size_continuous(name = "Detected\nfeatures", range = c(0.8, 2.8)) +
   coord_equal() +
-  labs(x = "Jaccard PCoA1", y = "Jaccard PCoA2") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_pcoa_formula_overlay.pdf"),
-  overlay_plot, width = 7, height = 5, bg = "white")
+  labs(x = "Jaccard PCoA1", y = "Jaccard PCoA2") + plot_theme +
+  fixed_equal_panels(site$pcoa1, c(site$pcoa2, min(vectors$axis2) - 0.045, max(vectors$axis2) + 0.045),
+    width = figure_large_panel_width)
+save_figure(overlay_plot, file.path(figures_dir, "2016_fticr_pcoa_formula_overlay.pdf"))
 
 h_c_plot <- ggplot(site, aes(site_drainage_area_ha, mean_detected_h_c)) +
-  geom_point(aes(color = factor(site_stream_order)), size = 2.8) +
+  geom_point(aes(color = factor(site_stream_order)), size = figure_point_size) +
   geom_smooth(method = "lm", se = TRUE, color = "black", linewidth = 0.6) +
-  scale_x_log10() + scale_color_viridis_d(name = "Stream order") +
-  labs(x = "Drainage area (ha)", y = "Mean H:C of detected features") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_h_c_drainage.pdf"),
-  h_c_plot, width = 6, height = 4.8, bg = "white")
+  scale_x_log10(labels = scales::label_log()) + scale_color_viridis_d(name = "Stream order") +
+  labs(x = "Drainage area (ha)", y = "Mean H:C of\ndetected features") + plot_theme + fixed_panels()
+save_figure(h_c_plot, file.path(figures_dir, "2016_fticr_h_c_drainage.pdf"))
 
 protein_plot <- ggplot(site, aes(site_drainage_area_ha, protein_like_fraction)) +
-  geom_point(aes(color = factor(site_stream_order)), size = 2.8) +
-  scale_x_log10() + scale_color_viridis_d(name = "Stream order") +
+  geom_point(aes(color = factor(site_stream_order)), size = figure_point_size) +
+  scale_x_log10(labels = scales::label_log()) + scale_color_viridis_d(name = "Stream order") +
   scale_y_continuous(labels = scales::label_percent()) +
-  labs(x = "Drainage area (ha)", y = "Protein-like fraction of detected features") + plot_theme
-ggsave(file.path(figures_dir, "2016_fticr_protein_like_drainage.pdf"),
-  protein_plot, width = 6, height = 4.8, bg = "white")
+  labs(x = "Drainage area (ha)", y = "Protein-like fraction\nof detected features") + plot_theme +
+  fixed_panels()
+save_figure(protein_plot, file.path(figures_dir, "2016_fticr_protein_like_drainage.pdf"))
 
 procrustes_plot <- ggplot(paired_coordinates) +
   geom_segment(aes(x = molecular_axis1, y = molecular_axis2,
     xend = microbial_axis1, yend = microbial_axis2), color = "gray65") +
-  geom_point(aes(molecular_axis1, molecular_axis2, color = log_area, shape = "Molecular"), size = 2.5) +
-  geom_point(aes(microbial_axis1, microbial_axis2, color = log_area, shape = "Microbial"), size = 2.5) +
+  geom_point(aes(molecular_axis1, molecular_axis2, color = log_area, shape = "Molecular"),
+    size = figure_point_size) +
+  geom_point(aes(microbial_axis1, microbial_axis2, color = log_area, shape = "Microbial"),
+    size = figure_point_size) +
   scale_shape_manual(name = NULL, values = c(Molecular = 16, Microbial = 2)) +
   scale_color_viridis_c(name = "Drainage area\n(log10 ha)") + coord_equal() +
-  labs(x = "Procrustes axis 1", y = "Procrustes axis 2") + plot_theme
-ggsave(file.path(figures_dir, "2016_paired_molecular_microbes_procrustes.pdf"),
-  procrustes_plot, width = 6, height = 4.8, bg = "white")
+  labs(x = "Procrustes axis 1", y = "Procrustes axis 2") + plot_theme +
+  fixed_equal_panels(c(paired_coordinates$molecular_axis1, paired_coordinates$microbial_axis1),
+    c(paired_coordinates$molecular_axis2, paired_coordinates$microbial_axis2),
+    width = figure_large_panel_width)
+save_figure(procrustes_plot, file.path(figures_dir, "2016_paired_molecular_microbes_procrustes.pdf"))
 
 ordination_views <- list(replacement = partition$repl, equal_feature = mean_subsampled_distance)
 ordination_rows <- list()
@@ -375,11 +381,11 @@ for (view_name in names(ordination_views)) {
     uncorrected_negative_eigenvalues = sum(uncorrected$eig < -1e-10),
     axis1_percent = percent[1], axis2_percent = percent[2])
   sensitivity_plot <- ggplot(plot_data, aes(axis1, axis2, color = log_area)) +
-    geom_point(size = 2.8) + scale_color_viridis_c(name = "Drainage area\n(log10 ha)") +
+    geom_point(size = figure_point_size) + scale_color_viridis_c(name = "Drainage area\n(log10 ha)") +
     coord_equal() + labs(x = sprintf("PCoA1 (%.1f%%)", percent[1]),
-      y = sprintf("PCoA2 (%.1f%%)", percent[2])) + plot_theme
-  ggsave(file.path(figures_dir, paste0("2016_fticr_", view_name, "_pcoa.pdf")),
-    sensitivity_plot, width = 6, height = 4.8, bg = "white")
+      y = sprintf("PCoA2 (%.1f%%)", percent[2])) + plot_theme +
+    fixed_equal_panels(plot_data$axis1, plot_data$axis2, width = figure_large_panel_width)
+  save_figure(sensitivity_plot, file.path(figures_dir, paste0("2016_fticr_", view_name, "_pcoa.pdf")))
 }
 write_csv(bind_rows(ordination_rows), file.path(results_dir, "sensitivity_pcoa_scores.csv"))
 write_csv(bind_rows(ordination_summary_rows), file.path(results_dir, "sensitivity_pcoa_summary.csv"))

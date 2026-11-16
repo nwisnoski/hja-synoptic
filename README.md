@@ -24,6 +24,8 @@ replacement and richness difference along flow paths, and runs dispersion with i
 completed molecular-class results; 05 reads completed network results.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
+All figures share the text sizes, panel sizes, and exporter in
+[figure_style.R](analysis/figure_style.R), so they print at journal size.
 Microbial abundance comparisons use Hellinger distance. Figure 2 B–C compare
 dispersal limitation and homogeneous selection for sediment and porewater on
 the same 18 sites, reusing completed reviewed-pool iCAMP assignments.

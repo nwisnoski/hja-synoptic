@@ -6,6 +6,7 @@ library(tidyr)
 library(ggplot2)
 library(ggrepel)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme ------------------------------------------------
 core_id <- 2L
@@ -18,9 +19,10 @@ results_dir <- here("results", "fticr_2016", "stable_group_distribution")
 figures_dir <- here("figures", "supplement", "networks")
 network_dir <- here("results", "fticr_2016", "bipartite_networks")
 figure_prefix <- "2016_sediment_stable_group"
-plot_theme <- theme_bw(base_size = 11) +
-  theme(panel.grid.minor = element_blank(), strip.background = element_blank(),
-    legend.position = "bottom")
+# Text sizes, panel sizes, and the exporter come from figure_style.R. The
+# labeled maps use the wider map of Figure 4 so site labels stay legible.
+plot_theme <- figure_theme
+map_width <- 4.2
 input_paths <- c(
   file.path(network_dir, "stable_core_asv_taxonomy.csv"),
   file.path(network_dir, "stable_core_molecular_properties.csv"),
@@ -183,12 +185,12 @@ for (component_name in c("ASVs", "Molecular features")) {
     geom_path(color = "#C0C0C0", linewidth = 0.35) +
     geom_point(data = current %>% filter(!is.na(detected_fraction)),
       aes(site_utm_x_m, site_utm_y_m, fill = detected_fraction),
-      inherit.aes = FALSE, shape = 21, size = 3.3, color = "black", stroke = 0.4) +
+      inherit.aes = FALSE, shape = 21, size = 1.5 * figure_point_size, color = "black", stroke = 0.4) +
     geom_point(data = current %>% filter(is.na(detected_fraction)),
       aes(site_utm_x_m, site_utm_y_m, shape = "Profile unavailable"),
-      inherit.aes = FALSE, color = "#666666", size = 2.5) +
+      inherit.aes = FALSE, color = "#666666", size = figure_point_size) +
     geom_text_repel(data = current, aes(site_utm_x_m, site_utm_y_m, label = site_code),
-      inherit.aes = FALSE, seed = label_seed, size = 2.8, max.overlaps = Inf,
+      inherit.aes = FALSE, seed = label_seed, size = figure_label_size, max.overlaps = Inf,
       box.padding = 0.3, point.padding = 0.25, min.segment.length = 0,
       segment.color = "#999999", segment.size = 0.2) +
     scale_fill_viridis_c(option = "C", direction = -1, limits = c(0, 1),
@@ -196,17 +198,16 @@ for (component_name in c("ASVs", "Molecular features")) {
       name = ifelse(component_name == "ASVs", "Fraction of 38 ASVs detected",
         "Fraction of 8 molecular features detected")) +
     scale_shape_manual(values = c("Profile unavailable" = 4), name = NULL) +
-    coord_equal() + labs(x = "UTM easting (m)", y = "UTM northing (m)") +
-    plot_theme + theme(panel.grid = element_blank())
+    coord_equal() + utm_km_scales +
+    plot_theme + fixed_equal_panels(c(map_lines$x, current$site_utm_x_m), c(map_lines$y, current$site_utm_y_m),
+      width = map_width)
   maps[[component_name]] <- map
   suffix <- ifelse(component_name == "ASVs", "asv_map", "molecular_map")
-  ggsave(file.path(figures_dir, paste0(figure_prefix, "_", suffix, ".pdf")), map,
-    width = 8, height = 7.5, bg = "white")
+  save_figure(map, file.path(figures_dir, paste0(figure_prefix, "_", suffix, ".pdf")))
 }
 combined <- maps[["ASVs"]] + maps[["Molecular features"]] +
   plot_layout(ncol = 2) + plot_annotation(tag_levels = "A")
-ggsave(file.path(figures_dir, paste0(figure_prefix, "_catchment_maps.pdf")), combined,
-  width = 15, height = 7.5, bg = "white")
+save_figure(combined, file.path(figures_dir, paste0(figure_prefix, "_catchment_maps.pdf")))
 
 # 5. Verify input integrity and record the scope --------------------------------
 write_csv(tibble(core = core_id, original_asvs = expected_asvs,

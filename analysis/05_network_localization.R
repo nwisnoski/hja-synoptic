@@ -6,6 +6,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(ggrepel)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme.
 core_id <- 2L
@@ -17,25 +18,14 @@ manuscript_dir <- here("figures", "manuscript")
 figure_file <- "2016_sediment_stable_group_colocation_map.pdf"
 labeled_figure_file <- "2016_sediment_stable_group_colocation_map_labeled.pdf"
 label_seed <- 20261044L
-label_size <- 2.8
-marker_size_range <- c(2, 8)
+marker_size_range <- c(1, 4.5)
 fraction_breaks <- c(0, 0.5, 1)
 fraction_labels <- c("0%", "50%", "100%")
 centerline_stride <- 10L
-figure_width <- 7.2
-figure_height <- 4.3
-plot_theme <- theme_bw(base_size = 12) +
-  theme(
-    panel.grid = element_blank(),
-    strip.background = element_blank(),
-    legend.position = "right",
-    legend.box = "vertical",
-    axis.text = element_text(size = 11),
-    legend.title = element_text(size = 11, face = "bold"),
-    legend.text = element_text(size = 11),
-    legend.key.size = grid::unit(0.5, "cm"),
-    plot.margin = margin(8, 8, 8, 8)
-  )
+# The single main-text map is wider than the standard map panel. Text sizes,
+# panel sizes, and the exporter come from figure_style.R.
+map_width <- 4.2
+plot_theme <- figure_theme + theme(legend.position = "right", legend.box = "vertical")
 
 # 2. Check that the completed site profiles still describe the current inputs.
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
@@ -126,8 +116,8 @@ map <- ggplot(map_lines, aes(x / 1000, y / 1000, group = segment)) +
     aes(site_utm_x_m / 1000, site_utm_y_m / 1000, shape = "One profile\nunavailable"),
     inherit.aes = FALSE,
     color = "#777777",
-    size = 2.5,
-    stroke = 0.7
+    size = figure_point_size,
+    stroke = 0.6
   ) +
   scale_size_continuous(
     range = marker_size_range,
@@ -154,9 +144,10 @@ map <- ggplot(map_lines, aes(x / 1000, y / 1000, group = segment)) +
   ) +
   coord_equal() +
   labs(x = "Easting (km, UTM zone 10N)", y = "Northing (km)") +
-  plot_theme
-ggsave(file.path(manuscript_dir, figure_file), map,
-  width = figure_width, height = figure_height, bg = "white")
+  plot_theme +
+  fixed_equal_panels(c(map_lines$x, plot_data$site_utm_x_m) / 1000,
+    c(map_lines$y, plot_data$site_utm_y_m) / 1000, width = map_width)
+save_figure(map, file.path(manuscript_dir, figure_file))
 
 # Retain all site IDs with the original label seed and leader-line styling.
 # Reserve room for the largest circles so labels do not cover their fills.
@@ -166,7 +157,7 @@ labeled_map <- map +
     aes(site_utm_x_m / 1000, site_utm_y_m / 1000, label = site_code),
     inherit.aes = FALSE,
     seed = label_seed,
-    size = label_size,
+    size = figure_label_size,
     point.size = max(marker_size_range),
     max.overlaps = Inf,
     box.padding = 0.3,
@@ -175,8 +166,7 @@ labeled_map <- map +
     segment.color = "#999999",
     segment.size = 0.2
   )
-ggsave(file.path(figures_dir, labeled_figure_file), labeled_map,
-  width = figure_width, height = figure_height, bg = "white")
+save_figure(labeled_map, file.path(figures_dir, labeled_figure_file))
 
 # 5. Verify that supplementary figures remain intact.
 stopifnot(identical(preserved_hashes, unname(tools::md5sum(preserved_paths))))

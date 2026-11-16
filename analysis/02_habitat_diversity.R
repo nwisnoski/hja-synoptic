@@ -7,6 +7,7 @@ library(vegan)
 library(permute)
 library(ggplot2)
 library(patchwork)
+source(here("analysis", "figure_style.R"))
 
 # 1. Settings and plotting theme -----------------------------------------------
 data_dir <- here("data", "derived", "soil_porewater_sediment_2016")
@@ -21,30 +22,16 @@ soil_inventory_draws <- 1000L
 soil_inventory_size <- 3L
 centerline_stride <- 10L
 alpha <- 0.05
-point_size <- 3
 point_alpha <- 0.5
-panel_aspect <- 0.8
-alpha_figure_width <- 5.8
-alpha_figure_height <- 5.2
-ordination_figure_width <- 6.2
-ordination_figure_height <- 5.6
-habitat_figure_width <- 7.2
-habitat_figure_height <- 3.8
 habitat_levels <- c("soil", "sediment", "hyporheic")
 habitat_labels <- c(soil = "Soil", sediment = "Sediment", hyporheic = "Porewater")
 habitat_colors <- c(soil = "#D55E00", sediment = "#009E73", hyporheic = "#0072B2")
 habitat_shapes <- c(soil = 17, sediment = 16, hyporheic = 15)
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
-diversity_labels <- c(q0 = "ASV richness (q = 0)", q1 = "Hill diversity (q = 1; exp Shannon)",
+diversity_labels <- c(q0 = "ASV richness (q = 0)", q1 = "Hill diversity (q = 1)",
   q2 = "Hill diversity (q = 2)")
-plot_theme <- theme_bw(base_size = 12) + theme(
-  panel.grid.minor = element_blank(), panel.grid.major = element_blank(),
-  strip.background = element_blank(), legend.position = "bottom",
-  axis.text = element_text(size = 11), strip.text = element_text(size = 12),
-  legend.title = element_text(size = 11, face = "bold"),
-  legend.text = element_text(size = 11),
-  legend.key.size = grid::unit(0.5, "cm"),
-  plot.tag = element_text(size = 14, face = "bold"))
+# Text sizes, panel sizes, and the exporter come from figure_style.R.
+plot_theme <- figure_theme
 habitat_design <- tibble::tribble(
   ~comparison, ~first, ~second, ~seed,
   "All three habitats", NA_character_, NA_character_, base_seed + 1L,
@@ -372,54 +359,61 @@ stopifnot(nrow(map_points) == 118, sum(map_points$molecular_pair) == 66,
   all(is.finite(map_points$x)), all(is.finite(map_points$y)))
 map_points$layer <- factor(map_points$layer, levels = c("Soil microbes (13 mapped / 15)",
   "Porewater microbes (27)", "Sediment microbes (34)", "Sediment molecular profiles (44)"))
+map_x <- c(geometry$x, map_points$x) / 1000
+map_y <- c(geometry$y, map_points$y) / 1000
 plots$sampling_map <- ggplot(geometry, aes(x / 1000, y / 1000, group = segment)) +
   geom_path(color = "gray75", linewidth = 0.3) +
   geom_point(data = map_points, aes(x / 1000, y / 1000, color = layer),
-    inherit.aes = FALSE, size = 2.2) +
+    inherit.aes = FALSE, size = figure_point_size) +
   geom_point(data = map_points %>% filter(molecular_pair), aes(x / 1000, y / 1000),
-    inherit.aes = FALSE, shape = 1, size = 3.3, color = "black", stroke = 0.4) +
+    inherit.aes = FALSE, shape = 1, size = 1.5 * figure_point_size, color = "black", stroke = 0.4) +
   facet_wrap(~layer, ncol = 2, drop = FALSE) + coord_equal() +
   scale_color_manual(values = c("#D55E00", "#0072B2", "#009E73", "#CC79A7")) +
   labs(x = "Easting (km, UTM zone 10N)", y = "Northing (km)") +
-  plot_theme + theme(legend.position = "none")
+  plot_theme + theme(legend.position = "none") +
+  fixed_equal_panels(map_x, map_y, width = figure_large_panel_width, n_col = 2, n_row = 2)
 plots$sampling_map <- plots$sampling_map +
   geom_text(data = tibble(layer = factor(levels(map_points$layer),
       levels = levels(map_points$layer)), tag = LETTERS[1:4]),
     aes(x = -Inf, y = Inf, label = tag), inherit.aes = FALSE,
-    hjust = -0.5, vjust = 1.3, fontface = "bold", size = 4)
+    hjust = -0.5, vjust = 1.3, fontface = "bold", size = figure_tag_size / .pt)
 plots$hellinger_pca <- ggplot(sample_summary, aes(pc1, pc2, color = habitat, shape = habitat)) +
-  geom_point(size = point_size, alpha = point_alpha) + coord_equal() +
+  geom_point(size = figure_point_size, alpha = point_alpha) + coord_equal() +
   scale_color_manual(values = habitat_colors, labels = habitat_labels) +
   scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("Hellinger PC1 (%.1f%%)", variance[1]),
-    y = sprintf("Hellinger PC2 (%.1f%%)", variance[2]), color = "Habitat", shape = "Habitat") + plot_theme
+    y = sprintf("Hellinger PC2 (%.1f%%)", variance[2]), color = "Habitat", shape = "Habitat") +
+  plot_theme + fixed_equal_panels(sample_summary$pc1, sample_summary$pc2, width = figure_large_panel_width)
 for (order in c("q0", "q1", "q2")) {
   plots[[paste0("diversity_", order)]] <- ggplot(sample_summary, aes(habitat, .data[[order]], color = habitat)) +
     geom_boxplot(outlier.shape = NA, color = "gray40") +
-    geom_point(aes(shape = habitat), position = position_jitter(width = 0.12, seed = base_seed), size = point_size, alpha = point_alpha) +
+    geom_point(aes(shape = habitat), position = position_jitter(width = 0.12, seed = base_seed),
+      size = figure_point_size, alpha = point_alpha) +
     scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
     scale_color_manual(values = habitat_colors) + scale_x_discrete(labels = habitat_labels) +
     labs(x = NULL, y = diversity_labels[[order]]) +
-    plot_theme + theme(legend.position = "none")
+    plot_theme + theme(legend.position = "none") + fixed_panels()
 }
 # The manuscript uses exponential Shannon diversity; q = 0 and 2 remain supplementary.
-plots$alpha_diversity <- plots$diversity_q1 +
-  labs(y = "Hill diversity (q = 1)") + theme(aspect.ratio = panel_aspect)
+plots$alpha_diversity <- plots$diversity_q1
 # Show individual libraries; distribution tests retain the dispersion diagnostic.
 plots$weighted_unifrac <- ggplot(weighted_scores, aes(pcoa1, pcoa2, color = habitat, shape = habitat)) +
-  geom_point(size = point_size, alpha = point_alpha) + coord_equal() +
+  geom_point(size = figure_point_size, alpha = point_alpha) + coord_equal() +
   scale_color_manual(values = habitat_colors, labels = habitat_labels) +
   scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("PCoA1 (%.1f%%)", weighted_percent[1]),
-    y = sprintf("PCoA2 (%.1f%%)", weighted_percent[2]), color = NULL, shape = NULL) + plot_theme
+    y = sprintf("PCoA2 (%.1f%%)", weighted_percent[2]), color = NULL, shape = NULL) +
+  plot_theme + fixed_equal_panels(weighted_scores$pcoa1, weighted_scores$pcoa2,
+    width = figure_large_panel_width)
 for (metric in c("soil_read_percent", "soil_asv_percent")) {
   plot <- ggplot(sharing, aes(site_drainage_area_ha, .data[[metric]], color = habitat)) +
-    geom_point(size = point_size, alpha = point_alpha) + scale_x_log10() +
+    geom_point(size = figure_point_size, alpha = point_alpha) +
+    scale_x_log10(labels = scales::label_log()) +
     scale_color_manual(values = habitat_colors, labels = habitat_labels) +
-    facet_wrap(~habitat, labeller = as_labeller(habitat_labels)) +
+    facet_wrap(~habitat, nrow = 1, labeller = as_labeller(habitat_labels)) +
     labs(x = "Drainage area (ha)", y = ifelse(metric == "soil_read_percent",
-      "Reads shared with soil inventory (%)", "ASVs shared with soil inventory (%)"), color = "Habitat") +
-    plot_theme + theme(legend.position = "none")
+      "Reads shared with\nsoil inventory (%)", "ASVs shared with\nsoil inventory (%)"), color = "Habitat") +
+    plot_theme + theme(legend.position = "none") + fixed_panels(n_col = n_distinct(sharing$habitat))
   significant <- slopes %>% filter(.data$metric == .env$metric, p_bh_family4 <= alpha)
   if (nrow(significant) > 0) plot <- plot + geom_abline(data = significant,
     aes(intercept = intercept, slope = slope, color = habitat), inherit.aes = FALSE)
@@ -429,45 +423,35 @@ distance_data <- pair_samples %>% filter(metric != "Sediment ASV read share") %>
   pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "distance") %>%
   mutate(comparison = factor(comparison, levels = c("same_site", "other_site_mean")))
 plots$same_site_distances <- ggplot(distance_data, aes(comparison, distance, group = site_code)) +
-  geom_line(color = "gray70") + geom_point(size = point_size, alpha = point_alpha, color = "#0072B2") +
-  facet_wrap(~metric, scales = "free_y") +
+  geom_line(color = "gray70") +
+  geom_point(size = figure_point_size, alpha = point_alpha, color = "#0072B2") +
+  facet_wrap(~metric, scales = "free_y", nrow = 1) +
   scale_x_discrete(labels = c(same_site = "Same site", other_site_mean = "Other sites\n(mean)")) +
-  labs(x = NULL, y = "Sediment-porewater dissimilarity") + plot_theme
+  labs(x = NULL, y = "Sediment-porewater\ndissimilarity") +
+  plot_theme + fixed_panels(n_col = n_distinct(distance_data$metric))
 read_data <- pair_samples %>% filter(metric == "Sediment ASV read share") %>%
   pivot_longer(c(same_site, other_site_mean), names_to = "comparison", values_to = "read_percent") %>%
   mutate(comparison = factor(comparison, levels = c("same_site", "other_site_mean")))
 plots$same_site_read_sharing <- ggplot(read_data, aes(comparison, read_percent, group = site_code)) +
-  geom_line(color = "gray70") + geom_point(size = point_size, alpha = point_alpha, color = "#0072B2") +
+  geom_line(color = "gray70") +
+  geom_point(size = figure_point_size, alpha = point_alpha, color = "#0072B2") +
   scale_x_discrete(labels = c(same_site = "Same site", other_site_mean = "Other sites\n(mean)")) +
-  labs(x = NULL, y = "Porewater reads detected in sediment (%)") + plot_theme
-figure_design <- tibble::tribble(
-  ~panel, ~width, ~height,
-  "sampling_map", 9, 9,
-  "hellinger_pca", 7, 5.5,
-  "diversity_q0", 5.5, 4.6,
-  "diversity_q1", 5.5, 4.6,
-  "diversity_q2", 5.5, 4.6,
-  "soil_read_percent", 9, 4.5,
-  "soil_asv_percent", 9, 4.5,
-  "same_site_distances", 10, 4.5,
-  "same_site_read_sharing", 5.5, 4.5
-)
-for (i in seq_len(nrow(figure_design))) {
-  ggsave(file.path(figures_dir, paste0(figure_prefix, figure_design$panel[i], ".pdf")),
-    plots[[figure_design$panel[i]]], width = figure_design$width[i], height = figure_design$height[i], bg = "white")
+  labs(x = NULL, y = "Porewater reads\ndetected in sediment (%)") + plot_theme + fixed_panels()
+for (panel in c("sampling_map", "hellinger_pca", "diversity_q0", "diversity_q1", "diversity_q2",
+    "soil_read_percent", "soil_asv_percent", "same_site_distances", "same_site_read_sharing")) {
+  save_figure(plots[[panel]], file.path(figures_dir, paste0(figure_prefix, panel, ".pdf")))
 }
-ggsave(file.path(figures_dir, "2016_manuscript_alpha_diversity.pdf"),
-  plots$alpha_diversity, width = alpha_figure_width, height = alpha_figure_height, bg = "white")
-ggsave(file.path(figures_dir, "2016_manuscript_weighted_unifrac.pdf"),
-  plots$weighted_unifrac, width = ordination_figure_width, height = ordination_figure_height, bg = "white")
-habitat_panel_aspect <- diff(range(weighted_scores$pcoa2)) / diff(range(weighted_scores$pcoa1))
-plots$habitat_diversity <- ((plots$alpha_diversity + guides(color = "none", shape = "none") +
-    theme(aspect.ratio = habitat_panel_aspect)) |
-  plots$weighted_unifrac) +
-  plot_layout(widths = c(1, 1), guides = "collect") + plot_annotation(tag_levels = "A") &
+save_figure(plots$alpha_diversity, file.path(figures_dir, "2016_manuscript_alpha_diversity.pdf"))
+save_figure(plots$weighted_unifrac, file.path(figures_dir, "2016_manuscript_weighted_unifrac.pdf"))
+# In Figure 1 the diversity panel takes the ordination's height so the two align.
+unifrac_height <- figure_large_panel_width * diff(range(weighted_scores$pcoa2)) /
+  diff(range(weighted_scores$pcoa1))
+plots$habitat_diversity <- (plots$alpha_diversity + guides(color = "none", shape = "none") +
+    fixed_panels(figure_large_panel_width, unifrac_height)) +
+  plots$weighted_unifrac +
+  plot_layout(guides = "collect") + plot_annotation(tag_levels = "A") &
   theme(legend.position = "bottom")
-ggsave(file.path(manuscript_dir, "2016_habitat_diversity.pdf"), plots$habitat_diversity,
-  width = habitat_figure_width, height = habitat_figure_height, bg = "white")
+save_figure(plots$habitat_diversity, file.path(manuscript_dir, "2016_habitat_diversity.pdf"))
 
 # 8. Check provenance and save session information ------------------------------
 checks$final_md5 <- unname(tools::md5sum(checks$path))
