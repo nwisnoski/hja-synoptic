@@ -83,29 +83,31 @@ changes are pending.
   detected features per unit sediment, not chemodiversity.
 - The direct feature-count decline with drainage area is the weakest link: it
   passes on the 33 matched sites (P = 0.033) and not on all 44 (P = 0.063).
-- Molecular differences among network positions are nestedness, not turnover.
-  Five-site upstream pools hold about 90% of the mainstem pool, which holds 54%
-  of headwater and 71% of intermediate pools. Microbes show neither a richness
-  decline nor nesting. Lower-carbon extracts could produce the same nesting
-  through detection alone; this limit belongs in every statement of the result.
-- The microbial contrast is tested directly in script 04: the molecular minus
-  microbial difference in nestedness rises with the drainage-area ratio, and
-  the difference in turnover falls. Pool containment is reported as a result,
-  not drawn.
-- `supporting/10_distance_decay.R`: over all pairs, decay is weak for both data
-  types (Mantel r = 0.12–0.17) and sits at the adjustment threshold. Among the
-  120 flow-connected pairs, molecular Jaccard rises strongly with channel
-  distance (r = 0.58) and is flat among unconnected pairs; the rise is
-  nestedness (r = 0.56), while turnover falls. Microbes show no such difference.
-  Flow-connected pairs concentrate on the five mainstem sites.
+- Figure 3 (rebuilt November 16) partitions binary Jaccard into replacement and
+  richness difference (Podani–Carvalho, `adespatial::beta.div.comp`) for both
+  data types. Richness difference is 60% of molecular and 10% of microbial beta
+  diversity. Among the 120 flow-connected pairs, the molecular richness-difference
+  share rises with watercourse distance (r = 0.48) and is flat among unconnected
+  pairs; microbes show neither. Replacement is bounded by 1 minus richness
+  difference, so its fall along flow paths is not a separate result. Panels:
+  organic content and drainage area, feature count and organic content, and the
+  richness-difference share against watercourse distance for each data type.
+- Avoid "nested subset" as a finding. Pairwise Baselga nestedness tracked the
+  difference in log feature count (r = 0.97), and site NODF ordered by drainage
+  area is slightly below a curveball null that fixes site richness and feature
+  prevalence (53.3 against 53.7–53.9; terminal check, not in a script). Along
+  flow paths the downstream site is the poorer one in 97 of 120 pairs.
+- `supporting/10_distance_decay.R` now tests only microbial Hellinger and
+  molecular Jaccard, reading pair separations from script 04. Over all pairs,
+  decay is weak (Mantel r = 0.12–0.17); among flow-connected pairs molecular
+  Jaccard rises with channel distance (r = 0.58). Flow-connected pairs
+  concentrate on the five mainstem sites.
 - New figures (Figure 3 and its panels, distance decay, richness dependence) are
   built at printed size: 2.6 x 2.0 in panels, 9-point base, canvas measured
   around the panels. Figures 1, 2, 4 and the older supplementary panels still
   use canvas-based sizing and need the same restyle.
-- Open question: the final panel set of Figure 3. The flow-connected nestedness
-  panel (supporting 10) could replace or join the drainage-ratio nestedness
-  panel (D). Panel A, the direct richness decline, passes on the 33 matched
-  sites but not on all 44.
+- Open question: whether the four-panel Figure 3 is final. The direct
+  feature-count decline with drainage area is a supplementary panel.
 - Planned, not started: rename `04_sediment_convergence.R`, and restyle the
   scripts for readability.
 - The Figure 2B–C porewater–sediment iCAMP contrast does not vary with porewater

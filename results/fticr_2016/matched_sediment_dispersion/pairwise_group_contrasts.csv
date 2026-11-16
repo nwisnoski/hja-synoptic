@@ -11,9 +11,9 @@ molecular_jaccard,primary,Intermediate-Mainstem,-0.015681930982878123,0.95600773
 microbial_jaccard,sensitivity,Headwater-Intermediate,-0.0018196205437773783,0.9965577333020885,0.91,0.91
 microbial_jaccard,sensitivity,Headwater-Mainstem,-0.019136026856965138,0.9649476807346338,0.3319,0.8854500000000001
 microbial_jaccard,sensitivity,Intermediate-Mainstem,-0.01731640631318776,0.9682807613536698,0.5903,0.8854500000000001
-molecular_turnover,turnover,Headwater-Intermediate,-0.003675388495773868,0.9946057819653156,0.7204,0.7204
-molecular_turnover,turnover,Headwater-Mainstem,0.011604241885667554,1.0174217613690058,0.2811,0.6803999999999999
-molecular_turnover,turnover,Intermediate-Mainstem,0.015279630381441422,1.0229397212618314,0.3681,0.6803999999999999
-microbial_turnover,turnover,Headwater-Intermediate,-0.010634015011120046,0.9795347707107437,0.5532,0.6803999999999999
-microbial_turnover,turnover,Headwater-Mainstem,-0.029275733583758234,0.9456099677024868,0.1754,0.6803999999999999
-microbial_turnover,turnover,Intermediate-Mainstem,-0.01864171857263819,0.9653664126862579,0.567,0.6803999999999999
+molecular_replacement,replacement,Headwater-Intermediate,-0.007210701988234036,0.9895792228362026,0.44,0.5348
+molecular_replacement,replacement,Headwater-Mainstem,0.006133735202800805,1.0090386762325654,0.5348,0.5348
+molecular_replacement,replacement,Intermediate-Mainstem,0.013344437191034841,1.0196643714290916,0.3942,0.5348
+microbial_replacement,replacement,Headwater-Intermediate,-0.017621578422652773,0.9776037135928863,0.1683,0.5049
+microbial_replacement,replacement,Headwater-Mainstem,-0.030238619317072724,0.9621745430776132,0.0652,0.3912
+microbial_replacement,replacement,Intermediate-Mainstem,-0.01261704089441995,0.9842173568893596,0.4735,0.5348

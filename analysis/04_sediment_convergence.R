@@ -1,5 +1,7 @@
-# Figure 3: downstream decline and nesting of sediment molecular features, with
-# dispersion and molecular class views of the same sites as supporting panels.
+# Figure 3: downstream decline of sediment molecular richness, and the share of
+# molecular and microbial dissimilarity that comes from richness differences
+# along flow paths. Dispersion and molecular class views of the same sites are
+# supporting panels.
 library(here)
 library(readr)
 library(dplyr)
@@ -7,7 +9,8 @@ library(tidyr)
 library(ggplot2)
 library(vegan)
 library(permute)
-library(betapart)
+library(adespatial)
+library(igraph)
 library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
@@ -38,8 +41,8 @@ facet_panel_width <- 2.1
 facet_panel_height <- 1.6
 print_base_size <- 9
 site_point_size <- 1.6
-pair_point_size <- 0.6
-pair_point_alpha <- 0.3
+pair_point_size <- 0.8
+pair_point_alpha <- 0.5
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 headwater_orders <- c(1, 2)
 intermediate_orders <- c(3, 4)
@@ -47,7 +50,7 @@ mainstem_order <- 5
 contrast_names <- c("Headwater-Intermediate", "Headwater-Mainstem", "Intermediate-Mainstem")
 group_colors <- c(Headwater = "#009E73", Intermediate = "#E69F00", Mainstem = "#0072B2")
 # Dispersion views. The primary views are the standard dissimilarity for each
-# data type on the complete data. Turnover removes the part of binary
+# data type on the complete data. Replacement removes the part of binary
 # dissimilarity that comes from richness differences. The equal-feature view is
 # kept only to document that thinning binary detections restates richness.
 test_design <- tribble(
@@ -56,11 +59,11 @@ test_design <- tribble(
   "microbial_hellinger", "primary", "Sediment microbes (Hellinger)",
   "molecular_jaccard", "primary", "Molecular signatures (complete Jaccard)",
   "microbial_jaccard", "sensitivity", "Sediment microbes (binary Jaccard)",
-  "molecular_turnover", "turnover", "Molecular signatures (Jaccard turnover)",
-  "microbial_turnover", "turnover", "Sediment microbes (Jaccard turnover)") %>%
+  "molecular_replacement", "replacement", "Molecular signatures (Jaccard replacement)",
+  "microbial_replacement", "replacement", "Sediment microbes (Jaccard replacement)") %>%
   mutate(seed = permutation_seed)
 # Each view is compared with the richness of its own data type.
-molecular_metrics <- c("molecular_equal_features", "molecular_jaccard", "molecular_turnover")
+molecular_metrics <- c("molecular_equal_features", "molecular_jaccard", "molecular_replacement")
 # Site-level models of the downstream decline. All variables are log10, so
 # slopes are scaling exponents. The joint model asks whether drainage area
 # explains feature richness beyond sediment organic content.
@@ -71,12 +74,29 @@ model_design <- tribble(
   "richness_organic", "simple", "log10_features", "log10_organic",
   "richness_joint", "joint", "log10_features", "log10_organic + log10_drainage",
   "asv_richness_drainage", "microbial_contrast", "log10_asvs", "log10_drainage")
-# Components of binary Jaccard dissimilarity related to the drainage-area ratio.
+# Binary Jaccard dissimilarity between two sites is the sum of replacement and
+# richness difference (Podani and Schmera 2011, Legendre 2014). The richness-
+# difference share is richness difference divided by Jaccard dissimilarity.
+# Jaccard dissimilarity itself is tested in supporting/10_distance_decay.R.
 component_design <- tribble(
   ~component, ~label,
-  "beta.jac", "Jaccard dissimilarity",
-  "beta.jtu", "Turnover",
-  "beta.jne", "Nestedness")
+  "replacement", "Replacement",
+  "richness_difference", "Richness difference",
+  "richness_share", "Richness-difference share")
+data_type_labels <- c(molecular = "FT-ICR features", microbial = "Microbial ASVs")
+# Two separations between sites: channel distance and the ratio of their
+# drainage areas. Each is tested within flow-connected and unconnected pairs.
+separation_design <- tribble(
+  ~separation, ~label,
+  "watercourse_km", "Watercourse distance (km)",
+  "log10_drainage_ratio", "Drainage area ratio (log10)")
+connection_levels <- c("Flow-connected", "Not flow-connected")
+connection_colors <- c("Flow-connected" = "#000000", "Not flow-connected" = "#BBBBBB")
+# Fitted lines for unconnected pairs use a darker gray so they stay visible over
+# the light gray points.
+connection_line_colors <- c("Flow-connected" = "#000000", "Not flow-connected" = "#707070")
+# Tolerance for matching graph distances to the centerline's own outlet distances.
+distance_tolerance_m <- 0.01
 draw_design <- tibble(run = seq_len(n_balanced_draws), seed = resampling_seed + run)
 plot_theme <- theme_bw(base_size = 12) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
@@ -206,21 +226,28 @@ stopifnot(!anyDuplicated(thinned$site_code), all(site$site_code %in% thinned$sit
 # Reuse the completed mean pairwise distances at the unchanged 391-feature target.
 equal_features <- as.matrix(thinned[match(site$site_code, thinned$site_code), site$site_code])
 rownames(equal_features) <- site$site_code
-# Binary Jaccard dissimilarity divides into turnover, where features are
-# replaced, and nestedness, where the poorer site holds a subset of the richer
-# one (Baselga 2010). Both use the complete binary data, with no thinning.
+# Binary Jaccard dissimilarity divides into replacement, where each site holds
+# features the other lacks, and richness difference, where one site holds more
+# features than the other (Podani and Schmera 2011; Carvalho et al. 2012).
+# Both data types use presence/absence on the complete data, with no thinning.
+# The abundance-weighted form would instead measure differences in total
+# abundance, which are zero for samples rarefied to equal depth.
 community_pa <- (community > 0) * 1
 site$detected_asvs <- as.integer(rowSums(community_pa))
-partitions <- list(molecular = beta.pair(pa, index.family = "jaccard"),
-  microbial = beta.pair(community_pa, index.family = "jaccard"))
+partitions <- list(molecular = beta.div.comp(pa, coef = "J", quant = FALSE),
+  microbial = beta.div.comp(community_pa, coef = "J", quant = FALSE))
 distances <- list(molecular_equal_features = equal_features,
   microbial_hellinger = as.matrix(dist(decostand(community, method = "hellinger"))),
   molecular_jaccard = as.matrix(vegdist(pa, method = "jaccard", binary = TRUE)),
   microbial_jaccard = as.matrix(vegdist(community, method = "jaccard", binary = TRUE)),
-  molecular_turnover = as.matrix(partitions$molecular$beta.jtu),
-  microbial_turnover = as.matrix(partitions$microbial$beta.jtu))
+  molecular_replacement = as.matrix(partitions$molecular$repl),
+  microbial_replacement = as.matrix(partitions$microbial$repl))
+for (data_type in names(partitions)) {
+  dimnames(distances[[paste0(data_type, "_replacement")]]) <- list(site$site_code, site$site_code)
+}
 stopifnot(identical(names(distances), test_design$metric),
-  max(abs(as.matrix(partitions$molecular$beta.jac) - distances$molecular_jaccard)) < 1e-12)
+  max(abs(as.matrix(partitions$molecular$D) - distances$molecular_jaccard)) < 1e-12,
+  max(abs(as.matrix(partitions$microbial$D) - distances$microbial_jaccard)) < 1e-12)
 
 # 4. Refit spatial medians and use the same residual permutations for each view ----
 set.seed(permutation_seed)
@@ -423,92 +450,175 @@ richness_models <- bind_rows(model_rows) %>% group_by(site_set, role) %>%
     p.adjust(if_else(term == "(Intercept)", NA_real_, p_value), method = "BH"))) %>% ungroup()
 write_csv(richness_models, file.path(results_dir, "molecular_richness_models.csv"))
 
-# 8. Relate turnover and nestedness to differences in network position ------------
-# For every pair of sites, the drainage-area ratio measures how far apart they
-# sit along the network. Mantel tests permute whole sites with the permutations
-# used for dispersion and are two-sided, because either component could rise or
-# fall. The slope is the least-squares line through the site pairs.
+# 8. Measure the separation of every pair of sites along the stream network --------
+# Each centerline row is one point; D is its channel distance to the basin outlet.
+# The raw header has a trailing comma but data rows have seven fields.
+geometry <- read_csv(here("data", "StreamCenterline.csv"), skip = 1,
+  col_names = c("x", "y", "elevation", "outlet_distance", "upstream_area", "order", "segment"),
+  col_types = cols(.default = col_double()))
+geometry$node <- seq_len(nrow(geometry))
+# Rows run down each segment, so consecutive rows of a segment are joined by the
+# change in their outlet distance.
+same_segment <- geometry$segment[-1] == geometry$segment[-nrow(geometry)]
+channel_edges <- tibble(from = geometry$node[-nrow(geometry)][same_segment],
+  to = geometry$node[-1][same_segment])
+channel_edges$weight <- abs(geometry$outlet_distance[channel_edges$from] -
+  geometry$outlet_distance[channel_edges$to])
+# Segments meet at confluences, where their end points have identical coordinates.
+shared_points <- split(geometry$node, paste(geometry$x, geometry$y))
+shared_points <- shared_points[lengths(shared_points) > 1]
+confluence_rows <- list()
+for (i in seq_along(shared_points)) {
+  nodes <- shared_points[[i]]
+  confluence_rows[[i]] <- tibble(from = nodes[1], to = nodes[-1], weight = 0)
+}
+confluence_edges <- bind_rows(confluence_rows)
+stream_graph <- graph_from_data_frame(bind_rows(channel_edges, confluence_edges),
+  directed = FALSE, vertices = tibble(name = geometry$node))
+# Check the graph against the source: along the connected network, the graph
+# distance from every point to the outlet must equal the centerline's own D.
+outlet_node <- which.min(geometry$outlet_distance)
+graph_outlet_distance <- as.numeric(distances(stream_graph, v = outlet_node,
+  weights = E(stream_graph)$weight))
+membership <- components(stream_graph)$membership
+reaches_outlet <- membership == membership[outlet_node]
+graph_checks <- tibble(
+  centerline_points = nrow(geometry),
+  segments = n_distinct(geometry$segment),
+  confluences = length(shared_points),
+  components = max(membership),
+  segments_not_reaching_outlet = paste(sort(unique(geometry$segment[!reaches_outlet])), collapse = ";"),
+  points_not_reaching_outlet = sum(!reaches_outlet),
+  max_outlet_distance_error_m = max(abs(graph_outlet_distance[reaches_outlet] -
+    geometry$outlet_distance[reaches_outlet])))
+stopifnot(graph_checks$max_outlet_distance_error_m < distance_tolerance_m)
+# Each site is placed at the nearest centerline point of its own segment.
+site$centerline_node <- NA_integer_
+site$centerline_match_error_m <- NA_real_
+for (i in seq_len(nrow(site))) {
+  candidates <- which(geometry$segment == site$site_segment_number[i])
+  stopifnot(length(candidates) > 0)
+  offset <- sqrt((geometry$x[candidates] - site$site_utm_x_m[i])^2 +
+    (geometry$y[candidates] - site$site_utm_y_m[i])^2)
+  site$centerline_node[i] <- candidates[which.min(offset)]
+  site$centerline_match_error_m[i] <- min(offset)
+}
+site_outlet_distance <- geometry$outlet_distance[site$centerline_node]
+stopifnot(all(reaches_outlet[site$centerline_node]), all(site$centerline_match_error_m < 1),
+  max(abs(site_outlet_distance - site$basin_outlet_stream_distance_m)) < distance_tolerance_m)
+watercourse_m <- distances(stream_graph, v = site$centerline_node, to = site$centerline_node,
+  weights = E(stream_graph)$weight)
+# Two sites are flow-connected when water passes from one to the other, so the
+# channel distance between them equals the difference of their outlet distances.
+outlet_difference_m <- abs(outer(site_outlet_distance, site_outlet_distance, "-"))
+connected_matrix <- abs(watercourse_m - outlet_difference_m) < distance_tolerance_m
+straight_line_m <- as.matrix(dist(cbind(site$site_utm_x_m, site$site_utm_y_m)))
+stopifnot(all(watercourse_m + distance_tolerance_m >= outlet_difference_m),
+  all(watercourse_m + 1e-3 >= straight_line_m))
 drainage <- model_data$matched_33$site_drainage_area_ha
-names(drainage) <- model_data$matched_33$site_code
-stopifnot(identical(names(drainage), site$site_code))
-log10_ratio <- abs(outer(log10(drainage), log10(drainage), "-"))
-lower <- which(lower.tri(log10_ratio), arr.ind = TRUE)
-pairs <- tibble(site_a = site$site_code[lower[, "col"]], site_b = site$site_code[lower[, "row"]],
-  drainage_ratio = 10^log10_ratio[lower])
-component_rows <- list()
+stopifnot(identical(model_data$matched_33$site_code, site$site_code))
+separations <- list(watercourse_km = watercourse_m / 1000,
+  log10_drainage_ratio = abs(outer(log10(drainage), log10(drainage), "-")))
+# One row per unordered pair of sites. For flow-connected pairs, the downstream
+# site is the one nearer the outlet.
+lower <- which(lower.tri(watercourse_m), arr.ind = TRUE)
+ia <- lower[, "col"]
+ib <- lower[, "row"]
+pairs <- tibble(site_a = site$site_code[ia], site_b = site$site_code[ib],
+  group_a = site$network_group[ia], group_b = site$network_group[ib],
+  flow_connected = connected_matrix[lower],
+  watercourse_km = separations$watercourse_km[lower], straight_line_km = straight_line_m[lower] / 1000,
+  log10_drainage_ratio = separations$log10_drainage_ratio[lower],
+  downstream_site = if_else(connected_matrix[lower],
+    if_else(site_outlet_distance[ia] < site_outlet_distance[ib], site$site_code[ia], site$site_code[ib]),
+    NA_character_))
+write_csv(graph_checks %>% mutate(flow_connected_pairs = sum(pairs$flow_connected),
+  site_pairs = nrow(pairs), max_site_match_error_m = max(site$centerline_match_error_m)),
+  file.path(results_dir, "stream_graph_checks.csv"))
+
+# 9. Divide Jaccard dissimilarity into replacement and richness difference ---------
+# Total beta diversity and its two shares summarize each data type over all site
+# pairs (Legendre 2014). For each pair, the richness-difference share says how
+# much of the dissimilarity between the two sites comes from one holding more
+# features or ASVs than the other.
+share_rows <- list()
+components <- list()
 for (data_type in names(partitions)) {
-  for (i in seq_len(nrow(component_design))) {
-    component <- component_design$component[i]
-    current <- as.matrix(partitions[[data_type]][[component]])
-    stopifnot(identical(rownames(current), site$site_code))
-    pairs[[paste(data_type, component, sep = "_")]] <- current[lower]
-    fit <- mantel(as.dist(log10_ratio), as.dist(current), method = "pearson", permutations = permutations)
-    line <- lm(current[lower] ~ log10_ratio[lower])
-    component_rows[[length(component_rows) + 1]] <- tibble(data_type, component,
-      label = component_design$label[i], sites = nrow(site), site_pairs = nrow(pairs),
-      mantel_r = fit$statistic, intercept = coef(line)[[1]], slope_per_log10_ratio = coef(line)[[2]],
-      p_value = (sum(abs(fit$perm) >= abs(fit$statistic)) + 1) / (length(fit$perm) + 1))
+  part <- partitions[[data_type]]$part
+  share_rows[[data_type]] <- tibble(data_type, sites = nrow(site), site_pairs = nrow(pairs),
+    total_beta_diversity = part[["BDtotal"]], replacement = part[["Repl"]],
+    richness_difference = part[["RichDif"]], replacement_share = part[["Repl/BDtotal"]],
+    richness_difference_share = part[["RichDif/BDtotal"]])
+  jaccard <- as.matrix(partitions[[data_type]]$D)
+  richness_difference <- as.matrix(partitions[[data_type]]$rich)
+  stopifnot(all(jaccard[lower] > 0))
+  richness_share <- richness_difference / jaccard
+  diag(richness_share) <- 0
+  components[[data_type]] <- list(replacement = as.matrix(partitions[[data_type]]$repl),
+    richness_difference = richness_difference, richness_share = richness_share)
+  pairs[[paste0(data_type, "_jaccard")]] <- jaccard[lower]
+  for (component in component_design$component) {
+    pairs[[paste(data_type, component, sep = "_")]] <- components[[data_type]][[component]][lower]
   }
 }
-# Contrast the two data types on the same site pairs. Each component is
-# standardized across the pairs, and the molecular minus microbial difference is
-# related to the drainage-area ratio. A positive association means the molecular
-# component rises faster with the ratio than the microbial one.
-for (i in seq_len(nrow(component_design))) {
-  component <- component_design$component[i]
-  molecular_component <- as.matrix(partitions$molecular[[component]])
-  microbial_component <- as.matrix(partitions$microbial[[component]])
-  difference <- (molecular_component - mean(molecular_component[lower])) / sd(molecular_component[lower]) -
-    (microbial_component - mean(microbial_component[lower])) / sd(microbial_component[lower])
-  diag(difference) <- 0
-  fit <- mantel(as.dist(log10_ratio), as.dist(difference), method = "pearson", permutations = permutations)
-  component_rows[[length(component_rows) + 1]] <- tibble(data_type = "molecular minus microbial",
-    component, label = component_design$label[i], sites = nrow(site), site_pairs = nrow(pairs),
-    mantel_r = fit$statistic, intercept = NA_real_, slope_per_log10_ratio = NA_real_,
-    p_value = (sum(abs(fit$perm) >= abs(fit$statistic)) + 1) / (length(fit$perm) + 1))
-}
-component_tests <- bind_rows(component_rows) %>% group_by(data_type) %>%
-  mutate(p_bh = p.adjust(p_value, method = "BH")) %>% ungroup()
-write_csv(component_tests, file.path(results_dir, "drainage_ratio_component_tests.csv"))
+partition_shares <- bind_rows(share_rows)
+write_csv(partition_shares, file.path(results_dir, "jaccard_partition_shares.csv"))
 write_csv(pairs, file.path(results_dir, "site_pair_components.csv"))
 
-# 9. Compare feature pools between network positions with equal site numbers ------
-# A pool is every feature detected in a set of sites. Pools from more sites hold
-# more features, so each upstream group is compared with the five mainstem sites
-# using the five-site, one-per-segment selections of the balanced draws above.
-mainstem_pool <- colSums(pa[mainstem_indices, , drop = FALSE]) > 0
-pool_rows <- list()
-for (run in seq_len(n_balanced_draws)) {
-  current <- selections[selections$run == run, ]
-  for (group in c("Headwater", "Intermediate")) {
-    chosen <- match(current$site_code[current$network_group == group], site$site_code)
-    stopifnot(length(chosen) == balanced_n)
-    upstream_pool <- colSums(pa[chosen, , drop = FALSE]) > 0
-    pool_rows[[length(pool_rows) + 1]] <- tibble(run, seed = draw_design$seed[run],
-      upstream_group = group, sites_per_pool = balanced_n,
-      upstream_pool_features = sum(upstream_pool), mainstem_pool_features = sum(mainstem_pool),
-      mainstem_pool_in_upstream_pool = mean(upstream_pool[mainstem_pool]),
-      upstream_pool_in_mainstem_pool = mean(mainstem_pool[upstream_pool]))
+# 10. Test each component against separation within flow-connected and other pairs
+# Water carries material between flow-connected sites, so composition may change
+# along a flow path and not between separate branches. The correlation with each
+# separation is computed within each set of pairs. Its null distribution permutes
+# whole sites in the component matrix, with the permutations used for dispersion,
+# while separations and flow connections stay in place. The last test compares
+# the slopes of the two pair sets. All tests are two-sided.
+connected <- pairs$flow_connected
+flow_rows <- list()
+for (data_type in names(partitions)) {
+  for (component in component_design$component) {
+    current <- components[[data_type]][[component]]
+    observed <- current[lower]
+    for (separation in separation_design$separation) {
+      x <- pairs[[separation]]
+      connected_line <- lm(observed[connected] ~ x[connected])
+      unconnected_line <- lm(observed[!connected] ~ x[!connected])
+      observed_r <- c(cor(observed[connected], x[connected]), cor(observed[!connected], x[!connected]))
+      observed_difference <- coef(connected_line)[[2]] - coef(unconnected_line)[[2]]
+      null_r <- matrix(NA_real_, n_permutations, 2)
+      null_difference <- rep(NA_real_, n_permutations)
+      for (k in seq_len(n_permutations)) {
+        order <- permutations[k, ]
+        shuffled <- current[order, order][lower]
+        null_r[k, 1] <- cor(shuffled[connected], x[connected])
+        null_r[k, 2] <- cor(shuffled[!connected], x[!connected])
+        null_difference[k] <- cov(shuffled[connected], x[connected]) / var(x[connected]) -
+          cov(shuffled[!connected], x[!connected]) / var(x[!connected])
+      }
+      flow_rows[[length(flow_rows) + 1]] <- tibble(data_type, component, separation,
+        pair_set = c(connection_levels, "Slope difference"),
+        site_pairs = c(sum(connected), sum(!connected), length(connected)),
+        mean_value = c(mean(observed[connected]), mean(observed[!connected]), NA_real_),
+        pearson_r = c(observed_r, NA_real_),
+        intercept = c(coef(connected_line)[[1]], coef(unconnected_line)[[1]], NA_real_),
+        slope = c(coef(connected_line)[[2]], coef(unconnected_line)[[2]], observed_difference),
+        p_value = c((sum(abs(null_r[, 1]) >= abs(observed_r[1])) + 1) / (n_permutations + 1),
+          (sum(abs(null_r[, 2]) >= abs(observed_r[2])) + 1) / (n_permutations + 1),
+          (sum(abs(null_difference) >= abs(observed_difference)) + 1) / (n_permutations + 1)))
+    }
   }
 }
-pool_draws <- bind_rows(pool_rows)
-write_csv(pool_draws, file.path(results_dir, "pool_containment_draws.csv"))
-# Draw medians and middle 95% ranges describe sensitivity to which sites are
-# drawn; they are not confidence intervals. The mainstem pool is the same in
-# every draw.
-pool_summary <- pool_draws %>%
-  pivot_longer(c(mainstem_pool_in_upstream_pool, upstream_pool_in_mainstem_pool),
-    names_to = "direction", values_to = "share") %>%
-  group_by(upstream_group, direction) %>%
-  summarize(draws = n(), median_share = median(share), share_p025 = quantile(share, 0.025),
-    share_p975 = quantile(share, 0.975), .groups = "drop")
+# Each separation forms two BH families: slopes within pair sets, and slope
+# differences.
+flow_tests <- bind_rows(flow_rows) %>%
+  mutate(family = if_else(pair_set == "Slope difference", "slope_difference", "within_pair_set")) %>%
+  group_by(separation, family) %>%
+  mutate(p_bh = p.adjust(p_value, method = "BH")) %>% ungroup() %>% select(-family)
+write_csv(flow_tests, file.path(results_dir, "flow_path_component_tests.csv"))
 
-# 10. Draw the manuscript figure: decline, organic content, and nesting ------------
+# 11. Draw the manuscript figure: organic content, richness, and flow paths -------
 # Lines are drawn only for slopes whose adjusted test passes the threshold.
-# Pool containment from section 9 is reported as a result, not drawn.
 matched <- model_data$matched_33
 simple <- richness_models %>% filter(site_set == "matched_33", role == "simple")
-molecular_components <- component_tests %>% filter(data_type == "molecular")
 figure_panels <- list()
 site_panel_design <- tribble(
   ~panel, ~x, ~y, ~x_label, ~y_label,
@@ -545,29 +655,43 @@ for (i in seq_len(nrow(site_panel_design))) {
   figure_panels[[design$panel]] <- p
   save_at_panel_size(p, file.path(figures_dir, paste0("2016_sediment_molecular_", design$panel, ".pdf")))
 }
-# Turnover and nestedness are the two components of binary Jaccard
-# dissimilarity. They share one y-axis range so their sizes can be compared.
-component_range <- range(pairs$molecular_beta.jtu, pairs$molecular_beta.jne)
-for (component in c("beta.jtu", "beta.jne")) {
-  tested <- molecular_components %>% filter(.data$component == .env$component)
-  p <- ggplot(pairs, aes(drainage_ratio, .data[[paste0("molecular_", component)]])) +
+# The richness-difference share of each pair against watercourse distance, with
+# the same axes for both data types so their levels can be compared directly.
+# Unconnected pairs are drawn first so the fewer flow-connected pairs stay visible.
+pairs$connection <- factor(if_else(pairs$flow_connected, connection_levels[1], connection_levels[2]),
+  levels = connection_levels)
+for (data_type in names(partitions)) {
+  panel <- pairs %>% arrange(desc(connection)) %>%
+    transmute(watercourse_km, connection, share = .data[[paste0(data_type, "_richness_share")]],
+      data_type = data_type_labels[[data_type]])
+  p <- ggplot(panel, aes(watercourse_km, share, color = connection)) +
     geom_point(size = pair_point_size, alpha = pair_point_alpha) +
-    scale_x_log10(labels = scales::label_log()) +
-    scale_y_continuous(limits = component_range) +
-    labs(x = "Drainage area ratio", y = paste("Jaccard", tolower(tested$label), "between sites")) +
-    print_theme
-  if (tested$p_bh <= significance_threshold) {
-    p <- p + geom_abline(intercept = tested$intercept, slope = tested$slope_per_log10_ratio, linewidth = 0.6)
+    facet_wrap(~data_type) +
+    scale_color_manual(values = connection_colors) +
+    coord_cartesian(ylim = c(0, 1)) +
+    labs(x = "Watercourse distance (km)", y = "Richness-difference share of Jaccard", color = NULL) +
+    print_theme + theme(legend.position = "bottom")
+  # Every fitted slope is drawn so the four can be compared: solid where the
+  # adjusted test passes the threshold, dashed where it does not. Each line spans
+  # only the distances of the pairs it was fitted to. Unconnected pairs are drawn
+  # first so the flow-connected line stays on top.
+  for (pair_set in rev(connection_levels)) {
+    tested <- flow_tests %>% filter(.data$data_type == .env$data_type, component == "richness_share",
+      separation == "watercourse_km", .data$pair_set == .env$pair_set)
+    fitted_range <- range(panel$watercourse_km[panel$connection == pair_set])
+    line <- tibble(watercourse_km = fitted_range, share = tested$intercept + tested$slope * fitted_range)
+    line_type <- if_else(tested$p_bh <= significance_threshold, "solid", "dashed")
+    p <- p + geom_line(data = line, aes(watercourse_km, share), inherit.aes = FALSE,
+      color = connection_line_colors[[pair_set]], linetype = line_type, linewidth = 0.6)
   }
-  figure_panels[[component]] <- p
-  save_at_panel_size(p, file.path(figures_dir,
-    paste0("2016_sediment_molecular_", tolower(tested$label), "_drainage_ratio.pdf")))
+  figure_panels[[data_type]] <- p
+  save_at_panel_size(p, file.path(figures_dir, paste0("2016_sediment_", data_type, "_richness_share_distance.pdf")))
 }
-figure <- wrap_plots(figure_panels[c("richness_drainage", "organic_drainage", "richness_organic", "beta.jne")],
-  ncol = 2) + plot_annotation(tag_levels = "A")
-save_at_panel_size(figure, file.path(manuscript_dir, "2016_sediment_molecular_nestedness.pdf"))
+figure <- wrap_plots(figure_panels[c("organic_drainage", "richness_organic", "molecular", "microbial")],
+  ncol = 2, guides = "collect") + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+save_at_panel_size(figure, file.path(manuscript_dir, "2016_sediment_richness_difference.pdf"))
 
-# 11. Save dispersion panels for every view ----------------------------------------
+# 12. Save dispersion panels for every view ----------------------------------------
 panels <- list()
 for (test in seq_len(nrow(test_design))) {
   metric <- test_design$metric[test]
@@ -591,12 +715,12 @@ ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_comparison.pdf")
   wrap_plots(panels[c("molecular_jaccard", "microbial_hellinger")], ncol = 2) +
     plot_annotation(tag_levels = "A"),
   width = 2 * panel_width, height = figure_height, bg = "white")
-ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_turnover_comparison.pdf"),
-  wrap_plots(panels[c("molecular_turnover", "microbial_turnover")], ncol = 2) +
+ggsave(file.path(figures_dir, "2016_matched_sediment_dispersion_replacement_comparison.pdf"),
+  wrap_plots(panels[c("molecular_replacement", "microbial_replacement")], ncol = 2) +
     plot_annotation(tag_levels = "A"),
   width = 2 * panel_width, height = figure_height, bg = "white")
 
-# 12. Align the existing class fractions to the audited 44-site network groups.
+# 13. Align the existing class fractions to the audited 44-site network groups.
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(manuscript_dir, recursive = TRUE, showWarnings = FALSE)
 class_input_paths <- c(
@@ -641,7 +765,7 @@ class_table$network_group <- factor(class_reference$network_group, levels = grou
 class_table$class_label <- factor(class_table$source_class, levels = class_order, labels = class_labels)
 class_table$site_code <- factor(class_table$site_code, levels = class_site_order$site_code)
 
-# 13. Verify that the saved fractions agree with current binary detections.
+# 14. Verify that the saved fractions agree with current binary detections.
 # Keep workbook classifications and detection rules unchanged.
 class_pa <- as.matrix(class_incidence[, -1])
 class_properties <- class_properties[match(colnames(class_pa), class_properties$peak_id), ]
@@ -662,7 +786,7 @@ site_sums <- class_table %>% group_by(site_code) %>%
   summarize(fraction_sum = sum(fraction_detected), .groups = "drop")
 stopifnot(all(abs(site_sums$fraction_sum - 1) < 1e-12))
 
-# 14. Average site fractions within groups, giving every site equal weight.
+# 15. Average site fractions within groups, giving every site equal weight.
 # Pooling raw feature counts would give feature-rich sites greater weight.
 class_group_summary <- class_table %>% group_by(network_group, source_class, class_label) %>%
   summarize(
@@ -678,7 +802,7 @@ class_group_counts <- table(factor(class_network$network_group, levels = group_l
 class_group_labels <- paste0(group_levels, "\n(n = ", as.integer(class_group_counts), ")")
 names(class_group_labels) <- group_levels
 
-# 15. Retain class panels for all sites and for the matched sites.
+# 16. Retain class panels for all sites and for the matched sites.
 group_plot <- ggplot(class_group_summary, aes(network_group, mean_fraction, fill = class_label)) +
   geom_col(width = 0.65) +
   scale_fill_manual(values = class_colors, drop = FALSE) +
@@ -739,7 +863,7 @@ for (group_name in c("All", "Matched", group_levels)) {
 }
 stopifnot(identical(class_input_hashes, unname(tools::md5sum(class_input_paths))))
 
-# 16. Confirm that the reused inputs and full-site dispersion results are intact.
+# 17. Confirm that the reused inputs and full-site dispersion results are intact.
 checks$final_md5 <- unname(tools::md5sum(checks$path))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))
@@ -752,5 +876,5 @@ print(tests)
 print(balanced_summary)
 print(richness_dependence)
 print(richness_models, n = Inf)
-print(component_tests)
-print(pool_summary)
+print(partition_shares)
+print(flow_tests, n = Inf)

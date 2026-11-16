@@ -6,7 +6,6 @@ library(tidyr)
 library(ggplot2)
 library(vegan)
 library(permute)
-library(igraph)
 library(patchwork)
 
 # 1. Settings and plotting theme ------------------------------------------------
@@ -16,8 +15,6 @@ figures_dir <- here("figures", "supplement", "sediment_comparison")
 n_permutations <- 9999
 permutation_seed <- 20261116
 significance_threshold <- 0.05
-# Tolerance for matching graph distances to the centerline's own outlet distances.
-distance_tolerance_m <- 0.01
 # Figures are built at printed size: each panel has a fixed size and the canvas
 # is measured around it.
 panel_width <- 2.6
@@ -25,22 +22,12 @@ panel_height <- 2.0
 base_size <- 9
 point_size <- 0.8
 point_alpha <- 0.5
-# Views of the dissimilarity between two sites. The primary views are the
-# standard ones for each data type. Binary Jaccard dissimilarity divides into
-# turnover, where features or ASVs are replaced, and nestedness, where the
-# poorer site holds a subset of the richer one (Baselga 2010).
+# The standard dissimilarity for each data type. Its replacement and
+# richness-difference components are tested in 04_sediment_convergence.R.
 view_design <- tribble(
   ~metric, ~data_type, ~role, ~label,
   "microbial_hellinger", "microbial", "primary", "Microbial communities (Hellinger)",
-  "molecular_jaccard", "molecular", "primary", "FT-ICR features (Jaccard)",
-  "microbial_turnover", "microbial", "turnover", "Microbial communities (Jaccard turnover)",
-  "molecular_turnover", "molecular", "turnover", "FT-ICR features (Jaccard turnover)",
-  "microbial_nestedness", "microbial", "nestedness", "Microbial communities (Jaccard nestedness)",
-  "molecular_nestedness", "molecular", "nestedness", "FT-ICR features (Jaccard nestedness)")
-# Complete-data matrices saved by 04_sediment_convergence.R. Nestedness is
-# binary Jaccard minus its turnover component.
-saved_metrics <- c("microbial_hellinger", "molecular_jaccard", "microbial_jaccard",
-  "microbial_turnover", "molecular_turnover")
+  "molecular_jaccard", "molecular", "primary", "FT-ICR features (Jaccard)")
 # Two spatial separations: along the channel and in a straight line. Differences
 # in network position (drainage area) are tested in 04_sediment_convergence.R.
 predictor_design <- tribble(
@@ -69,14 +56,16 @@ save_at_panel_size <- function(plot, path) {
   ggsave(path, plot, width = width, height = height, bg = "white")
 }
 
-# 2. Read the matched sites and their saved dissimilarities -----------------------
+# 2. Read the matched sites, their dissimilarities, and their separations ----------
+# 04_sediment_convergence.R saves the complete-data matrices and one row per pair
+# of sites with its channel and straight-line distances and flow connection.
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 site <- read_csv(file.path(dispersion_dir, "matched_site_manifest.csv"),
   col_types = cols(site_code = col_character()))
 stopifnot(nrow(site) == 33, !anyDuplicated(site$site_code))
 dissimilarities <- list()
-for (metric in saved_metrics) {
+for (metric in view_design$metric) {
   saved <- read_csv(file.path(dispersion_dir, paste0(metric, "_distance_matrix.csv")),
     col_types = cols(site_code = col_character(), .default = col_double()))
   stopifnot(identical(saved$site_code, site$site_code), identical(names(saved)[-1], site$site_code))
@@ -85,101 +74,27 @@ for (metric in saved_metrics) {
   stopifnot(all(is.finite(current)), max(abs(current - t(current))) < 1e-12, all(diag(current) == 0))
   dissimilarities[[metric]] <- current
 }
-dissimilarities$microbial_nestedness <- dissimilarities$microbial_jaccard - dissimilarities$microbial_turnover
-dissimilarities$molecular_nestedness <- dissimilarities$molecular_jaccard - dissimilarities$molecular_turnover
-stopifnot(all(view_design$metric %in% names(dissimilarities)),
-  min(dissimilarities$microbial_nestedness) > -1e-12, min(dissimilarities$molecular_nestedness) > -1e-12)
-
-# 3. Build the stream network from the surveyed centerline ------------------------
-# Each centerline row is one point; D is its channel distance to the basin outlet.
-# The raw header has a trailing comma but data rows have seven fields.
-geometry <- read_csv(here("data", "StreamCenterline.csv"), skip = 1,
-  col_names = c("x", "y", "elevation", "outlet_distance", "upstream_area", "order", "segment"),
-  col_types = cols(.default = col_double()))
-geometry$node <- seq_len(nrow(geometry))
-# Rows run down each segment, so consecutive rows of a segment are joined by the
-# change in their outlet distance.
-same_segment <- geometry$segment[-1] == geometry$segment[-nrow(geometry)]
-channel_edges <- tibble(from = geometry$node[-nrow(geometry)][same_segment],
-  to = geometry$node[-1][same_segment])
-channel_edges$weight <- abs(geometry$outlet_distance[channel_edges$from] -
-  geometry$outlet_distance[channel_edges$to])
-# Segments meet at confluences, where their end points have identical coordinates.
-shared_points <- split(geometry$node, paste(geometry$x, geometry$y))
-shared_points <- shared_points[lengths(shared_points) > 1]
-confluence_rows <- list()
-for (i in seq_along(shared_points)) {
-  nodes <- shared_points[[i]]
-  confluence_rows[[i]] <- tibble(from = nodes[1], to = nodes[-1], weight = 0)
-}
-confluence_edges <- bind_rows(confluence_rows)
-stream_graph <- graph_from_data_frame(bind_rows(channel_edges, confluence_edges),
-  directed = FALSE, vertices = tibble(name = geometry$node))
-# Check the graph against the source: along the connected network, the graph
-# distance from every point to the outlet must equal the centerline's own D.
-outlet_node <- which.min(geometry$outlet_distance)
-graph_outlet_distance <- as.numeric(distances(stream_graph, v = outlet_node,
-  weights = E(stream_graph)$weight))
-membership <- components(stream_graph)$membership
-connected <- membership == membership[outlet_node]
-graph_checks <- tibble(
-  centerline_points = nrow(geometry),
-  segments = n_distinct(geometry$segment),
-  confluences = length(shared_points),
-  components = max(membership),
-  segments_not_reaching_outlet = paste(sort(unique(geometry$segment[!connected])), collapse = ";"),
-  points_not_reaching_outlet = sum(!connected),
-  max_outlet_distance_error_m = max(abs(graph_outlet_distance[connected] -
-    geometry$outlet_distance[connected])))
-stopifnot(graph_checks$max_outlet_distance_error_m < distance_tolerance_m)
-
-# 4. Measure the separation of every pair of sites ---------------------------------
-# Each site is placed at the nearest centerline point of its own segment.
-site$centerline_node <- NA_integer_
-site$centerline_match_error_m <- NA_real_
-for (i in seq_len(nrow(site))) {
-  candidates <- which(geometry$segment == site$site_segment_number[i])
-  stopifnot(length(candidates) > 0)
-  offset <- sqrt((geometry$x[candidates] - site$site_utm_x_m[i])^2 +
-    (geometry$y[candidates] - site$site_utm_y_m[i])^2)
-  site$centerline_node[i] <- candidates[which.min(offset)]
-  site$centerline_match_error_m[i] <- min(offset)
-}
-site_outlet_distance <- geometry$outlet_distance[site$centerline_node]
-stopifnot(all(connected[site$centerline_node]), all(site$centerline_match_error_m < 1),
-  max(abs(site_outlet_distance - site$basin_outlet_stream_distance_m)) < distance_tolerance_m)
-watercourse_m <- distances(stream_graph, v = site$centerline_node, to = site$centerline_node,
-  weights = E(stream_graph)$weight)
-# Two sites are flow-connected when water passes from one to the other, so the
-# channel distance between them equals the difference of their outlet distances.
-outlet_difference_m <- abs(outer(site_outlet_distance, site_outlet_distance, "-"))
-flow_connected <- abs(watercourse_m - outlet_difference_m) < distance_tolerance_m
-separations <- list(
-  watercourse_km = watercourse_m / 1000,
-  straight_line_km = as.matrix(dist(cbind(site$site_utm_x_m, site$site_utm_y_m))) / 1000)
-stopifnot(all(watercourse_m + distance_tolerance_m >= outlet_difference_m),
-  all(separations$watercourse_km + 1e-6 >= separations$straight_line_km))
-# One row per unordered pair of sites, with every separation and dissimilarity.
-lower <- which(lower.tri(watercourse_m), arr.ind = TRUE)
-pairs <- tibble(site_a = site$site_code[lower[, "col"]], site_b = site$site_code[lower[, "row"]],
-  group_a = site$network_group[lower[, "col"]], group_b = site$network_group[lower[, "row"]],
-  flow_connected = flow_connected[lower])
+pairs <- read_csv(file.path(dispersion_dir, "site_pair_components.csv"),
+  col_types = cols(site_a = col_character(), site_b = col_character(), downstream_site = col_character())) %>%
+  select(site_a, site_b, group_a, group_b, flow_connected, watercourse_km, straight_line_km)
+# Rebuild full separation matrices from the pair rows, in the site order of the
+# dissimilarity matrices.
+lower <- cbind(row = match(pairs$site_b, site$site_code), col = match(pairs$site_a, site$site_code))
+stopifnot(nrow(pairs) == choose(nrow(site), 2), !anyNA(lower), all(lower[, "row"] > lower[, "col"]))
+separations <- list()
 for (predictor in predictor_design$predictor) {
-  pairs[[predictor]] <- separations[[predictor]][lower]
+  current <- matrix(0, nrow(site), nrow(site), dimnames = list(site$site_code, site$site_code))
+  current[lower] <- pairs[[predictor]]
+  separations[[predictor]] <- current + t(current)
 }
 for (metric in view_design$metric) {
   pairs[[metric]] <- dissimilarities[[metric]][lower]
 }
-stopifnot(nrow(pairs) == choose(nrow(site), 2))
 write_csv(pairs, file.path(results_dir, "site_pair_separations.csv"))
-write_csv(graph_checks %>% mutate(flow_connected_pairs = sum(pairs$flow_connected),
-  site_pairs = nrow(pairs), max_site_match_error_m = max(site$centerline_match_error_m)),
-  file.path(results_dir, "stream_graph_checks.csv"))
 
 # 5. Test distance decay for each view and separation ------------------------------
 # Mantel tests permute whole sites, so every pair involving a site moves together.
-# All tests use the same permutations and are two-sided, because turnover and
-# nestedness can fall as well as rise with separation. The slope is the
+# All tests use the same permutations and are two-sided. The slope is the
 # least-squares line through the site pairs, which is what the Pearson Mantel
 # statistic tests.
 set.seed(permutation_seed)
@@ -298,15 +213,11 @@ for (view in seq_len(nrow(view_design))) {
   panels[[metric]] <- p
   save_at_panel_size(p, file.path(figures_dir, paste0("2016_matched_sediment_distance_decay_", metric, ".pdf")))
 }
-for (role in unique(view_design$role)) {
-  metrics <- view_design$metric[view_design$role == role]
-  combined <- wrap_plots(panels[metrics], ncol = 2, guides = "collect") +
-    plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
-  save_at_panel_size(combined, file.path(figures_dir, paste0("2016_matched_sediment_distance_decay_", role, ".pdf")))
-}
+combined <- wrap_plots(panels[view_design$metric], ncol = 2, guides = "collect") +
+  plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
+save_at_panel_size(combined, file.path(figures_dir, "2016_matched_sediment_distance_decay_primary.pdf"))
 
 writeLines(trimws(capture.output(sessionInfo()), which = "right"), file.path(results_dir, "session_info.txt"))
-print(graph_checks)
 print(mantel_tests, n = Inf)
 print(flow_tests, n = Inf)
 print(contrast_tests, n = Inf)
