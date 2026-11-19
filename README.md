@@ -14,8 +14,8 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
 | [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1), weighted UniFrac, and matched-habitat iCAMP contrasts | [Diversity and assembly](figures/manuscript/fig1_habitat_diversity_assembly.pdf) |
 | [03_molecular_gradients.R](analysis/03_molecular_gradients.R) | 2. Sediment molecular richness and richness differences along flow paths on the 33 matched sites | [Richness and richness difference](figures/manuscript/fig2_molecular_richness_difference.pdf) |
-| [04_first_detection.R](analysis/04_first_detection.R) | 3. First detection of sediment and porewater taxa | [First detection](figures/manuscript/fig3_first_detection.pdf) |
-| [05_soil_affinity.R](analysis/05_soil_affinity.R) | 4. Soil-shared taxa in sediment across the stream network | [Soil affinity](figures/manuscript/fig4_soil_affinity.pdf) |
+| [04_soil_sharing.R](analysis/04_soil_sharing.R) | 3. First detection of sediment and porewater taxa, with soil-core and non-core soil ASVs | [First detection](figures/manuscript/fig3_first_detection.pdf) |
+| [04_soil_sharing.R](analysis/04_soil_sharing.R) | 4. Soil-shared taxa in sediment across the stream network | [Soil affinity](figures/manuscript/fig4_soil_affinity.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
 scripts. Script 02 uses saved UniFrac distances, reuses completed iCAMP
@@ -23,13 +23,14 @@ assignments, and supplies the paired soil-sharing test for 04; 03 fits the
 molecular richness models, builds the stream network, tests replacement and
 richness difference along flow paths, and runs dispersion with its
 balanced-sampling sensitivity, then reads completed molecular-class results;
-04 builds the first-detection inventory; 05 identifies soil-core ASVs from the
-soil samples and maps their share of sediment and porewater reads.
+04 builds the first-detection inventory, identifies soil-core ASVs from the
+soil samples, and maps their share of sediment and porewater reads.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
 All figures share the text sizes, panel sizes, and exporter in
 [figure_style.R](analysis/figure_style.R), so they print at journal size.
-Microbial abundance comparisons use Hellinger distance. Figure 1 C–D compare
+Figure 1 habitat tests use weighted UniFrac; other microbial abundance
+comparisons use Hellinger distance. Figure 1 C–D compare
 dispersal limitation and homogeneous selection for sediment and porewater on
 the same 18 sites, reusing completed reviewed-pool iCAMP assignments.
 Paired soil sharing, same-site taxonomic resolution, and classification coverage

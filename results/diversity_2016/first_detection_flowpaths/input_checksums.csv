@@ -5,3 +5,6 @@ path,initial_md5,final_md5,unchanged
 /Users/nawis/GitHub/hja-synoptic/results/diversity_2016/soil_porewater_sediment/soil_sharing_by_sample.csv,2fa39d22cbc1e638a34d3b283f45cd7b,2fa39d22cbc1e638a34d3b283f45cd7b,TRUE
 /Users/nawis/GitHub/hja-synoptic/results/diversity_2016/soil_porewater_sediment/paired_soil_sharing_test.csv,373a09f57763d578da6ee215c52eb391,373a09f57763d578da6ee215c52eb391,TRUE
 /Users/nawis/GitHub/hja-synoptic/results/dada2_2016/asv_taxonomy.csv,7af0b15717bed0c0dfe532b747d6b6fa,7af0b15717bed0c0dfe532b747d6b6fa,TRUE
+/Users/nawis/GitHub/hja-synoptic/results/diversity_2016/soil_porewater_sediment/soil_inventory.csv,465b3952920fb06927a33677a1114002,465b3952920fb06927a33677a1114002,TRUE
+/Users/nawis/GitHub/hja-synoptic/data/StreamCenterline.csv,9a1de3d6e53c03f2366113d8ec370328,9a1de3d6e53c03f2366113d8ec370328,TRUE
+/Users/nawis/GitHub/hja-synoptic/data/derived/microbial_diversity_2016/asv_metadata_screened.csv,7fc8eb797b749ee90fd4bab5816f68f6,7fc8eb797b749ee90fd4bab5816f68f6,TRUE

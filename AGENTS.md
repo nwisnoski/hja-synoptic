@@ -67,7 +67,7 @@ win. Check in briefly that these project instructions are visible and understood
   Lookout branch and KC tributary) and nearly absent from the north branch. It
   was selected by co-occurrence, so its microbial–molecular concordance is not
   an independent result; a metabolic guild has not been established.
-- Figure 4 (`05_soil_affinity.R`) shows soil-core ASVs (5+ of 15 soils, defined
+- Figure 4 (`04_soil_sharing.R`, with Figure 3) shows soil-core ASVs (5+ of 15 soils, defined
   from soils alone) as a diffuse component of sediment across the catchment.
   Say "shared with soil", not "from soil".
 - Solute tracer breakthrough curves are in `data/tracer_2016/`, gitignored and
@@ -89,7 +89,7 @@ win. Check in briefly that these project instructions are visible and understood
 
 Checks against the saved tables. Figure numbers follow the order set on
 November 19: (1) diversity, composition, and iCAMP (`02`); (2) molecular
-gradients (`03`); (3) first detection (`04`); (4) soil-shared taxa (`05`).
+gradients (`03`); (3) first detection and (4) soil-shared taxa (both `04_soil_sharing.R`).
 Manuscript PDFs are named `fig1_` to `fig4_` so they sort.
 
 - Equal-feature Jaccard dispersion tracks detected feature count (Spearman
@@ -166,7 +166,10 @@ Manuscript PDFs are named `fig1_` to `fig4_` so they sort.
   limit power; a null here does not establish equivalence.
 - Porewater uses the same square marker and blue in Figures 1, 3, and 4. Figure fixes pending: the
   supplementary dispersion panels reuse the habitat colors for network groups;
-  Figure 3 shows the full inventory, whose soil share is effort-dependent.
+  Figure 3 splits the soil first detections into soil-core (5+ of 15 soils)
+  and non-core ASVs; the total soil share grows with the number of soils
+  sampled (70% of sediment reads with 15 soils, about 42% with 3), while the
+  sediment-porewater contrast holds in every three-soil draw.
   Figure 1 habitat tests use the plotted weighted UniFrac (R2 0.35-0.43),
   with Hellinger retained as a companion.
 

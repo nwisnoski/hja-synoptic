@@ -201,7 +201,11 @@ ASVs are assigned at the first surveyed stream-order group containing them:
 orders 1–2, 3–4, then 5. Sediment and porewater pools are parallel; ties remain
 shared. The figure has sediment and porewater facets; bars summarize
 percentages of ASV reads per library. Percentages of detected ASVs remain
-supplementary.
+supplementary. Soil first detections are split into soil-core ASVs, found in at
+least five of the 15 soils (the Figure 4 definition), and non-core soil ASVs,
+found in one to four. The total soil share grows with the number of soils in the
+inventory; the soil-core part depends less on that effort. The split applies to
+the full inventory only, since three soils per draw are too few for the same rule.
 The 1,000 balanced draws select three libraries in each of six stream
 habitat–network cells and three soils, rebuilding the inventory each time.
 Draw quantiles describe sampling sensitivity, not confidence intervals.
@@ -258,7 +262,7 @@ distance only, with a line for a pair set only where adjusted P <= 0.05.
 
 ## Figure 4: soil-shared taxa in sediment across the stream network
 
-`05_soil_affinity.R` calls an ASV soil-core when it occurs in at least five of
+`04_soil_sharing.R` calls an ASV soil-core when it occurs in at least five of
 the 15 reviewed soils. The class uses the soil samples only, so the sediment
 data it is tested on play no part in defining it. Its share of a sample's
 10,000 reads is measured for all 34 sediment and 27 porewater samples, counting

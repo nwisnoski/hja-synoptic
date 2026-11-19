@@ -1,0 +1,13 @@
+habitat,network_group,category,samples,richness_percent,read_percent
+hyporheic,Headwater,Soil core,14,12.779180780554945,14.274285714285714
+hyporheic,Headwater,Soil non-core,14,21.126896746300748,22.322142857142858
+hyporheic,Intermediate,Soil core,8,12.559175223483619,13.0875
+hyporheic,Intermediate,Soil non-core,8,22.58635381408882,20.09375
+hyporheic,Mainstem,Soil core,5,13.201194232525893,13.966
+hyporheic,Mainstem,Soil non-core,5,20.964884051979624,19.714
+sediment,Headwater,Soil core,19,22.11409233175255,34.55947368421052
+sediment,Headwater,Soil non-core,19,37.905844767663595,37.70315789473684
+sediment,Intermediate,Soil core,10,18.467436128411325,31.454
+sediment,Intermediate,Soil non-core,10,35.00119441682375,36.284
+sediment,Mainstem,Soil core,5,22.173714497168092,35.013999999999996
+sediment,Mainstem,Soil non-core,5,35.20340612294195,34.886
