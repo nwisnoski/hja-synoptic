@@ -12,26 +12,28 @@ Run `01_prepare_cohort.R` first, then the figure scripts in order.
 | Script | Figure | Main output |
 | --- | --- | --- |
 | [01_prepare_cohort.R](analysis/01_prepare_cohort.R) | Reviewed sample set and exclusion audit | `data/derived/soil_porewater_sediment_2016/` |
-| [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1) and weighted UniFrac | [Habitat diversity](figures/manuscript/2016_habitat_diversity.pdf) |
-| [03_first_detection.R](analysis/03_first_detection.R) | 2. First detection and matched-habitat iCAMP contrasts | [Detection and assembly](figures/manuscript/2016_first_detection_flowpaths.pdf) |
-| [04_sediment_convergence.R](analysis/04_sediment_convergence.R) | 3. Sediment molecular richness and richness differences along flow paths on the 33 matched sites | [Richness and richness difference](figures/manuscript/2016_sediment_richness_difference.pdf) |
-| [05_soil_affinity.R](analysis/05_soil_affinity.R) | 4. Soil-shared taxa in sediment across the stream network | [Soil affinity](figures/manuscript/2016_sediment_soil_affinity.pdf) |
+| [02_habitat_diversity.R](analysis/02_habitat_diversity.R) | 1. Hill diversity (q = 1), weighted UniFrac, and matched-habitat iCAMP contrasts | [Diversity and assembly](figures/manuscript/fig1_habitat_diversity_assembly.pdf) |
+| [03_molecular_gradients.R](analysis/03_molecular_gradients.R) | 2. Sediment molecular richness and richness differences along flow paths on the 33 matched sites | [Richness and richness difference](figures/manuscript/fig2_molecular_richness_difference.pdf) |
+| [04_first_detection.R](analysis/04_first_detection.R) | 3. First detection of sediment and porewater taxa | [First detection](figures/manuscript/fig3_first_detection.pdf) |
+| [05_soil_affinity.R](analysis/05_soil_affinity.R) | 4. Soil-shared taxa in sediment across the stream network | [Soil affinity](figures/manuscript/fig4_soil_affinity.pdf) |
 
 The checkout contains the prepared inputs and completed results used by these
-scripts. Script 02 uses saved UniFrac distances and supplies the paired tests
-for 03; 04 fits the molecular richness models, builds the stream network, tests
-replacement and richness difference along flow paths, and runs dispersion with its balanced-sampling sensitivity, then reads
-completed molecular-class results; 05 identifies soil-core ASVs from the soil
-samples and maps their share of sediment and porewater reads.
+scripts. Script 02 uses saved UniFrac distances, reuses completed iCAMP
+assignments, and supplies the paired soil-sharing test for 04; 03 fits the
+molecular richness models, builds the stream network, tests replacement and
+richness difference along flow paths, and runs dispersion with its
+balanced-sampling sensitivity, then reads completed molecular-class results;
+04 builds the first-detection inventory; 05 identifies soil-core ASVs from the
+soil samples and maps their share of sediment and porewater reads.
 They do not rerun DADA2, phylogeny construction, or network null simulations.
 Each script declares its packages and analytical settings at the top.
 All figures share the text sizes, panel sizes, and exporter in
 [figure_style.R](analysis/figure_style.R), so they print at journal size.
-Microbial abundance comparisons use Hellinger distance. Figure 2 B–C compare
+Microbial abundance comparisons use Hellinger distance. Figure 1 C–D compare
 dispersal limitation and homogeneous selection for sediment and porewater on
 the same 18 sites, reusing completed reviewed-pool iCAMP assignments.
 Paired soil sharing, same-site taxonomic resolution, and classification coverage
-remain supporting analyses in script 03.
+remain supporting analyses in script 04.
 The [supporting figure guide](figures/supplement/README.md) points to the sampling
 map, individual figure panels, and the retained bulk transformation summaries.
 The [methods guide](analysis/METHODS.md) defines the measurements and inference
@@ -55,7 +57,7 @@ Pair counts, formula checks, and site coverage are in
   only when inputs need rebuilding.
 - `analysis/supporting/`: molecular inputs and dispersion (01–03), network
   inference and stability (04–07), bulk transformations (08–09), and distance
-  decay on the matched sediment sites (10, run after script 04). The `icamp/`
+  decay on the matched sediment sites (10, run after script 03). The `icamp/`
   subfolder retains its separate 01–03 sequence for completed-run provenance and
   plotting.
 - `analysis/cluster/`: batch launchers for sequence processing, phylogeny, and iCAMP.
@@ -87,7 +89,7 @@ tables rather than duplicated reports.
 ## Completed iCAMP results
 
 [The iCAMP result guide](results/icamp_2016/README.md) distinguishes the completed
-reviewed-pool run used by Figure 2, the sediment-only sensitivity, and the
+reviewed-pool run used by Figure 1, the sediment-only sensitivity, and the
 historical four-habitat run that includes excluded libraries. Reuse completed
 assignments when plotting. The reviewed-pool script can start expensive inference
 if its completed result is absent; do not rerun inference for this cleanup.

@@ -1,4 +1,5 @@
-# Figure 1: habitat diversity, with supplementary sampling coverage; run 01_prepare_cohort.R first.
+# Figure 1: habitat diversity, composition, and matched-habitat iCAMP process
+# importance, with supplementary sampling coverage; run 01_prepare_cohort.R first.
 library(here)
 library(readr)
 library(dplyr)
@@ -14,6 +15,7 @@ data_dir <- here("data", "derived", "soil_porewater_sediment_2016")
 results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
 figures_dir <- here("figures", "supplement", "habitat_diversity")
 manuscript_dir <- here("figures", "manuscript")
+icamp_results_dir <- here("results", "icamp_2016", "reviewed_pool_castor")
 figure_prefix <- "2016_soil_porewater_sediment_"
 target_depth <- 10000L
 n_permutations <- 9999L
@@ -30,14 +32,31 @@ habitat_shapes <- c(soil = 17, sediment = 16, hyporheic = 15)
 group_levels <- c("Headwater", "Intermediate", "Mainstem")
 diversity_labels <- c(q0 = "ASV richness (q = 0)", q1 = "Hill diversity (q = 1)",
   q2 = "Hill diversity (q = 2)")
+icamp_habitats <- c("sediment", "hyporheic")
+icamp_axis_max <- 60
+icamp_pair_point_size <- figure_small_point_size
+icamp_pair_point_alpha <- 0.35
+icamp_jitter_width <- 0.16
+icamp_point_seed <- 20261014L
+icamp_processes <- tibble::tribble(
+  ~panel, ~process, ~label,
+  "icamp_dispersal_limitation", "Dispersal.Limitation", "Dispersal limitation",
+  "icamp_homogeneous_selection", "Homogeneous.Selection", "Homogeneous selection"
+)
 # Text sizes, panel sizes, and the exporter come from figure_style.R.
 plot_theme <- figure_theme
+# Habitat tests use the weighted UniFrac distances plotted in Figure 1, with
+# Hellinger as a companion. Each distance has its own seeds and BH family.
 habitat_design <- tibble::tribble(
-  ~comparison, ~first, ~second, ~seed,
-  "All three habitats", NA_character_, NA_character_, base_seed + 1L,
-  "Soil-sediment", "soil", "sediment", base_seed + 2L,
-  "Soil-porewater", "soil", "hyporheic", base_seed + 3L,
-  "Sediment-porewater", "sediment", "hyporheic", base_seed + 4L
+  ~metric, ~comparison, ~first, ~second, ~seed,
+  "Hellinger", "All three habitats", NA_character_, NA_character_, base_seed + 1L,
+  "Hellinger", "Soil-sediment", "soil", "sediment", base_seed + 2L,
+  "Hellinger", "Soil-porewater", "soil", "hyporheic", base_seed + 3L,
+  "Hellinger", "Sediment-porewater", "sediment", "hyporheic", base_seed + 4L,
+  "Weighted UniFrac", "All three habitats", NA_character_, NA_character_, base_seed + 5L,
+  "Weighted UniFrac", "Soil-sediment", "soil", "sediment", base_seed + 6L,
+  "Weighted UniFrac", "Soil-porewater", "soil", "hyporheic", base_seed + 7L,
+  "Weighted UniFrac", "Sediment-porewater", "sediment", "hyporheic", base_seed + 8L
 )
 pair_design <- expand_grid(
   metric = c("Hellinger", "Weighted UniFrac", "Unweighted UniFrac", "Sediment ASV read share"),
@@ -67,7 +86,13 @@ input_paths <- c(
   here("results", "diversity_2016", "tables", "unifrac_unweighted_10k.csv"),
   here("data", "StreamCenterline.csv"),
   here("data", "derived", "soil_drainage_2016", "soil_coordinate_audit.csv"),
-  here("results", "fticr_2016", "stable_group_distribution", "core_site_profiles.csv")
+  here("results", "fticr_2016", "stable_group_distribution", "core_site_profiles.csv"),
+  file.path(icamp_results_dir, "matched_stream_samples.csv"),
+  file.path(icamp_results_dir, "matched_within_group_pair_contrasts.csv"),
+  file.path(icamp_results_dir, "matched_within_group_summary.csv"),
+  file.path(icamp_results_dir, "pairwise_process_importance.csv"),
+  file.path(icamp_results_dir, "input_checksums.csv"),
+  file.path(icamp_results_dir, "icamp_settings.csv")
 )
 checks <- tibble(path = input_paths, initial_md5 = unname(tools::md5sum(input_paths)))
 stopifnot(!anyNA(checks$initial_md5))
@@ -127,23 +152,29 @@ habitat_rows <- list()
 dispersion_rows <- list()
 for (i in seq_len(nrow(habitat_design))) {
   current <- metadata
-  if (i > 1) current <- metadata %>% filter(habitat %in% c(habitat_design$first[i], habitat_design$second[i]))
+  if (!is.na(habitat_design$first[i])) {
+    current <- metadata %>% filter(habitat %in% c(habitat_design$first[i], habitat_design$second[i]))
+  }
   current$habitat <- droplevels(current$habitat)
-  d <- as.dist(hellinger_matrix[current$sample_id, current$sample_id])
+  metric <- habitat_design$metric[i]
+  d <- as.dist(distance_matrices[[metric]][current$sample_id, current$sample_id])
   set.seed(habitat_design$seed[i])
   fit <- adonis2(d ~ habitat, data = current, permutations = n_permutations)
   dispersion <- betadisper(d, current$habitat, type = "median", bias.adjust = TRUE)
   set.seed(habitat_design$seed[i] + 1000L)
   dispersion_test <- permutest(dispersion, permutations = n_permutations)
-  habitat_rows[[i]] <- tibble(comparison = habitat_design$comparison[i], metric = "Hellinger", samples = nrow(current),
+  habitat_rows[[i]] <- tibble(comparison = habitat_design$comparison[i], metric, samples = nrow(current),
     r_squared = fit$R2[1], f = fit$F[1], p = fit$`Pr(>F)`[1],
     dispersion_f = dispersion_test$tab$F[1], dispersion_p = dispersion_test$tab$`Pr(>F)`[1],
     null = "Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled")
-  if (i == 1) dispersion_rows[[1]] <- tibble(sample_id = current$sample_id, metric = "Hellinger",
-    habitat = current$habitat, distance_to_median = dispersion$distances)
+  if (is.na(habitat_design$first[i])) {
+    dispersion_rows[[length(dispersion_rows) + 1L]] <- tibble(sample_id = current$sample_id, metric,
+      habitat = current$habitat, distance_to_median = dispersion$distances)
+  }
 }
-habitat_tests <- bind_rows(habitat_rows) %>% mutate(
-  p_bh_family4 = p.adjust(p, "BH"), dispersion_p_bh_family4 = p.adjust(dispersion_p, "BH"))
+habitat_tests <- bind_rows(habitat_rows) %>% group_by(metric) %>% mutate(
+  p_bh_family4 = p.adjust(p, "BH"), dispersion_p_bh_family4 = p.adjust(dispersion_p, "BH")) %>%
+  ungroup()
 write_csv(habitat_tests, file.path(results_dir, "habitat_distribution_tests.csv"))
 write_csv(bind_rows(dispersion_rows), file.path(results_dir, "habitat_dispersion.csv"))
 # This paired contrast conditions on site and exchanges habitat only within site.
@@ -333,7 +364,91 @@ environment_tests <- bind_rows(environment_rows) %>% mutate(metric = "Hellinger"
 write_csv(environment_tests, file.path(results_dir, "porewater_environment_tests.csv"))
 write_csv(bind_rows(environment_audit), file.path(results_dir, "porewater_environment_inclusion.csv"))
 
-# 7. Save individual vector panels and manuscript combinations ------------------
+# 7. Validate completed iCAMP summaries on the same 18 paired sites --------------
+# Reuse assignments from the reviewed regional pool. Both habitats contribute
+# the same unordered within-position site pairs, including same-segment pairs.
+# These rows share sites; means are descriptive, without independent-pair tests.
+icamp_samples <- read_csv(input_paths[9], col_types = cols(site_code = col_character()))
+icamp_pairs <- read_csv(input_paths[10],
+  col_types = cols(site_low = col_character(), site_high = col_character()))
+icamp_summary <- read_csv(input_paths[11], show_col_types = FALSE)
+icamp_assignments <- read_csv(input_paths[12], show_col_types = FALSE)
+icamp_checks <- read_csv(input_paths[13], show_col_types = FALSE)
+icamp_settings <- read_csv(input_paths[14], show_col_types = FALSE)
+stopifnot(all(unname(tools::md5sum(here(icamp_checks$input))) == icamp_checks$md5),
+  icamp_settings$value[icamp_settings$setting == "samples"] == "76",
+  icamp_settings$value[icamp_settings$setting == "asvs"] == "33974",
+  icamp_settings$value[icamp_settings$setting == "randomizations"] == "1000")
+paired_manifest <- metadata %>%
+  filter(sample_id %in% c(pairs$sediment_id, pairs$porewater_id)) %>%
+  transmute(sample_id, site_code, habitat = as.character(habitat),
+    network_group = as.character(network_group), site_segment_number, site_stream_order) %>%
+  arrange(sample_id)
+stopifnot(identical(as.data.frame(icamp_samples %>% arrange(sample_id)),
+  as.data.frame(paired_manifest)), nrow(icamp_samples) == 36L,
+  !anyDuplicated(icamp_samples$sample_id), !anyNA(icamp_pairs))
+icamp_group_sizes <- icamp_samples %>% distinct(site_code, network_group) %>%
+  count(network_group, name = "sites") %>%
+  mutate(network_group = factor(network_group, levels = group_levels)) %>%
+  arrange(network_group) %>% mutate(pairs = choose(sites, 2))
+stopifnot(identical(icamp_group_sizes$sites, c(11L, 3L, 4L)),
+  nrow(icamp_pairs) == sum(icamp_group_sizes$pairs) * 5L,
+  !anyDuplicated(icamp_pairs[, c("site_low", "site_high", "process")]),
+  all(icamp_pairs$Sediment >= 0 & icamp_pairs$Sediment <= 1),
+  all(icamp_pairs$Porewater >= 0 & icamp_pairs$Porewater <= 1),
+  max(abs(icamp_pairs$porewater_minus_sediment -
+    (icamp_pairs$Porewater - icamp_pairs$Sediment))) < 1e-12)
+# Check every plotted source pair against its canonical pooled assignment.
+assignment_keys <- paste(pmin(icamp_assignments$sample1, icamp_assignments$sample2),
+  pmax(icamp_assignments$sample1, icamp_assignments$sample2), sep = "|")
+stopifnot(!anyDuplicated(assignment_keys), nrow(icamp_assignments) == choose(76, 2))
+assignment_values <- as.matrix(icamp_assignments[, unique(icamp_pairs$process)])
+for (current_habitat in icamp_habitats) {
+  samples <- icamp_samples %>% filter(habitat == current_habitat)
+  first <- samples$sample_id[match(icamp_pairs$site_low, samples$site_code)]
+  second <- samples$sample_id[match(icamp_pairs$site_high, samples$site_code)]
+  pair_rows <- match(paste(pmin(first, second), pmax(first, second), sep = "|"), assignment_keys)
+  expected <- assignment_values[cbind(pair_rows, match(icamp_pairs$process, colnames(assignment_values)))]
+  observed <- icamp_pairs[[habitat_labels[current_habitat]]]
+  stopifnot(!anyNA(expected), max(abs(expected - observed)) < 1e-12,
+    all(samples$network_group[match(icamp_pairs$site_low, samples$site_code)] == icamp_pairs$network_group),
+    all(samples$network_group[match(icamp_pairs$site_high, samples$site_code)] == icamp_pairs$network_group))
+}
+icamp_expected <- icamp_pairs %>% group_by(network_group, process) %>%
+  summarize(pairs = n(), sediment_mean = mean(Sediment), porewater_mean = mean(Porewater),
+    mean_difference = mean(porewater_minus_sediment), .groups = "drop") %>%
+  arrange(network_group, process)
+icamp_summary <- icamp_summary %>% mutate(pairs = as.integer(pairs)) %>% arrange(network_group, process)
+stopifnot(identical(icamp_summary[, c("network_group", "process", "pairs")],
+  icamp_expected[, c("network_group", "process", "pairs")]),
+  max(abs(as.matrix(icamp_summary[, c("sediment_mean", "porewater_mean", "mean_difference")]) -
+    as.matrix(icamp_expected[, c("sediment_mean", "porewater_mean", "mean_difference")]))) < 1e-12)
+icamp_plot_data <- icamp_summary %>% filter(process %in% icamp_processes$process) %>%
+  pivot_longer(c(sediment_mean, porewater_mean), names_to = "habitat", values_to = "importance") %>%
+  mutate(habitat = if_else(habitat == "sediment_mean", "sediment", "hyporheic"),
+    habitat = factor(habitat, levels = icamp_habitats),
+    network_group = factor(network_group, levels = group_levels),
+    plot_x = as.integer(network_group))
+stopifnot(nrow(icamp_plot_data) == 12L, all(100 * icamp_plot_data$importance <= icamp_axis_max))
+# Give each unordered site pair one horizontal offset, shared by both habitats
+# and both processes. Vertical coordinates remain the observed assignments.
+icamp_pair_positions <- icamp_pairs %>% distinct(site_low, site_high, network_group) %>%
+  mutate(network_group = factor(network_group, levels = group_levels)) %>%
+  arrange(network_group, site_low, site_high)
+set.seed(icamp_point_seed)
+icamp_pair_positions <- icamp_pair_positions %>%
+  mutate(plot_x = as.integer(network_group) + runif(n(), -icamp_jitter_width, icamp_jitter_width))
+icamp_pair_points <- icamp_pairs %>% filter(process %in% icamp_processes$process) %>%
+  select(site_low, site_high, network_group, process, Sediment, Porewater) %>%
+  mutate(network_group = factor(network_group, levels = group_levels)) %>%
+  left_join(icamp_pair_positions, by = c("site_low", "site_high", "network_group")) %>%
+  pivot_longer(c(Sediment, Porewater), names_to = "habitat", values_to = "importance") %>%
+  mutate(habitat = if_else(habitat == "Sediment", "sediment", "hyporheic"),
+    habitat = factor(habitat, levels = icamp_habitats))
+stopifnot(nrow(icamp_pair_points) == sum(icamp_group_sizes$pairs) * 4L,
+  !anyNA(icamp_pair_points), all(100 * icamp_pair_points$importance <= icamp_axis_max))
+
+# 8. Save individual vector panels and manuscript combinations ------------------
 plots <- list()
 # Separate habitat panels retain co-located measurements without symbol overlap.
 geometry <- read_csv(input_paths[6], skip = 1,
@@ -397,13 +512,28 @@ for (order in c("q0", "q1", "q2")) {
 # The manuscript uses exponential Shannon diversity; q = 0 and 2 remain supplementary.
 plots$alpha_diversity <- plots$diversity_q1
 # Show individual libraries; distribution tests retain the dispersion diagnostic.
+# Each habitat is named beside its cluster instead of in a legend: porewater
+# above its points, sediment to the upper left, soil to the left.
+unifrac_labels <- weighted_scores %>% group_by(habitat) %>%
+  summarize(left = min(pcoa1), center_x = mean(pcoa1), top = max(pcoa2),
+    center_y = mean(pcoa2), .groups = "drop") %>%
+  mutate(label = habitat_labels[as.character(habitat)],
+    x = case_when(habitat == "hyporheic" ~ center_x, TRUE ~ left),
+    y = case_when(habitat == "soil" ~ center_y, TRUE ~ top),
+    hjust = case_when(habitat == "hyporheic" ~ 0.5, TRUE ~ 1.15),
+    vjust = case_when(habitat == "hyporheic" ~ -0.6, habitat == "sediment" ~ 1, TRUE ~ 0.5))
 plots$weighted_unifrac <- ggplot(weighted_scores, aes(pcoa1, pcoa2, color = habitat, shape = habitat)) +
-  geom_point(size = figure_point_size, alpha = point_alpha) + coord_equal() +
+  geom_point(size = figure_point_size, alpha = point_alpha) +
+  geom_text(data = unifrac_labels, aes(x, y, label = label, hjust = hjust, vjust = vjust),
+    inherit.aes = FALSE, color = habitat_colors[as.character(unifrac_labels$habitat)],
+    size = figure_text_size / .pt) +
+  coord_equal(clip = "off") +
   scale_color_manual(values = habitat_colors, labels = habitat_labels) +
   scale_shape_manual(values = habitat_shapes, labels = habitat_labels) +
   labs(x = sprintf("PCoA1 (%.1f%%)", weighted_percent[1]),
-    y = sprintf("PCoA2 (%.1f%%)", weighted_percent[2]), color = NULL, shape = NULL) +
-  plot_theme + fixed_equal_panels(weighted_scores$pcoa1, weighted_scores$pcoa2,
+    y = sprintf("PCoA2 (%.1f%%)", weighted_percent[2])) +
+  plot_theme + theme(legend.position = "none") +
+  fixed_equal_panels(weighted_scores$pcoa1, weighted_scores$pcoa2,
     width = figure_large_panel_width)
 for (metric in c("soil_read_percent", "soil_asv_percent")) {
   plot <- ggplot(sharing, aes(site_drainage_area_ha, .data[[metric]], color = habitat)) +
@@ -443,17 +573,58 @@ for (panel in c("sampling_map", "hellinger_pca", "diversity_q0", "diversity_q1",
 }
 save_figure(plots$alpha_diversity, file.path(figures_dir, "2016_manuscript_alpha_diversity.pdf"))
 save_figure(plots$weighted_unifrac, file.path(figures_dir, "2016_manuscript_weighted_unifrac.pdf"))
-# In Figure 1 the diversity panel takes the ordination's height so the two align.
+# Sediment and porewater keep the colors and markers of the diversity panels.
+# Each line is named above it, midway between the intermediate and mainstem
+# means, where no pair points fall. The label clears the higher of the two
+# means, so it stays off a steep line.
+icamp_x_labels <- paste0(group_levels, "\n(n = ", icamp_group_sizes$sites, ")")
+icamp_label_x <- 2.5
+icamp_label_offset <- 4
+for (i in seq_len(nrow(icamp_processes))) {
+  panel <- icamp_plot_data %>% filter(process == icamp_processes$process[i])
+  pair_points <- icamp_pair_points %>% filter(process == icamp_processes$process[i])
+  line_labels <- panel %>% filter(plot_x %in% c(2, 3)) %>% group_by(habitat) %>%
+    summarize(y = 100 * max(importance) + icamp_label_offset, .groups = "drop") %>%
+    mutate(x = icamp_label_x, label = habitat_labels[as.character(habitat)])
+  # Lines connect descriptive group means; they are not fitted regressions.
+  plots[[icamp_processes$panel[i]]] <- ggplot(panel,
+    aes(plot_x, 100 * importance, color = habitat, shape = habitat, group = habitat)) +
+    geom_point(data = pair_points, size = icamp_pair_point_size,
+      alpha = icamp_pair_point_alpha, show.legend = FALSE) +
+    geom_line(linewidth = 0.6) + geom_point(size = 1.5 * figure_point_size) +
+    geom_text(data = line_labels, aes(x, y, label = label, color = habitat),
+      inherit.aes = FALSE, size = figure_text_size / .pt, show.legend = FALSE) +
+    scale_color_manual(values = habitat_colors[icamp_habitats],
+      labels = habitat_labels[icamp_habitats], name = "Habitat") +
+    scale_shape_manual(values = habitat_shapes[icamp_habitats],
+      labels = habitat_labels[icamp_habitats], name = "Habitat") +
+    scale_x_continuous(breaks = seq_along(group_levels), limits = c(0.5, 3.5),
+      labels = icamp_x_labels) +
+    scale_y_continuous(limits = c(0, icamp_axis_max), breaks = seq(0, icamp_axis_max, 20),
+      expand = expansion(mult = c(0.02, 0.04))) +
+    facet_wrap(~process, labeller = as_labeller(setNames(icamp_processes$label, icamp_processes$process))) +
+    labs(x = NULL, y = "Pairwise importance (%)") + plot_theme +
+    theme(legend.position = "none") +
+    fixed_panels(figure_large_panel_width, figure_large_panel_height)
+  save_figure(plots[[icamp_processes$panel[i]]],
+    file.path(figures_dir, paste0("2016_", icamp_processes$panel[i], ".pdf")))
+}
+# Figure 1: diversity and composition on the top row, iCAMP processes below.
+# The diversity panel takes the ordination's height so the two align. Habitats
+# are named on the panels, so there is no legend. The layout is flat so the
+# canvas can be measured around the fixed panels.
 unifrac_height <- figure_large_panel_width * diff(range(weighted_scores$pcoa2)) /
   diff(range(weighted_scores$pcoa1))
-plots$habitat_diversity <- (plots$alpha_diversity + guides(color = "none", shape = "none") +
-    fixed_panels(figure_large_panel_width, unifrac_height)) +
-  plots$weighted_unifrac +
-  plot_layout(guides = "collect") + plot_annotation(tag_levels = "A") &
-  theme(legend.position = "bottom")
-save_figure(plots$habitat_diversity, file.path(manuscript_dir, "2016_habitat_diversity.pdf"))
+plots$habitat_diversity <- wrap_plots(
+    A = plots$alpha_diversity + fixed_panels(figure_large_panel_width, unifrac_height),
+    B = plots$weighted_unifrac,
+    C = plots$icamp_dispersal_limitation,
+    D = plots$icamp_homogeneous_selection,
+    design = "AB\nCD") +
+  plot_annotation(tag_levels = "A")
+save_figure(plots$habitat_diversity, file.path(manuscript_dir, "fig1_habitat_diversity_assembly.pdf"))
 
-# 8. Check provenance and save session information ------------------------------
+# 9. Check provenance and save session information ------------------------------
 checks$final_md5 <- unname(tools::md5sum(checks$path))
 stopifnot(identical(checks$initial_md5, checks$final_md5))
 write_csv(checks, file.path(results_dir, "input_checksums.csv"))

@@ -10,10 +10,10 @@ figures are in `reviewed_pool/`:
 
 The [shared-site habitat comparison](reviewed_pool/2016_reviewed_pool_icamp_matched_habitats.pdf)
 uses the same 18 sites and unordered site pairs in both habitats.
-Its dispersal-limitation and homogeneous-selection means also supply Figure 2
-C–D via [03_first_detection.R](../../../analysis/03_first_detection.R).
+Its dispersal-limitation and homogeneous-selection means also supply Figure 1
+C–D via [02_habitat_diversity.R](../../../analysis/02_habitat_diversity.R).
 Those main-figure panels share a 0–60% scale and have individual exports in
-`../first_detection/`.
+`../habitat_diversity/`.
 
 `sediment_sensitivity/` holds the sediment-only
 [composition](sediment_sensitivity/2016_sediment_icamp_network_composition.pdf)

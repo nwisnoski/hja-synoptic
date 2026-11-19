@@ -3,3 +3,7 @@ All three habitats,Hellinger,76,0.17247027856484104,7.6071771255528935,1e-4,103.
 Soil-sediment,Hellinger,49,0.15916345709696986,8.896714286144313,1e-4,16.2589731132964,2e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2e-4
 Soil-porewater,Hellinger,42,0.10989350661821394,4.938443093508733,1e-4,45.01781090491709,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
 Sediment-porewater,Hellinger,61,0.13231611705950677,8.997114110331221,1e-4,351.91382572473896,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,1.3333333333333334e-4
+All three habitats,Weighted UniFrac,76,0.4246886763429577,26.943910277974258,1e-4,58.36194700676258,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2e-4
+Soil-sediment,Weighted UniFrac,49,0.37689183417664474,28.428316587531306,1e-4,12.003946263125394,0.0016,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,0.0016
+Soil-porewater,Weighted UniFrac,42,0.34780381369923075,21.331238728761065,1e-4,19.944104027664817,2e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2.666666666666667e-4
+Sediment-porewater,Weighted UniFrac,61,0.34997097478960554,31.765177725569274,1e-4,164.13632037803654,1e-4,"Unrestricted labels; exploratory, spatial and repeated-site dependence not controlled",1e-4,2e-4

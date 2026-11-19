@@ -87,22 +87,24 @@ win. Check in briefly that these project instructions are visible and understood
 
 ## Review of November 15, 2026
 
-Checks against the saved tables. Figure 3 has been rebuilt; the other figure
-changes are pending.
+Checks against the saved tables. Figure numbers follow the order set on
+November 19: (1) diversity, composition, and iCAMP (`02`); (2) molecular
+gradients (`03`); (3) first detection (`04`); (4) soil-shared taxa (`05`).
+Manuscript PDFs are named `fig1_` to `fig4_` so they sort.
 
 - Equal-feature Jaccard dispersion tracks detected feature count (Spearman
   rho = 0.95 across the 33 sites). Thinning binary detections removes more of a
-  richer profile. It is retained in script 04 only as a diagnostic. No
+  richer profile. It is retained in script 03 only as a diagnostic. No
   complete-data view shows a network-group dispersion difference for molecules
   or microbes. Raup–Crick was tried, saturated at zero, and removed.
-- Figure 3 now shows the supported pattern on the 33 matched sites: sediment
+- Figure 2 now shows the supported pattern on the 33 matched sites: sediment
   organic content declines with drainage area, feature count follows organic
   content, and drainage area adds nothing once organic content is in the model.
   Fixed sediment mass does not standardize carbon, so treat feature count as
   detected features per unit sediment, not chemodiversity.
 - The direct feature-count decline with drainage area is the weakest link: it
   passes on the 33 matched sites (P = 0.033) and not on all 44 (P = 0.063).
-- Figure 3 (rebuilt November 16) partitions binary Jaccard into replacement and
+- Figure 2 (rebuilt November 16) partitions binary Jaccard into replacement and
   richness difference (Podani–Carvalho, `adespatial::beta.div.comp`) for both
   data types. Richness difference is 60% of molecular and 10% of microbial beta
   diversity. Among the 120 flow-connected pairs, the molecular richness-difference
@@ -117,7 +119,7 @@ changes are pending.
   prevalence (53.3 against 53.7–53.9; terminal check, not in a script). Along
   flow paths the downstream site is the poorer one in 97 of 120 pairs.
 - `supporting/10_distance_decay.R` now tests only microbial Hellinger and
-  molecular Jaccard, reading pair separations from script 04. Over all pairs,
+  molecular Jaccard, reading pair separations from script 03. Over all pairs,
   decay is weak (Mantel r = 0.12–0.17); among flow-connected pairs molecular
   Jaccard rises with channel distance (r = 0.58). Flow-connected pairs
   concentrate on the five mainstem sites.
@@ -127,11 +129,10 @@ changes are pending.
   ordination heights from the data ranges, canvas measured around the panels.
   Composites use flat `wrap_plots(design = ...)` layouts; nested patchworks hide
   fixed panel sizes from the measurement.
-- Open question: whether the four-panel Figure 3 is final. The direct
+- Open question: whether the four-panel Figure 2 is final. The direct
   feature-count decline with drainage area is a supplementary panel.
-- Planned, not started: rename `04_sediment_convergence.R`, and restyle the
-  scripts for readability.
-- The Figure 2B–C porewater–sediment iCAMP contrast does not vary with porewater
+- Planned, not started: restyle the scripts for readability.
+- The Figure 1C–D porewater–sediment iCAMP contrast does not vary with porewater
   Hill diversity, pre-rarefaction depth, or plate.
 - The mapped group is present at 17 sediment sites and nearly absent at 17. This
   is unrelated to plate, depth, feature count, or sampling date. The network's
@@ -163,11 +164,11 @@ changes are pending.
   microbial dispersion, porewater composition, or soil sharing. The supported
   results are habitat contrasts on the 18 paired sites. Five mainstem sites
   limit power; a null here does not establish equivalence.
-- Porewater now uses the same square marker and blue in Figures 1 and 2 and the
-  matched-habitat iCAMP panels. Figure fixes pending: the
+- Porewater uses the same square marker and blue in Figures 1, 3, and 4. Figure fixes pending: the
   supplementary dispersion panels reuse the habitat colors for network groups;
-  Figure 1 plots weighted UniFrac but tests Hellinger; Figure 2A shows the full
-  inventory, whose soil share is effort-dependent.
+  Figure 3 shows the full inventory, whose soil share is effort-dependent.
+  Figure 1 habitat tests use the plotted weighted UniFrac (R2 0.35-0.43),
+  with Hellinger retained as a companion.
 
 ## Cluster continuity and authorization
 

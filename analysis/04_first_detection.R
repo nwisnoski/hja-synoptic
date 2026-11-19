@@ -1,4 +1,4 @@
-# Figure 2: first detection and matched-habitat iCAMP process importance.
+# Figure 3: first detection of sediment and porewater taxa in soil and stream pools.
 # Adapt Ruiz-Gonzalez et al. (2015), doi:10.1111/ele.12499, to parallel
 # aquatic compartments. Earliest detection is not a demonstrated source.
 library(here)
@@ -20,16 +20,6 @@ point_alpha <- 0.5
 base_seed <- 20261005
 rank_seed <- 20261010L
 rank_permutations <- 9999L
-icamp_axis_max <- 60
-icamp_pair_point_size <- figure_small_point_size
-icamp_pair_point_alpha <- 0.35
-icamp_jitter_width <- 0.16
-icamp_point_seed <- 20261014L
-icamp_processes <- tibble::tribble(
-  ~panel, ~process, ~label,
-  "icamp_dispersal_limitation", "Dispersal.Limitation", "Dispersal limitation",
-  "icamp_homogeneous_selection", "Homogeneous.Selection", "Homogeneous selection"
-)
 taxonomic_lineage <- c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")
 rank_levels <- c("ASV", "Genus", "Family", "Order", "Class", "Phylum")
 rank_scopes <- c("All reads", "Genus-classified ASVs")
@@ -50,7 +40,6 @@ results_dir <- here("results", "diversity_2016", "first_detection_flowpaths")
 manuscript_dir <- here("figures", "manuscript")
 supplement_dir <- here("figures", "supplement", "first_detection")
 habitat_results_dir <- here("results", "diversity_2016", "soil_porewater_sediment")
-icamp_results_dir <- here("results", "icamp_2016", "reviewed_pool_castor")
 # Text sizes, panel sizes, and the exporter come from figure_style.R.
 plot_theme <- figure_theme
 theme_set(plot_theme)
@@ -64,13 +53,7 @@ input_paths <- c(here("data", "derived", "soil_porewater_sediment_2016", "asv_co
   here("data", "derived", "soil_porewater_sediment_2016", "sediment_porewater_pair_audit.csv"),
   file.path(habitat_results_dir, "soil_sharing_by_sample.csv"),
   file.path(habitat_results_dir, "paired_soil_sharing_test.csv"),
-  here("results", "dada2_2016", "asv_taxonomy.csv"),
-  file.path(icamp_results_dir, "matched_stream_samples.csv"),
-  file.path(icamp_results_dir, "matched_within_group_pair_contrasts.csv"),
-  file.path(icamp_results_dir, "matched_within_group_summary.csv"),
-  file.path(icamp_results_dir, "pairwise_process_importance.csv"),
-  file.path(icamp_results_dir, "input_checksums.csv"),
-  file.path(icamp_results_dir, "icamp_settings.csv"))
+  here("results", "dada2_2016", "asv_taxonomy.csv"))
 checks <- tibble(path = input_paths, initial_md5 = unname(tools::md5sum(input_paths)))
 stopifnot(!anyNA(checks$initial_md5))
 count_table <- read_csv(input_paths[1], show_col_types = FALSE)
@@ -304,90 +287,7 @@ write_csv(rank_samples, file.path(results_dir, "taxonomic_rank_sample_comparison
 write_csv(rank_tests, file.path(results_dir, "taxonomic_rank_tests.csv"))
 write_csv(bind_rows(coverage_rows), file.path(results_dir, "taxonomic_rank_coverage.csv"))
 
-# 5. Validate completed iCAMP summaries on the same 18 paired sites --------------
-# Reuse assignments from the reviewed regional pool. Both habitats contribute
-# the same unordered within-position site pairs, including same-segment pairs.
-# These rows share sites; means are descriptive, without independent-pair tests.
-icamp_samples <- read_csv(input_paths[7], col_types = cols(site_code = col_character()))
-icamp_pairs <- read_csv(input_paths[8],
-  col_types = cols(site_low = col_character(), site_high = col_character()))
-icamp_summary <- read_csv(input_paths[9], show_col_types = FALSE)
-icamp_assignments <- read_csv(input_paths[10], show_col_types = FALSE)
-icamp_checks <- read_csv(input_paths[11], show_col_types = FALSE)
-icamp_settings <- read_csv(input_paths[12], show_col_types = FALSE)
-stopifnot(all(unname(tools::md5sum(here(icamp_checks$input))) == icamp_checks$md5),
-  icamp_settings$value[icamp_settings$setting == "samples"] == "76",
-  icamp_settings$value[icamp_settings$setting == "asvs"] == "33974",
-  icamp_settings$value[icamp_settings$setting == "randomizations"] == "1000")
-paired_manifest <- metadata %>%
-  filter(sample_id %in% c(pair_audit$sediment_id, pair_audit$porewater_id)) %>%
-  select(sample_id, site_code, habitat, network_group, site_segment_number, site_stream_order) %>%
-  arrange(sample_id)
-stopifnot(identical(as.data.frame(icamp_samples %>% arrange(sample_id)),
-  as.data.frame(paired_manifest)), nrow(icamp_samples) == 36L,
-  !anyDuplicated(icamp_samples$sample_id), !anyNA(icamp_pairs))
-icamp_group_sizes <- icamp_samples %>% distinct(site_code, network_group) %>%
-  count(network_group, name = "sites") %>%
-  mutate(network_group = factor(network_group, levels = network_groups)) %>%
-  arrange(network_group) %>% mutate(pairs = choose(sites, 2))
-stopifnot(identical(icamp_group_sizes$sites, c(11L, 3L, 4L)),
-  nrow(icamp_pairs) == sum(icamp_group_sizes$pairs) * 5L,
-  !anyDuplicated(icamp_pairs[, c("site_low", "site_high", "process")]),
-  all(icamp_pairs$Sediment >= 0 & icamp_pairs$Sediment <= 1),
-  all(icamp_pairs$Porewater >= 0 & icamp_pairs$Porewater <= 1),
-  max(abs(icamp_pairs$porewater_minus_sediment -
-    (icamp_pairs$Porewater - icamp_pairs$Sediment))) < 1e-12)
-# Check every plotted source pair against its canonical pooled assignment.
-assignment_keys <- paste(pmin(icamp_assignments$sample1, icamp_assignments$sample2),
-  pmax(icamp_assignments$sample1, icamp_assignments$sample2), sep = "|")
-stopifnot(!anyDuplicated(assignment_keys), nrow(icamp_assignments) == choose(76, 2))
-assignment_values <- as.matrix(icamp_assignments[, unique(icamp_pairs$process)])
-for (habitat in habitats) {
-  samples <- icamp_samples %>% filter(.data$habitat == .env$habitat)
-  first <- samples$sample_id[match(icamp_pairs$site_low, samples$site_code)]
-  second <- samples$sample_id[match(icamp_pairs$site_high, samples$site_code)]
-  pair_rows <- match(paste(pmin(first, second), pmax(first, second), sep = "|"), assignment_keys)
-  expected <- assignment_values[cbind(pair_rows, match(icamp_pairs$process, colnames(assignment_values)))]
-  observed <- icamp_pairs[[habitat_labels[habitat]]]
-  stopifnot(!anyNA(expected), max(abs(expected - observed)) < 1e-12,
-    all(samples$network_group[match(icamp_pairs$site_low, samples$site_code)] == icamp_pairs$network_group),
-    all(samples$network_group[match(icamp_pairs$site_high, samples$site_code)] == icamp_pairs$network_group))
-}
-icamp_expected <- icamp_pairs %>% group_by(network_group, process) %>%
-  summarize(pairs = n(), sediment_mean = mean(Sediment), porewater_mean = mean(Porewater),
-    mean_difference = mean(porewater_minus_sediment), .groups = "drop") %>%
-  arrange(network_group, process)
-icamp_summary <- icamp_summary %>% mutate(pairs = as.integer(pairs)) %>% arrange(network_group, process)
-stopifnot(identical(icamp_summary[, c("network_group", "process", "pairs")],
-  icamp_expected[, c("network_group", "process", "pairs")]),
-  max(abs(as.matrix(icamp_summary[, c("sediment_mean", "porewater_mean", "mean_difference")]) -
-    as.matrix(icamp_expected[, c("sediment_mean", "porewater_mean", "mean_difference")]))) < 1e-12)
-icamp_plot_data <- icamp_summary %>% filter(process %in% icamp_processes$process) %>%
-  pivot_longer(c(sediment_mean, porewater_mean), names_to = "habitat", values_to = "importance") %>%
-  mutate(habitat = if_else(habitat == "sediment_mean", "sediment", "hyporheic"),
-    habitat = factor(habitat, levels = habitats),
-    network_group = factor(network_group, levels = network_groups),
-    plot_x = as.integer(network_group))
-stopifnot(nrow(icamp_plot_data) == 12L, all(100 * icamp_plot_data$importance <= icamp_axis_max))
-# Give each unordered site pair one horizontal offset, shared by both habitats
-# and both processes. Vertical coordinates remain the observed assignments.
-icamp_pair_positions <- icamp_pairs %>% distinct(site_low, site_high, network_group) %>%
-  mutate(network_group = factor(network_group, levels = network_groups)) %>%
-  arrange(network_group, site_low, site_high)
-set.seed(icamp_point_seed)
-icamp_pair_positions <- icamp_pair_positions %>%
-  mutate(plot_x = as.integer(network_group) + runif(n(), -icamp_jitter_width, icamp_jitter_width))
-icamp_pair_points <- icamp_pairs %>% filter(process %in% icamp_processes$process) %>%
-  select(site_low, site_high, network_group, process, Sediment, Porewater) %>%
-  mutate(network_group = factor(network_group, levels = network_groups)) %>%
-  left_join(icamp_pair_positions, by = c("site_low", "site_high", "network_group")) %>%
-  pivot_longer(c(Sediment, Porewater), names_to = "habitat", values_to = "importance") %>%
-  mutate(habitat = if_else(habitat == "Sediment", "sediment", "hyporheic"),
-    habitat = factor(habitat, levels = habitats))
-stopifnot(nrow(icamp_pair_points) == sum(icamp_group_sizes$pairs) * 4L,
-  !anyNA(icamp_pair_points), all(100 * icamp_pair_points$importance <= icamp_axis_max))
-
-# 6. Show inventories and iCAMP contrasts; retain earlier panels as supplements ---
+# 5. Show inventories; retain earlier panels as supplements ---------------------
 plot_data <- full_summary %>% mutate(category = factor(category, levels = category_labels),
   habitat = factor(habitat, levels = habitats), network_group = factor(network_group, levels = network_groups))
 plots <- list()
@@ -467,51 +367,16 @@ for (view in c("taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
 for (panel in c("paired_soil_sharing", "taxonomic_resolution", "taxonomic_resolution_sensitivity")) {
   save_figure(plots[[panel]], file.path(supplement_dir, paste0("2016_", panel, ".pdf")))
 }
-# Porewater keeps the square marker it has in Figure 1.
-icamp_x_labels <- paste0(network_groups, "\n(n = ", icamp_group_sizes$sites, ")")
-for (i in seq_len(nrow(icamp_processes))) {
-  panel <- icamp_plot_data %>% filter(process == icamp_processes$process[i])
-  pair_points <- icamp_pair_points %>% filter(process == icamp_processes$process[i])
-  # Lines connect descriptive group means; they are not fitted regressions.
-  plots[[icamp_processes$panel[i]]] <- ggplot(panel,
-    aes(plot_x, 100 * importance, color = habitat, shape = habitat, group = habitat)) +
-    geom_point(data = pair_points, size = icamp_pair_point_size,
-      alpha = icamp_pair_point_alpha, show.legend = FALSE) +
-    geom_line(linewidth = 0.6) + geom_point(size = 1.5 * figure_point_size) +
-    scale_color_manual(values = setNames(category_colors[c("Sediment", "Hyporheic")], habitats),
-      labels = habitat_labels, name = "Habitat") +
-    scale_shape_manual(values = c(sediment = 16, hyporheic = 15),
-      labels = habitat_labels, name = "Habitat") +
-    scale_x_continuous(breaks = seq_along(network_groups), limits = c(0.5, 3.5),
-      labels = icamp_x_labels) +
-    scale_y_continuous(limits = c(0, icamp_axis_max), breaks = seq(0, icamp_axis_max, 20),
-      expand = expansion(mult = c(0.02, 0.04))) +
-    facet_wrap(~process, labeller = as_labeller(setNames(icamp_processes$label, icamp_processes$process))) +
-    labs(x = NULL, y = "Pairwise importance (%)") + plot_theme + fixed_panels()
-  save_figure(plots[[icamp_processes$panel[i]]],
-    file.path(supplement_dir, paste0("2016_first_detection_", icamp_processes$panel[i], ".pdf")))
-}
-# The faceted inventory spans the top row; each iCAMP process is a panel below.
-# Each legend sits to the right of the panels it describes, so the pool legend
-# and the habitat legend share a narrow right-hand column. The layout is flat
-# so the canvas can be measured around the fixed panels.
+# Figure 3 shows read shares; richness shares remain a supplementary panel.
 inventory_panel <- plots$read_percent +
   guides(fill = guide_legend(ncol = 1, title.position = "top")) +
   theme(legend.position = "right", legend.justification = "left")
-dispersal_panel <- plots$icamp_dispersal_limitation + theme(legend.position = "none")
-selection_panel <- plots$icamp_homogeneous_selection +
-  guides(color = guide_legend(ncol = 1, title.position = "top"),
-    shape = guide_legend(ncol = 1, title.position = "top")) +
-  theme(legend.position = "right", legend.justification = "left")
-combined <- wrap_plots(A = inventory_panel, B = dispersal_panel, C = selection_panel,
-    design = "AA\nBC") +
-  plot_annotation(tag_levels = "A")
-save_figure(combined, file.path(manuscript_dir, "2016_first_detection_flowpaths.pdf"))
+save_figure(inventory_panel, file.path(manuscript_dir, "fig3_first_detection.pdf"))
 if (interactive()) {
-  print(combined)
+  print(inventory_panel)
 }
 
-# 7. Verify that the community and completed iCAMP inputs were not changed -------
+# 6. Verify that the community inputs were not changed ---------------------------
 checks$final_md5 <- unname(tools::md5sum(input_paths))
 checks$unchanged <- checks$initial_md5 == checks$final_md5
 stopifnot(all(checks$unchanged))

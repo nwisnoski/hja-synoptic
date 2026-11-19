@@ -40,7 +40,7 @@ manuscript_dir <- here("figures", "manuscript")
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)
 
-# Habitat colors and shapes match Figures 1 and 2.
+# Habitat colors and shapes match Figures 1 and 3.
 habitat_labels <- c(soil = "Soil", sediment = "Sediment", hyporheic = "Porewater")
 habitat_colors <- c(soil = "#D55E00", sediment = "#009E73", hyporheic = "#0072B2")
 habitat_shapes <- c(soil = 17, sediment = 16, hyporheic = 15)
@@ -98,7 +98,7 @@ class_summary <- tibble(
 write_csv(class_summary, file.path(results_dir, "class_summary.csv"))
 
 # 4. Place every sample on the stream network and assign its branch ---------------
-# The graph follows script 04: consecutive centerline points within a segment
+# The graph follows script 03: consecutive centerline points within a segment
 # are joined by their change in outlet distance, and segments join at shared
 # confluence points.
 geometry <- read_csv(input_paths[5], skip = 1,
@@ -310,7 +310,7 @@ for (panel in names(panel_files)) {
 }
 figure <- wrap_plots(panels[c("map", "drainage", "lineages")], design = "AC\nBC") +
   plot_annotation(tag_levels = "A")
-save_figure(figure, file.path(manuscript_dir, "2016_sediment_soil_affinity.pdf"))
+save_figure(figure, file.path(manuscript_dir, "fig4_soil_affinity.pdf"))
 
 # 9. Verify inputs were not changed and record the settings ------------------------
 stopifnot(identical(input_md5, unname(tools::md5sum(input_paths))))

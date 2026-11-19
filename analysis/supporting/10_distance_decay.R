@@ -20,13 +20,13 @@ significance_threshold <- 0.05
 # panels overlay two sets of pairs, so they use the large panel size.
 point_alpha <- 0.5
 # The standard dissimilarity for each data type. Its replacement and
-# richness-difference components are tested in 04_sediment_convergence.R.
+# richness-difference components are tested in 03_molecular_gradients.R.
 view_design <- tribble(
   ~metric, ~data_type, ~role, ~label,
   "microbial_hellinger", "microbial", "primary", "Microbial communities (Hellinger)",
   "molecular_jaccard", "molecular", "primary", "FT-ICR features (Jaccard)")
 # Two spatial separations: along the channel and in a straight line. Differences
-# in network position (drainage area) are tested in 04_sediment_convergence.R.
+# in network position (drainage area) are tested in 03_molecular_gradients.R.
 predictor_design <- tribble(
   ~predictor, ~label,
   "watercourse_km", "Watercourse distance (km)",
@@ -36,7 +36,7 @@ connection_colors <- c("Flow-connected" = "#000000", "Not flow-connected" = "#99
 plot_theme <- figure_theme + fixed_panels(figure_large_panel_width, figure_large_panel_height)
 
 # 2. Read the matched sites, their dissimilarities, and their separations ----------
-# 04_sediment_convergence.R saves the complete-data matrices and one row per pair
+# 03_molecular_gradients.R saves the complete-data matrices and one row per pair
 # of sites with its channel and straight-line distances and flow connection.
 dir.create(results_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_dir, recursive = TRUE, showWarnings = FALSE)

@@ -1,4 +1,4 @@
-# Figure 3: downstream decline of sediment molecular richness, and the share of
+# Figure 2: downstream decline of sediment molecular richness, and the share of
 # molecular and microbial dissimilarity that comes from richness differences
 # along flow paths. Dispersion and molecular class views of the same sites are
 # supporting panels.
@@ -28,7 +28,7 @@ permutation_seed <- 20261015
 significance_threshold <- 0.05
 resampling_seed <- 20261016
 plot_seed <- 20261017
-# Text sizes, panel sizes, and the exporter come from figure_style.R. Figure 3
+# Text sizes, panel sizes, and the exporter come from figure_style.R. Figure 2
 # uses large panels; the supporting dispersion and class panels use standard ones.
 point_alpha <- 0.5
 site_point_size <- 1.6
@@ -642,7 +642,7 @@ for (data_type in names(partitions)) {
 }
 figure <- wrap_plots(figure_panels[c("organic_drainage", "richness_organic", "molecular", "microbial")],
   ncol = 2, guides = "collect") + plot_annotation(tag_levels = "A") & theme(legend.position = "bottom")
-save_figure(figure, file.path(manuscript_dir, "2016_sediment_richness_difference.pdf"))
+save_figure(figure, file.path(manuscript_dir, "fig2_molecular_richness_difference.pdf"))
 
 # 12. Save dispersion panels for every view ----------------------------------------
 panels <- list()
